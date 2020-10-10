@@ -6,7 +6,22 @@ function HistoryScreen(props) {
   return (
     <View style={styles.container}>
       <BackgroundImage>
-        <Text>History Screen</Text>
+        <View style={{
+          flexDirection: 'row',
+          marginTop: 40,
+          alignItems: 'center',
+          paddingHorizontal: 20
+        }}>
+          <Icon name='menu' size={30} color='#a2a2db' style={{
+            width: 20
+          }} onPress={() => props.navigation.openDrawer()}/>
+          <Text style={{
+            fontSize: 20,
+            fontWeight: 'bold',
+            color: '#522289',
+            marginLeft: 50
+          }}>Lịch sử</Text>
+        </View>
       </BackgroundImage>
     </View>
   )
