@@ -49,7 +49,7 @@ function DrawerContent(props) {
                 />
               )}
               label="Trang chủ"
-              onPress={() => { }}
+              onPress={() => {props.navigation.navigate('Home')}}
             />
             <DrawerItem
               icon={({ color, size }) => (
@@ -60,18 +60,7 @@ function DrawerContent(props) {
                 />
               )}
               label="Đăng ký xe"
-              onPress={() => { }}
-            />
-            <DrawerItem
-              icon={({ color, size }) => (
-                <Icon
-                  name="license"
-                  color={color}
-                  size={size}
-                />
-              )}
-              label="Đăng ký lái xe"
-              onPress={() => { }}
+              onPress={() => { props.navigation.navigate('RegisterCar')}}
             />
             <DrawerItem
               icon={({ color, size }) => (
@@ -104,7 +93,7 @@ function DrawerContent(props) {
                 />
               )}
               label="Tài khoản"
-              onPress={() => { }}
+              onPress={() => {props.navigation.navigate('AccountInfo') }}
             />
           </Drawer.Section>
           <Drawer.Section title="Tình trạng">
@@ -130,7 +119,7 @@ function DrawerContent(props) {
             />
           )}
           label="Đăng xuất"
-          onPress={() => { }}
+          onPress={() => {props.navigation.navigate('Login') }}
         />
       </Drawer.Section>
     </View>
