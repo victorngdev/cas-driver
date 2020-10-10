@@ -96,20 +96,23 @@ function AccountScreen(props) {
           <View style={{
             flexDirection: 'column',
             marginTop: 10,
-            alignItems: 'center',
-            paddingHorizontal: 20
+            paddingHorizontal: 20,
+            textAlign: 'center'
           }}>
             <Text style={{
               fontSize: 20,
               fontWeight: 'bold',
               color: '#522289',
               marginLeft: 50
-            }}>Thông tin cá nhân</Text>
+            }}>Hình ảnh xác thực</Text>
+
             <ScrollView
-              horizontals
+              horizontal
               showsHorizontalScrollIndicator={false}
-              style={{ marginHorizontal: 40, marginTop: 30 }}
+              style={{ marginHorizontal: -28, marginTop: 10 }}
             >
+
+              {/* Component Image Confirm */}
               <View style={{
                 backgroundColor: '#FEFEFE',
                 height: 200,
@@ -124,26 +127,116 @@ function AccountScreen(props) {
                 }} />
                 <View
                   style={{
-                    flexDirection: "row",
-                    width: 100,
-                    alignItems: "center",
+                    flexDirection: "column",
+                    width: 180,
+                    textAlign: "center",
                   }}
                 >
-                  <View
+                  <Text
                     style={{
-                      paddingHorizontal: 5,
-                      paddingVertical: 5,
+                      fontSize: 13,
+                      color: "#a2a2db",
+                      textAlign: 'center'
                     }}
                   >
-                    <Text
-                      style={{
-                        fontSize: 11,
-                        color: "#a2a2db",
-                      }}
-                    >
-                      CMND/Thẻ căn cước hoặc hộ chiếu
+                    CMND/Thẻ căn cước hoặc hộ chiếu
                   </Text>
-                  </View>
+                </View>
+              </View>
+
+              {/* Component Image Confirm */}
+              <View style={{
+                backgroundColor: '#FEFEFE',
+                height: 200,
+                width: 190,
+                borderRadius: 15,
+                padding: 5
+              }}>
+                <Image source={require('../../../assets/images/giayphep.jpg')} style={{
+                  width: 180,
+                  borderRadius: 10,
+                  height: 130
+                }} />
+                <View
+                  style={{
+                    flexDirection: "column",
+                    width: 180,
+                    textAlign: "center",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 13,
+                      color: "#a2a2db",
+                      textAlign: 'center'
+                    }}
+                  >
+                    Giấy phép lái xe
+                  </Text>
+                </View>
+              </View>
+
+              {/* Component Image Confirm */}
+              <View style={{
+                backgroundColor: '#FEFEFE',
+                height: 200,
+                width: 190,
+                borderRadius: 15,
+                padding: 5
+              }}>
+                <Image source={require('../../../assets/images/giaydangkyxe.jpg')} style={{
+                  width: 180,
+                  borderRadius: 10,
+                  height: 130
+                }} />
+                <View
+                  style={{
+                    flexDirection: "column",
+                    width: 180,
+                    textAlign: "center",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 13,
+                      color: "#a2a2db",
+                      textAlign: 'center'
+                    }}
+                  >
+                    Giấy đăng ký xe
+                  </Text>
+                </View>
+              </View>
+
+              {/* Component Image Confirm */}
+              <View style={{
+                backgroundColor: '#FEFEFE',
+                height: 200,
+                width: 190,
+                borderRadius: 15,
+                padding: 5
+              }}>
+                <Image source={require('../../../assets/images/xecuuthuong.jpg')} style={{
+                  width: 180,
+                  borderRadius: 10,
+                  height: 130
+                }} />
+                <View
+                  style={{
+                    flexDirection: "column",
+                    width: 180,
+                    textAlign: "center",
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 13,
+                      color: "#a2a2db",
+                      textAlign: 'center'
+                    }}
+                  >
+                    Xe cứu thương
+                  </Text>
                 </View>
               </View>
             </ScrollView>
