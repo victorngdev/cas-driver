@@ -27,17 +27,19 @@ import RegisterCarScreen from "./src/screens/register-car/register-car";
 import RegisterCarImageScreen from "./src/screens/register-car-image/register-car-image";
 import HistoryScreen from "./src/screens/history/history";
 import HistoryDetailScreen from "./src/screens/history-detail/history-detail";
+import AcceptRequestScreen from "./src/screens/accept-request/accept-request";
 
 const Drawer = createDrawerNavigator();
 
 export function App () {
   return (
     <NavigationContainer>
-      <Drawer.Navigator initialRouteName="Home" drawerContent={props => <DrawerContent {...props} />}>
+      <Drawer.Navigator initialRouteName="RequestInfo" drawerContent={props => <DrawerContent {...props} />}>
         <Drawer.Screen name="Home" component={HomeScreen}/>
         <Drawer.Screen name="Login" component={LoginScreen}/>
         <Drawer.Screen name="AccountInfo" component={AccountScreen}/>
         <Drawer.Screen name="RequestInfo" component={RequestInfoScreen}/>
+        <Drawer.Screen name = "AcceptRequest" component={AcceptRequestScreen}/>
         <Drawer.Screen name ="History" component={HistoryScreen}/>
         <Drawer.Screen name = "RegisterCar" component={RegisterCarScreen}/>
         <Drawer.Screen name = "RegisterCarImage" component={RegisterCarImageScreen}/>

@@ -108,7 +108,7 @@ function RequestInfoScreen(props) {
                     }}>
                         <Button 
                             title='Chấp nhận'
-                            onPress={() => {}}
+                            onPress={() => {props.navigation.navigate('AcceptRequest')}}
                         />
                         <Button 
                             title='Hủy'
