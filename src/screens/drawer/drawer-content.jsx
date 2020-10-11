@@ -62,6 +62,7 @@ function DrawerContent(props) {
               label="Đăng ký xe"
               onPress={() => { props.navigation.navigate('RegisterCar')}}
             />
+          
             <DrawerItem
               icon={({ color, size }) => (
                 <Icon
@@ -71,7 +72,7 @@ function DrawerContent(props) {
                 />
               )}
               label="Lịch sử"
-              onPress={() => { }}
+              onPress={() => {props.navigation.navigate('History') }}
             />
             <DrawerItem
               icon={({ color, size }) => (

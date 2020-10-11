@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Image, Dimensions } from 'react-native';
+import { View, Image, Alert } from 'react-native';
 import { Avatar, Title, Text, TouchableRipple, Switch } from 'react-native-paper';
 import BackgroundImage from '../../components/background-screen.component';
 import styles from './home-style';
@@ -7,6 +7,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import MapView, { Marker } from "react-native-maps";
+
 
 const HomeStack = createStackNavigator();
 
@@ -23,7 +24,11 @@ function HomeScreen(props) {
     }
     if (!isAction) {
       setIsAction(!isAction);
-      setText('Sẵn sàng đón bệnh nhân');
+      setText('Sẵn sàng');
+
+      Alert.alert("Hệ thống sẽ thông báo cho bạn khi có yêu cầu từ bệnh nhân");
+      
+     
     }
   }
 
@@ -83,13 +88,13 @@ function HomeScreen(props) {
           <View style={styles.starList}>
             <Image style={styles.iconStar}
               source={require("../../../assets/icons/goldStar.png")} />
-              <Image style={styles.iconStar}
+            <Image style={styles.iconStar}
               source={require("../../../assets/icons/goldStar.png")} />
-              <Image style={styles.iconStar}
+            <Image style={styles.iconStar}
               source={require("../../../assets/icons/goldStar.png")} />
-              <Image style={styles.iconStar}
+            <Image style={styles.iconStar}
               source={require("../../../assets/icons/goldStar.png")} />
-              <Image style={styles.iconStar}
+            <Image style={styles.iconStar}
               source={require("../../../assets/icons/emptyStar.png")} />
           </View>
         </View>
