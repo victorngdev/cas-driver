@@ -22,7 +22,7 @@ import LoginScreen from "./src/screens/login/login-screen";
 import DrawerContent from './src/screens/drawer/drawer-content';
 import HomeScreen from "./src/screens/home/home-screen";
 import AccountScreen from "./src/screens/account-info/account-info";
-
+import RequestInfoScreen from './src/screens/get-request/request-info';
 
 const Drawer = createDrawerNavigator();
 
@@ -33,6 +33,7 @@ export function App () {
         <Drawer.Screen name="Home" component={HomeScreen}/>
         <Drawer.Screen name="Login" component={LoginScreen}/>
         <Drawer.Screen name="AccountInfo" component={AccountScreen}/>
+        <Drawer.Screen name="RequestInfo" component={RequestInfoScreen}/>
       </Drawer.Navigator>
     </NavigationContainer>
   )

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Button, Text, View } from 'react-native';
 import BackgroundImage from '../../components/background-screen.component';
 import styles from './home-style';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -28,7 +28,10 @@ function HomeScreen(props) {
             color: '#522289',
             marginLeft: 50
           }}>Trang chủ</Text>
-
+          <Button 
+            title='Request Info'
+            onPress={() => props.navigation.navigate('RequestInfo')} 
+          />
         </View>
       </BackgroundImage>
     </View>
