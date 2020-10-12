@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   appName: {
     fontFamily: "Roboto_900Black",
     fontSize: 25,
-    marginLeft: '12%',
+    marginLeft: '10%',
     marginTop: 18,
     color: "#522289",
   },
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     height: 40,
     backgroundColor: '#fff',
     marginTop: 18,
-    marginLeft: '5%',
+    marginLeft: '20%',
     backgroundColor: '#fff'
   },
   icon: {
@@ -62,13 +62,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginHorizontal: 10,
     borderRadius: 10,
+    backgroundColor: '#c4def6'
   }
   ,
   rate: {
     flex: 1,
     width: '100%',
+    marginTop: '5%',
     marginHorizontal: 10,
-    marginTop: 10
   },
   starList: {
     flexDirection: 'row',
@@ -93,7 +94,6 @@ const styles = StyleSheet.create({
   statusText: {
     flex: 1,
     alignSelf: 'center',
-    marginVertical: 8,
     color: "#000",
     fontSize: 17,
     fontFamily: "Roboto_500Medium",
