@@ -1,23 +1,42 @@
 import React from 'react'
-import { StyleSheet, View, ImageBackground, Text, SafeAreaView, Button } from 'react-native';
+import { StyleSheet, View, ImageBackground, Text, SafeAreaView } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import MapView from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import ButtonText from '../../components/button-text.component';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+
 function AcceptRequestScreen() {
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollView
                 contentContainerStyle={{
                     flex: 1,
                     justifyContent: 'space-between'
-                }}>
+                }}
+            >
                 <ImageBackground source={require('../../../assets/icons/background.png')} style={styles.image}>
                     {/* Header */}
                     <View style={styles.headerView}>
-
+                        <View style={{ 
+                            flex: 1,
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}>
+                            <Text style={{fontWeight: 'bold', fontSize: 15, color: 'blue'}}>ĐÓN BỆNH NHÂN</Text>
+                            <Text style={{fontSize: 15, marginTop: 10}}>Huy</Text>
+                        </View>
+                        <View style={{
+                            flex: 1,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            backgroundColor: 'silver'
+                        }}>
+                            <Text style={{fontWeight: 'bold', fontSize: 20, color: 'green'}}>ĐẾN NƠI</Text>
+                        </View>
                     </View>
                     {/* Info */}
                     <View style={styles.infoView}>
@@ -26,19 +45,19 @@ function AcceptRequestScreen() {
                             flexDirection: "row"
                         }}>
                             <View style={{ flex: 4, flexDirection: 'column', justifyContent: 'center' }}>
-                                <Text 
-                                    style={{fontWeight: 'bold', fontSize: 20, marginLeft: 10}} 
+                                <Text
+                                    style={{ fontWeight: 'bold', fontSize: 20, marginLeft: 10 }}
                                     numberOfLines={1}>
-                                        Bệnh viện Quân Y
+                                    Bệnh viện Quân Y
                                 </Text>
-                                <Text 
-                                    style={{fontWeight: 'bold', fontSize: 15, marginLeft: 10}} 
+                                <Text
+                                    style={{ fontWeight: 'bold', fontSize: 15, marginLeft: 10 }}
                                     numberOfLines={2}>
-                                        365, Lê Văn Việt, Quận 9, TP.Hồ Chí Minh
+                                    365, Lê Văn Việt, Quận 9, TP.Hồ Chí Minh
                                 </Text>
                             </View>
-                            <View style={{ flex: 1 , justifyContent: 'center', alignItems: 'center'}}>
-                                <Icon name='location-arrow' size={35}/>
+                            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                <Icon name='location-arrow' size={35} />
                             </View>
                         </View>
                         {/* Note */}
@@ -47,15 +66,19 @@ function AcceptRequestScreen() {
                             flexDirection: 'column',
                             backgroundColor: 'white'
                         }}>
-                            <Text style={{fontWeight: 'bold', marginLeft: 10, fontSize: 18}}>Ghi chú:</Text>
-                            <Text style={{marginLeft: 20, fontSize: 15}}>Bệnh nhân cần người sơ cứu, vì đang bị gãy chân</Text>
+                            <Text style={{ fontWeight: 'bold', marginLeft: 10, fontSize: 18 }}>Ghi chú:</Text>
+                            <Text style={{ marginLeft: 20, fontSize: 15 }}>Bệnh nhân cần người sơ cứu, vì đang bị gãy chân</Text>
                         </View>
                     </View>
                     {/* Map */}
-                    <View style={styles.mapView}>
+                    <View style={{ flex: 4 }}>
                         <MapView
+                            mapType={Platform.OS == "android" ? "none" : "standard"}
+                            provider={PROVIDER_GOOGLE}
                             style={{ flex: 1 }}
-                            showsUserLocation={true}    
+                            showsUserLocation={true}
+                            showsMyLocationButton={true}
+                            followsUserLocation={true}
                         />
                     </View>
                     {/* Call, Exit... */}
@@ -102,13 +125,13 @@ const styles = StyleSheet.create({
     },
     headerView: {
         flex: 2,
-        backgroundColor: 'red'
+        flexDirection: 'row'
     },
     infoView: {
         flex: 3,
     },
     mapView: {
-        flex: 4,
+        flex: 4
     },
     footerView: {
         flex: 4,
