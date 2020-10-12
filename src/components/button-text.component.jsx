@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 20,
-    color: "red",
+    color: "red"
   },
 });
 export default ButtonText;

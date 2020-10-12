@@ -1,14 +1,13 @@
 import React from 'react'
-import { StyleSheet, View, ImageBackground, Text, SafeAreaView } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { SafeAreaView, StyleSheet, View, Text, Button } from 'react-native'
+import BackgroundImage from '../../components/background-screen.component'
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import ButtonText from '../../components/button-text.component';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
-
-function AcceptRequestScreen(props) {
-
+function PatientArrivedScreen() {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <ScrollView
@@ -17,25 +16,18 @@ function AcceptRequestScreen(props) {
                     justifyContent: 'space-between'
                 }}
             >
-                <ImageBackground source={require('../../../assets/icons/background.png')} style={styles.image}>
+                <BackgroundImage>
                     {/* Header */}
                     <View style={styles.headerView}>
                         <View style={{
                             flex: 1,
                             flexDirection: 'column',
                             justifyContent: 'center',
-                            alignItems: 'center'
-                        }}>
-                            <Text style={{ fontWeight: 'bold', fontSize: 15, color: 'blue' }}>ĐÓN BỆNH NHÂN</Text>
-                            <Text style={{ fontSize: 15, marginTop: 10 }}>Huy</Text>
-                        </View>
-                        <View style={{
-                            flex: 1,
-                            justifyContent: 'center',
                             alignItems: 'center',
                             backgroundColor: 'silver'
                         }}>
-                            <Text style={{ fontWeight: 'bold', fontSize: 20, color: 'green' }}>ĐẾN NƠI</Text>
+                            <Text style={{ fontWeight: 'bold', fontSize: 20, color: 'blue' }}>BỆNH NHÂN ĐẾN NƠI</Text>
+                            <Text style={{ fontSize: 20, marginTop: 10 }}>Huy</Text>
                         </View>
                     </View>
                     {/* Info */}
@@ -71,7 +63,7 @@ function AcceptRequestScreen(props) {
                         </View>
                     </View>
                     {/* Map */}
-                    <View style={{ flex: 4 }}>
+                    <View style={{ flex: 4, paddingHorizontal: 4 }}>
                         <MapView
                             mapType={Platform.OS == "android" ? "none" : "standard"}
                             provider={PROVIDER_GOOGLE}
@@ -88,46 +80,26 @@ function AcceptRequestScreen(props) {
                                 <MaterialIcons name='local-phone' size={50} />
                                 <Text>Gọi</Text>
                             </View>
-                            <View style={styles.layoutIconAndText}>
-                                <MaterialIcons name='cancel' size={50} />
-                                <Text>Hủy</Text>
-                            </View>
                         </View>
-                        <View style={{ flex: 4, flexDirection: 'row' }}>
-                            <ButtonText textContent='ĐẾN ĐIỂM' styleButton={styles.buttonGoTo} styleText={{
-                                fontWeight: 'bold',
-                                color: 'blue',
-                                fontSize: 17
-                            }} />
-                            <ButtonText
-                                textContent='ĐÓN BỆNH NHÂN'
-                                styleButton={styles.buttonGetPatient}
-                                gotoScreen={() => props.navigation.navigate('PatientArrived')}
-                                styleText={{
+                        <View style={{ flex: 4 , marginBottom: 10}}>
+                            <TouchableOpacity style={styles.buttonConfirm} onPress={() => { }} >
+                                <Text style={{
+                                    fontSize: 17,
                                     fontWeight: 'bold',
                                     color: 'white',
-                                    fontSize: 17
-                                }} 
-                                />
+                                    paddingLeft: 10,
+                                    paddingRight: 10
+                                }}>BỆNH NHÂN XUỐNG XE</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
-                </ImageBackground>
+                </BackgroundImage>
             </ScrollView>
-
         </SafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        flexDirection: "column"
-    },
-    image: {
-        flex: 1,
-        resizeMode: "cover",
-        justifyContent: "center"
-    },
     headerView: {
         flex: 2,
         flexDirection: 'row'
@@ -142,21 +114,22 @@ const styles = StyleSheet.create({
         flex: 4,
         alignItems: 'center'
     },
+    buttonGetPatient: {
+        borderRadius: 8,
+        backgroundColor: 'green'
+    },
     layoutIconAndText: {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center'
     },
-    buttonGetPatient: {
-        borderRadius: 8,
-        width: 150,
-        backgroundColor: 'green',
-        marginLeft: 20
-    },
-    buttonGoTo: {
-        width: 100,
-        borderRadius: 8
+    buttonConfirm: {
+        flex: 1,
+        backgroundColor: "green",
+        borderRadius: 10,
+        alignItems: "center",
+        justifyContent: "center"
     }
 });
 
-export default AcceptRequestScreen;
+export default PatientArrivedScreen;

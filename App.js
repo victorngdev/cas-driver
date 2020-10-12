@@ -28,6 +28,7 @@ import RegisterCarImageScreen from "./src/screens/register-car-image/register-ca
 import HistoryScreen from "./src/screens/history/history";
 import HistoryDetailScreen from "./src/screens/history-detail/history-detail";
 import AcceptRequestScreen from "./src/screens/accept-request/accept-request";
+import PatientArrivedScreen from "./src/screens/patient-arrived/patient-arrived";
 
 const Drawer = createDrawerNavigator();
 
@@ -44,6 +45,7 @@ export function App () {
         <Drawer.Screen name = "RegisterCar" component={RegisterCarScreen}/>
         <Drawer.Screen name = "RegisterCarImage" component={RegisterCarImageScreen}/>
         <Drawer.Screen name = "HistoryDetail" component={HistoryDetailScreen}/>
+        <Drawer.Screen name = "PatientArrived" component={PatientArrivedScreen}/>
       </Drawer.Navigator>
     </NavigationContainer>
   )
