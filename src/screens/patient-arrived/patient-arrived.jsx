@@ -1,11 +1,10 @@
 import React from 'react'
-import { SafeAreaView, StyleSheet, View, Text, Button } from 'react-native'
+import { SafeAreaView, StyleSheet, View, Text, Linking } from 'react-native'
 import BackgroundImage from '../../components/background-screen.component'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import ButtonText from '../../components/button-text.component';
 
 function PatientArrivedScreen() {
     return (
@@ -77,7 +76,10 @@ function PatientArrivedScreen() {
                     <View style={styles.footerView}>
                         <View style={{ flex: 6, flexDirection: 'row' }}>
                             <View style={styles.layoutIconAndText}>
-                                <MaterialIcons name='local-phone' size={50} />
+                                <MaterialIcons 
+                                    name='local-phone' size={50} 
+                                    onPress={() => Linking.openURL('tel: 0907766357')}    
+                                />
                                 <Text>Gọi</Text>
                             </View>
                         </View>
