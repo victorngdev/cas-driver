@@ -3,8 +3,8 @@ import { StyleSheet, View, ImageBackground, Text, SafeAreaView, StatusBar } from
 import { ScrollView } from 'react-native-gesture-handler';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import ButtonText from '../../components/button-text.component';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { Button } from 'react-native-paper';
 
 function AcceptRequestScreen(props) {
     return (
@@ -152,28 +152,17 @@ function AcceptRequestScreen(props) {
                                 <Text>Hủy</Text>
                             </View>
                         </View>
-                        <View style={{ flex: 4, flexDirection: "row" }}>
-                            <ButtonText
-                                textContent="ĐẾN ĐIỂM"
-                                styleButton={styles.buttonGoTo}
-                                styleText={{
-                                    fontWeight: "bold",
-                                    color: "blue",
-                                    fontSize: 17,
-                                }}
-                            />
-                            <ButtonText
-                                textContent="ĐÓN BỆNH NHÂN"
-                                styleButton={styles.buttonGetPatient}
-                                gotoScreen={() =>
-                                    props.navigation.navigate("PatientArrived")
-                                }
-                                styleText={{
-                                    fontWeight: "bold",
-                                    color: "white",
-                                    fontSize: 17,
-                                }}
-                            />
+                        <View style={{ flex: 4, flexDirection: "row", justifyContent: 'center', alignItems: 'center' }}>
+                            <Button mode="contained" color='white' labelStyle={{ fontSize: 17, fontWeight: 'bold' }} compact={true}
+                                style={{marginRight: 5}}
+                            >
+                                ĐẾN ĐIỂM
+                            </Button>
+                            <Button mode="contained" color='#1c942c' labelStyle={{ fontSize: 17, fontWeight: 'bold' }} compact={true}
+                                style={{marginLeft: 5}}
+                            >
+                                ĐÓN BỆNH NHÂN
+                            </Button>
                         </View>
                     </View>
                 </ImageBackground>

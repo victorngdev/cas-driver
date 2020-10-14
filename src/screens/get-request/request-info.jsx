@@ -1,11 +1,11 @@
 import React from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import {StyleSheet, Text, View } from 'react-native';
 import BackgroundImage from '../../components/background-screen.component';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import CountDown from 'react-native-countdown-component';
 import Header from '../../components/header.component';
-
+import { Button } from 'react-native-paper';
 
 function RequestInfoScreen(props) {
     return (
@@ -15,7 +15,7 @@ function RequestInfoScreen(props) {
                 <Header
                     title='Yêu cầu mới từ bệnh nhân'
                     passedIcon={() =>
-                        <MaterialCommunityIcons name='chevron-left' size={50} color='#a2a2db' style={{ }}
+                        <MaterialCommunityIcons name='chevron-left' size={50} color='#a2a2db' style={{}}
                             onPress={() => props.navigation.openDrawer()}
                         />}
                     styleText={{
@@ -104,15 +104,19 @@ function RequestInfoScreen(props) {
                         justifyContent: 'center',
                         paddingVertical: 20
                     }}>
-                        <Button
-                            title='Chấp nhận'
+
+                        <Button mode="contained" color='#1c942c' labelStyle={{ fontSize: 17, fontWeight: 'bold' }} compact={true}
                             onPress={() => { props.navigation.navigate('AcceptRequest') }}
-                        />
-                        <Button
-                            title='Hủy'
-                            color='red'
-                            onPress={() => { }}
-                        />
+                            style={{marginRight: 5}}
+                        >
+                            CHẤP NHẬN
+                            </Button>
+                        <Button mode="contained" color='red' 
+                            labelStyle={{ fontSize: 17, fontWeight: 'bold' }} compact={true}
+                            style={{marginLeft: 5}}
+                        >
+                            HỦY
+                        </Button>
                     </View>
                 </View>
             </BackgroundImage>
