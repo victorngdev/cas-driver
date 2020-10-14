@@ -59,15 +59,11 @@ const styles = StyleSheet.create({
         flex: 5.5,
         width: 320,
         height: 380,
-        borderRadius: 30,
     },
     viewMap: {
         flex: 4,
         alignItems: "center",
         justifyContent: "center",
-        marginHorizontal: 10,
-        borderRadius: 10,
-        backgroundColor: "#c4def6",
     },
     rate: {
         flex: 1,
@@ -89,6 +85,7 @@ const styles = StyleSheet.create({
         color: "#000",
         fontSize: 17,
         fontFamily: "Roboto_500Medium",
+        marginTop: 10,
     },
     status: {
         flex: 1,
