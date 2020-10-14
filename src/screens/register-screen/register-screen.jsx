@@ -1,14 +1,14 @@
 import React from "react";
+
 import { View } from "react-native";
 
-import styles from "./login-style";
-import BackgroundLogin from "../../components/background-screen-login.component";
-import LogoName from "../../components/logo-name.component";
 import TextInputIcon from "../../components/text-input-with-icon.component";
 import ButtonText from "../../components/button-text.component";
 import TextLinking from "../../components/text-linking.component";
-
-const LoginScreen = ({ navigation }) => {
+import LogoName from "../../components/logo-name.component";
+import BackgroundLogin from "../../components/background-screen-login.component";
+import styles from "./register-styles";
+const RegisterScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <BackgroundLogin>
@@ -23,20 +23,19 @@ const LoginScreen = ({ navigation }) => {
                     <TextInputIcon
                         imgSrc={require("../../../assets/icons/key.png")}
                         placeholder="Mật khẩu"
-                        secureTextEntry={true}
+                    />
+                    <TextInputIcon
+                        imgSrc={require("../../../assets/icons/user.png")}
+                        placeholder="Tên"
                     />
                     <ButtonText
-                        textContent="ĐĂNG NHẬP"
-                        gotoScreen={() => navigation.navigate("Home")}
+                        textContent="TẠO TÀI KHOẢN"
+                        gotoScreen={() => navigation.navigate("Login")}
                     />
                     <TextLinking
-                        contentText="Chưa có tài khoản?"
-                        contentLink="Đăng ký"
-                        link={() => navigation.navigate("Register")}
-                    />
-                    <TextLinking
-                        contentLink="Quên mật khẩu?"
-                        link={() => navigation.navigate("ResetPass")}
+                        contentText="Đã có tài khoản?"
+                        contentLink="Đăng nhập"
+                        link={() => navigation.navigate("Login")}
                     />
                 </View>
             </BackgroundLogin>
@@ -44,4 +43,4 @@ const LoginScreen = ({ navigation }) => {
     );
 };
 
-export default LoginScreen;
+export default RegisterScreen;
