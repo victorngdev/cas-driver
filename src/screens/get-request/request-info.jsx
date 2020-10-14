@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import BackgroundImage from '../../components/background-screen.component';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -10,84 +10,109 @@ import { Button } from 'react-native-paper';
 function RequestInfoScreen(props) {
     return (
         <View style={styles.container}>
-
             <BackgroundImage>
                 <Header
                     title='Yêu cầu mới từ bệnh nhân'
                     passedIcon={() =>
                         <MaterialCommunityIcons name='chevron-left' size={50} color='#a2a2db' style={{}}
+
                             onPress={() => props.navigation.openDrawer()}
                         />}
                     styleText={{
-                        fontSize: 18,
-                        color: '#522289',
-                        marginLeft: 20
-                    }}
+                    fontSize: 18,
+                    color: "#522289",
+                    marginLeft: 20,
+                }}
                 />
                 {/* Điểm đến */}
-                <View style={{
-                    flex: 2,
-                    flexDirection: 'row',
-                    alignItems: "center",
-                    paddingHorizontal: 10,
-                    backgroundColor: 'rgba(211, 219, 240, 0.5)',
-                    borderRadius: 10
-                }}>
-
-                    <View style={{
-                    }}>
-                        <MaterialCommunityIcons name="map-marker-radius" size={30} color='#a2a2db' style={{
-                            width: 30
-                        }} />
+                <View
+                    style={{
+                        flex: 2,
+                        flexDirection: "row",
+                        alignItems: "center",
+                        paddingHorizontal: 10,
+                        backgroundColor: "rgba(211, 219, 240, 0.5)",
+                        borderRadius: 10,
+                    }}
+                >
+                    <View style={{}}>
+                        <MaterialCommunityIcons
+                            name="map-marker-radius"
+                            size={30}
+                            color="#a2a2db"
+                            style={{
+                                width: 30,
+                            }}
+                        />
                         <Text>18km</Text>
                     </View>
 
-                    <View style={{
-                        paddingHorizontal: 20
-                    }}>
-                        <Text style={{ fontWeight: 'bold', fontSize: 20 }}>Điểm đến</Text>
+                    <View
+                        style={{
+                            paddingHorizontal: 20,
+                        }}
+                    >
+                        <Text style={{ fontWeight: "bold", fontSize: 20 }}>
+                            Điểm đến
+                        </Text>
                         <Text>Bệnh viện Quân Y</Text>
                         <Text>365 Lê Văn Việt, Quận 9, TP.HCM</Text>
                     </View>
                 </View>
 
                 {/* Vị trí bạn & bệnh nhân */}
-                <View style={{
-                    flex: 4,
-                    flexDirection: 'column',
-                    backgroundColor: 'rgba(211, 219, 240, 0.5)',
-                    marginTop: 10,
-                    borderRadius: 10
-                }}>
+                <View
+                    style={{
+                        flex: 4,
+                        flexDirection: "column",
+                        backgroundColor: "rgba(211, 219, 240, 0.5)",
+                        marginTop: 10,
+                        borderRadius: 10,
+                    }}
+                >
                     {/* Vị trí của bạn */}
                     <View style={styles.placeYouAndPatient}>
-
-                        <View style={{
-                        }}>
-                            <MaterialIcons name="my-location" size={30} color='green' style={{
-                                width: 30
-                            }} />
+                        <View style={{}}>
+                            <MaterialIcons
+                                name="my-location"
+                                size={30}
+                                color="green"
+                                style={{
+                                    width: 30,
+                                }}
+                            />
                         </View>
-                        <View style={{
-                            paddingHorizontal: 20
-                        }}>
-                            <Text style={{ fontWeight: 'bold', fontSize: 20 }}>Vị trí của bạn</Text>
+                        <View
+                            style={{
+                                paddingHorizontal: 20,
+                            }}
+                        >
+                            <Text style={{ fontWeight: "bold", fontSize: 20 }}>
+                                Vị trí của bạn
+                            </Text>
                             <Text>365 Lê Văn Việt, Quận 9, TP.HCM</Text>
                         </View>
                     </View>
                     {/* Vị trí bệnh nhân */}
                     <View style={styles.placeYouAndPatient}>
-
-                        <View style={{
-                        }}>
-                            <MaterialIcons name="location-on" size={30} color='red' style={{
-                                width: 30
-                            }} />
+                        <View style={{}}>
+                            <MaterialIcons
+                                name="location-on"
+                                size={30}
+                                color="red"
+                                style={{
+                                    width: 30,
+                                }}
+                            />
                         </View>
-                        <View style={{
-                            paddingHorizontal: 20
-                        }}>
-                            <Text style={{ fontWeight: 'bold', fontSize: 20 }}>Vị trí bệnh nhân</Text>
+                        <View
+                            style={{
+                                paddingHorizontal: 20,
+                            }}
+                        >
+                            <Text style={{ fontWeight: "bold", fontSize: 20 }}>
+                                Vị trí bệnh nhân
+                            </Text>
                             <Text>302 Nguyễn Ảnh Thủ, Quận 12, TP.HCM</Text>
                         </View>
                     </View>
@@ -96,8 +121,8 @@ function RequestInfoScreen(props) {
                         digitStyle={styles.timeCountdown}
                         onFinish={() => { }}
                         size={20}
-                        timeToShow={['S']}
-                        timeLabels={{ s: 'giây' }}
+                        timeToShow={["S"]}
+                        timeLabels={{ s: "giây" }}
                     />
                     <View style={{
                         flexDirection: 'row',
@@ -107,13 +132,13 @@ function RequestInfoScreen(props) {
 
                         <Button mode="contained" color='#1c942c' labelStyle={{ fontSize: 17, fontWeight: 'bold' }} compact={true}
                             onPress={() => { props.navigation.navigate('AcceptRequest') }}
-                            style={{marginRight: 5}}
+                            style={{ marginRight: 5 }}
                         >
                             CHẤP NHẬN
                             </Button>
-                        <Button mode="contained" color='red' 
+                        <Button mode="contained" color='red'
                             labelStyle={{ fontSize: 17, fontWeight: 'bold' }} compact={true}
-                            style={{marginLeft: 5}}
+                            style={{ marginLeft: 5 }}
                         >
                             HỦY
                         </Button>
@@ -121,7 +146,6 @@ function RequestInfoScreen(props) {
                 </View>
             </BackgroundImage>
         </View>
-
     )
 }
 
@@ -132,18 +156,17 @@ const styles = StyleSheet.create({
     },
 
     placeYouAndPatient: {
-        flexDirection: 'row',
+        flexDirection: "row",
         alignItems: "center",
         paddingHorizontal: 10,
-        marginTop: 20
+        marginTop: 20,
     },
 
     timeCountdown: {
         borderRadius: 96,
-        backgroundColor: 'white',
-        marginTop: 20
+        backgroundColor: "white",
+        marginTop: 20,
     }
-})
+});
 
 export default RequestInfoScreen;
-

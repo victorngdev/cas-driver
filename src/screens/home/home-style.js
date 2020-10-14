@@ -1,5 +1,5 @@
 import { StyleSheet, StatusBar } from "react-native";
-import { Dimensions } from 'react-native';
+import { Dimensions } from "react-native";
 
 const styles = StyleSheet.create({
     container: {
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
         marginVertical: 5,
         marginHorizontal: 10,
         flex: 5.5,
-        width: 320,
+        width: "100%",
         height: 380,
     },
     viewMap: {

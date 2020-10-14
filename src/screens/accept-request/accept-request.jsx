@@ -6,6 +6,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Button } from 'react-native-paper';
 
+
 function AcceptRequestScreen(props) {
     return (
         <View style={styles.container}>
@@ -20,45 +21,52 @@ function AcceptRequestScreen(props) {
                 >
                     {/* Header */}
                     <View style={styles.headerView}>
-                        <View
+                        <ImageBackground
+                            source={require("../../../assets/icons/header-accept-request.png")}
                             style={{
-                                flex: 1,
-                                flexDirection: "column",
-                                justifyContent: "center",
-                                alignItems: "center",
+                                width: "100%",
+                                flexDirection: "row",
                             }}
                         >
-                            <Text
+                            <View
                                 style={{
-                                    fontWeight: "bold",
-                                    fontSize: 15,
-                                    color: "blue",
+                                    flex: 1,
+                                    flexDirection: "column",
+                                    justifyContent: "center",
+                                    alignItems: "center",
                                 }}
                             >
-                                ĐÓN BỆNH NHÂN
-                            </Text>
-                            <Text style={{ fontSize: 15, marginTop: 10 }}>
-                                Huy
-                            </Text>
-                        </View>
-                        <View
-                            style={{
-                                flex: 1,
-                                justifyContent: "center",
-                                alignItems: "center",
-                                backgroundColor: "silver",
-                            }}
-                        >
-                            <Text
+                                <Text
+                                    style={{
+                                        fontWeight: "bold",
+                                        fontSize: 15,
+                                        color: "blue",
+                                    }}
+                                >
+                                    ĐÓN BỆNH NHÂN
+                                </Text>
+                                <Text style={{ fontSize: 15, marginTop: 10 }}>
+                                    Huy
+                                </Text>
+                            </View>
+                            <View
                                 style={{
-                                    fontWeight: "bold",
-                                    fontSize: 20,
-                                    color: "green",
+                                    flex: 1,
+                                    justifyContent: "center",
+                                    alignItems: "center",
                                 }}
                             >
-                                ĐẾN NƠI
-                            </Text>
-                        </View>
+                                <Text
+                                    style={{
+                                        fontWeight: "bold",
+                                        fontSize: 20,
+                                        color: "green",
+                                    }}
+                                >
+                                    ĐẾN NƠI
+                                </Text>
+                            </View>
+                        </ImageBackground>
                     </View>
                     {/* Info */}
                     <View style={styles.infoView}>
@@ -142,7 +150,12 @@ function AcceptRequestScreen(props) {
                     </View>
                     {/* Call, Exit... */}
                     <View style={styles.footerView}>
-                        <View style={{ flex: 6, flexDirection: "row" }}>
+                        <View
+                            style={{
+                                flex: 3,
+                                flexDirection: "row",
+                            }}
+                        >
                             <View style={styles.layoutIconAndText}>
                                 <MaterialIcons name="local-phone" size={50} />
                                 <Text>Gọi</Text>
@@ -163,6 +176,7 @@ function AcceptRequestScreen(props) {
                             >
                                 ĐÓN BỆNH NHÂN
                             </Button>
+
                         </View>
                     </View>
                 </ImageBackground>
@@ -174,9 +188,7 @@ function AcceptRequestScreen(props) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: "column",
-        backgroundColor: "white",
-        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+        flexDirection: "column"
     },
     image: {
         flex: 1,
@@ -198,6 +210,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     layoutIconAndText: {
+        flex: 1,
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
