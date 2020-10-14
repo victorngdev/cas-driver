@@ -35,7 +35,7 @@ function DrawerContent(props) {
               />
               <View style={{ flexDirection: 'column', marginLeft: 15 }}>
                 <Title style={styles.title}>Lê Quang Huy</Title>
-                <Caption>@lehuy.fptu</Caption>
+                <Caption>@0359680538</Caption>
               </View>
             </View>
           </View>
