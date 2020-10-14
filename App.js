@@ -31,6 +31,7 @@ import PatientArrivedScreen from "./src/screens/patient-arrived/patient-arrived"
 import RegisterScreen from "./src/screens/register-screen/register-screen";
 import OtpScreen from "./src/screens/otp/otp.component";
 import ResetPassScreen from "./src/screens/reset-password-screen/reset-password-screen";
+import GoogleMapScreen from "./src/screens/google-map/google-map";
 
 const Drawer = createDrawerNavigator();
 
@@ -71,6 +72,10 @@ export function App() {
                 <Drawer.Screen
                     name="PatientArrived"
                     component={PatientArrivedScreen}
+                />
+                 <Drawer.Screen
+                    name="GoogleMap"
+                    component={GoogleMapScreen}
                 />
             </Drawer.Navigator>
         </NavigationContainer>

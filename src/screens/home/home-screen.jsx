@@ -31,7 +31,7 @@ function HomeScreen(props) {
             setIsAction(!isAction);
             setText("Sẵn sàng");
 
-            Alert.alert(
+            Alert.alert("Trạng thái sẵn sàng",
                 "Hệ thống sẽ thông báo cho bạn khi có yêu cầu từ bệnh nhân"
             );
 
@@ -68,12 +68,11 @@ function HomeScreen(props) {
                 <View style={styles.viewMap}>
                     <MapView
                         style={styles.map}
-                        mapType={Platform.OS == "android" ? "none" : "standard"}
                         provider={PROVIDER_GOOGLE}
                         showsUserLocation={true}
                         showsMyLocationButton={true}
                         followsUserLocation={true}
-                    />
+                    ></MapView>
                 </View>
 
                 <View style={styles.rate}>

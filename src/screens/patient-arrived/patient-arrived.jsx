@@ -1,5 +1,5 @@
 import React from 'react'
-import { SafeAreaView, StyleSheet, View, Text, Linking, StatusBar } from 'react-native'
+import { SafeAreaView, StyleSheet, View, Text, Linking, StatusBar, Alert } from 'react-native'
 import BackgroundImage from '../../components/background-screen.component'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
@@ -47,9 +47,7 @@ function PatientArrivedScreen() {
                                     365, Lê Văn Việt, Quận 9, TP.Hồ Chí Minh
                                 </Text>
                             </View>
-                            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                <Icon name='location-arrow' size={35} />
-                            </View>
+
                         </View>
                         {/* Note */}
                         <View style={{
@@ -62,11 +60,10 @@ function PatientArrivedScreen() {
                         </View>
                     </View>
                     {/* Map */}
-                    <View style={{ flex: 4, paddingHorizontal: 4 }}>
+                    <View style={styles.viewMap}>
                         <MapView
-                            mapType={Platform.OS == "android" ? "none" : "standard"}
+                            style={styles.map}
                             provider={PROVIDER_GOOGLE}
-                            style={{ flex: 1 }}
                             showsUserLocation={true}
                             showsMyLocationButton={true}
                             followsUserLocation={true}
@@ -76,15 +73,19 @@ function PatientArrivedScreen() {
                     <View style={styles.footerView}>
                         <View style={{ flex: 6, flexDirection: 'row' }}>
                             <View style={styles.layoutIconAndText}>
-                                <MaterialIcons 
-                                    name='local-phone' size={50} 
-                                    onPress={() => Linking.openURL('tel: 0907766357')}    
+                                <MaterialIcons
+                                    name='local-phone' size={50}
+                                    onPress={() => Linking.openURL('tel: 0907766357')}
                                 />
                                 <Text>Gọi</Text>
                             </View>
                         </View>
-                        <View style={{ flex: 4 , marginBottom: 10}}>
-                            <TouchableOpacity style={styles.buttonConfirm} onPress={() => { }} >
+                        <View style={{ flex: 4, marginBottom: 10 }}>
+                            <TouchableOpacity style={styles.buttonConfirm} onPress={() => {
+                                Alert.alert(
+                                    "Chuyến đi hoàn thành","Cảm ơn bạn đã giúp đỡ bệnh nhân"
+                                );
+                            }} >
                                 <Text style={{
                                     fontSize: 17,
                                     fontWeight: 'bold',
@@ -115,9 +116,19 @@ const styles = StyleSheet.create({
     infoView: {
         flex: 3,
     },
-    mapView: {
-        flex: 4
+    map: {
+        marginVertical: 5,
+        marginHorizontal: 10,
+        flex: 5.5,
+        width: "100%",
+        height: 380,
     },
+    viewMap: {
+        flex: 4,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+
     footerView: {
         flex: 4,
         alignItems: 'center'
