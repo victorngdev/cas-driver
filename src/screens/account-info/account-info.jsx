@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, ScrollView, StyleSheet, Text, TextInput, View, SafeAreaView } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, TextInput, View, SafeAreaView , StatusBar} from 'react-native';
 import BackgroundImage from '../../components/background-screen.component';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Header from '../../components/header.component';

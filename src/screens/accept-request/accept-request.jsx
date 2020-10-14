@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, ImageBackground, Text, SafeAreaView } from 'react-native';
+import { StyleSheet, View, ImageBackground, Text, SafeAreaView, StatusBar } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
