@@ -8,7 +8,7 @@ const ButtonText = ({ gotoScreen, textContent, styleButton, styleText }) => {
   const combineStylesText = StyleSheet.flatten([text, styleText]);
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={combineStylesButton} onPress={gotoScreen}>
+      <TouchableOpacity style={combineStylesButton} onPress={gotoScreen} >
         <Text style={combineStylesText}>{textContent}</Text>
       </TouchableOpacity>
     </View>
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 20,
-    color: "red",
+    color: "red"
   },
 });
 export default ButtonText;

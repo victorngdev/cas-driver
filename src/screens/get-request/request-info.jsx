@@ -96,7 +96,7 @@ function RequestInfoScreen(props) {
                     <CountDown
                         until={10}
                         digitStyle={styles.timeCountdown}
-                        onFinish={() => alert('finished')}
+                        onFinish={() => {}}
                         size={20}
                         timeToShow={['S']}
                         timeLabels={{s: 'giây'}}
@@ -108,7 +108,7 @@ function RequestInfoScreen(props) {
                     }}>
                         <Button 
                             title='Chấp nhận'
-                            onPress={() => {}}
+                            onPress={() => {props.navigation.navigate('AcceptRequest')}}
                         />
                         <Button 
                             title='Hủy'
