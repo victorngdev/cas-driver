@@ -1,10 +1,17 @@
-import React from 'react'
-import { StyleSheet, View, ImageBackground, Text, SafeAreaView, StatusBar } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import ButtonText from '../../components/button-text.component';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import React from "react";
+import {
+    StyleSheet,
+    View,
+    ImageBackground,
+    Text,
+    SafeAreaView,
+    StatusBar,
+} from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
+import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import ButtonText from "../../components/button-text.component";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 function AcceptRequestScreen(props) {
     return (
@@ -20,45 +27,52 @@ function AcceptRequestScreen(props) {
                 >
                     {/* Header */}
                     <View style={styles.headerView}>
-                        <View
+                        <ImageBackground
+                            source={require("../../../assets/icons/header-accept-request.png")}
                             style={{
-                                flex: 1,
-                                flexDirection: "column",
-                                justifyContent: "center",
-                                alignItems: "center",
+                                width: "100%",
+                                flexDirection: "row",
                             }}
                         >
-                            <Text
+                            <View
                                 style={{
-                                    fontWeight: "bold",
-                                    fontSize: 15,
-                                    color: "blue",
+                                    flex: 1,
+                                    flexDirection: "column",
+                                    justifyContent: "center",
+                                    alignItems: "center",
                                 }}
                             >
-                                ĐÓN BỆNH NHÂN
-                            </Text>
-                            <Text style={{ fontSize: 15, marginTop: 10 }}>
-                                Huy
-                            </Text>
-                        </View>
-                        <View
-                            style={{
-                                flex: 1,
-                                justifyContent: "center",
-                                alignItems: "center",
-                                backgroundColor: "silver",
-                            }}
-                        >
-                            <Text
+                                <Text
+                                    style={{
+                                        fontWeight: "bold",
+                                        fontSize: 15,
+                                        color: "blue",
+                                    }}
+                                >
+                                    ĐÓN BỆNH NHÂN
+                                </Text>
+                                <Text style={{ fontSize: 15, marginTop: 10 }}>
+                                    Huy
+                                </Text>
+                            </View>
+                            <View
                                 style={{
-                                    fontWeight: "bold",
-                                    fontSize: 20,
-                                    color: "green",
+                                    flex: 1,
+                                    justifyContent: "center",
+                                    alignItems: "center",
                                 }}
                             >
-                                ĐẾN NƠI
-                            </Text>
-                        </View>
+                                <Text
+                                    style={{
+                                        fontWeight: "bold",
+                                        fontSize: 20,
+                                        color: "green",
+                                    }}
+                                >
+                                    ĐẾN NƠI
+                                </Text>
+                            </View>
+                        </ImageBackground>
                     </View>
                     {/* Info */}
                     <View style={styles.infoView}>
@@ -142,7 +156,12 @@ function AcceptRequestScreen(props) {
                     </View>
                     {/* Call, Exit... */}
                     <View style={styles.footerView}>
-                        <View style={{ flex: 6, flexDirection: "row" }}>
+                        <View
+                            style={{
+                                flex: 3,
+                                flexDirection: "row",
+                            }}
+                        >
                             <View style={styles.layoutIconAndText}>
                                 <MaterialIcons name="local-phone" size={50} />
                                 <Text>Gọi</Text>
@@ -152,9 +171,9 @@ function AcceptRequestScreen(props) {
                                 <Text>Hủy</Text>
                             </View>
                         </View>
-                        <View style={{ flex: 4, flexDirection: "row" }}>
+                        <View style={{ flex: 2, flexDirection: "row" }}>
                             <ButtonText
-                                textContent="ĐẾN ĐIỂM"
+                                textContent="Điểm đến"
                                 styleButton={styles.buttonGoTo}
                                 styleText={{
                                     fontWeight: "bold",
@@ -163,7 +182,7 @@ function AcceptRequestScreen(props) {
                                 }}
                             />
                             <ButtonText
-                                textContent="ĐÓN BỆNH NHÂN"
+                                textContent="Đón bệnh nhân"
                                 styleButton={styles.buttonGetPatient}
                                 gotoScreen={() =>
                                     props.navigation.navigate("PatientArrived")
@@ -209,6 +228,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     layoutIconAndText: {
+        flex: 1,
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
