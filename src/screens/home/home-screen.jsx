@@ -73,7 +73,7 @@ function HomeScreen(props) {
                         showsUserLocation={true}
                         showsMyLocationButton={true}
                         followsUserLocation={true}
-                    ></MapView>
+                    />
                 </View>
 
                 <View style={styles.rate}>
