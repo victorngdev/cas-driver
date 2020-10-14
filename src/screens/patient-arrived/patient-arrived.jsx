@@ -1,5 +1,5 @@
 import React from 'react'
-import { SafeAreaView, StyleSheet, View, Text, Linking } from 'react-native'
+import { SafeAreaView, StyleSheet, View, Text, Linking, StatusBar } from 'react-native'
 import BackgroundImage from '../../components/background-screen.component'
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';

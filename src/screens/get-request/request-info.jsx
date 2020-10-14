@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, StyleSheet, Text, View, SafeAreaView } from 'react-native';
+import { Button, StyleSheet, Text, View } from 'react-native';
 import BackgroundImage from '../../components/background-screen.component';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -9,10 +9,9 @@ import Header from '../../components/header.component';
 
 function RequestInfoScreen(props) {
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
 
             <BackgroundImage>
-
                 <Header
                     title='Yêu cầu mới từ bệnh nhân'
                     passedIcon={() =>
@@ -117,7 +116,7 @@ function RequestInfoScreen(props) {
                     </View>
                 </View>
             </BackgroundImage>
-        </SafeAreaView>
+        </View>
 
     )
 }
@@ -125,9 +124,7 @@ function RequestInfoScreen(props) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: "column",
-        backgroundColor: "white",
-        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
+        flexDirection: "column"
     },
 
     placeYouAndPatient: {
