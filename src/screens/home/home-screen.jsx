@@ -13,7 +13,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Header from "../../components/header.component";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import CountDown from "react-native-countdown-component";
 
 const HomeStack = createStackNavigator();
@@ -37,7 +37,7 @@ function HomeScreen(props) {
 
             setTimeout(() => {
                 props.navigation.navigate("RequestInfo");
-            }, 7000);
+            }, 3000);
         }
     };
 
@@ -68,26 +68,16 @@ function HomeScreen(props) {
                 <View style={styles.viewMap}>
                     <MapView
                         style={styles.map}
-                        initialRegion={{
-                            latitude: 37.78825,
-                            longitude: -122.4324,
-                            latitudeDelta: 0.0,
-                            longitudeDelta: 0.0,
-                        }}
-                    >
-                        <MapView.Marker
-                            coordinate={{
-                                latitude: 37.78825,
-                                longitude: -122.4324,
-                            }}
-                            title={"Vị trí của bạn"}
-                            description={"123 Lê Văn Việt, quận 9, TPHCM"}
-                        />
-                    </MapView>
+                        mapType={Platform.OS == "android" ? "none" : "standard"}
+                        provider={PROVIDER_GOOGLE}
+                        showsUserLocation={true}
+                        showsMyLocationButton={true}
+                        followsUserLocation={true}
+                    ></MapView>
                 </View>
 
                 <View style={styles.rate}>
-                    <Text style={styles.text}> Đánh giá</Text>
+                    <Text style={styles.text}> Đánh giá hiện tại</Text>
                     <View style={styles.starList}>
                         <Image
                             style={styles.iconStar}
