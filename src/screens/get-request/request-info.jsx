@@ -1,23 +1,16 @@
-import React from "react";
-import {
-    Button,
-    StyleSheet,
-    Text,
-    View,
-    SafeAreaView,
-    StatusBar,
-} from "react-native";
-import BackgroundImage from "../../components/background-screen.component";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import CountDown from "react-native-countdown-component";
-import Header from "../../components/header.component";
+import React from 'react';
+import { Button, StyleSheet, Text, View } from 'react-native';
+import BackgroundImage from '../../components/background-screen.component';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import CountDown from 'react-native-countdown-component';
+import Header from '../../components/header.component';
 import ButtonText from "../../components/button-text.component";
 import rem from "../../components/constant.unit";
 
 function RequestInfoScreen(props) {
     return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <BackgroundImage>
                 <Header
                     title="Yêu cầu mới từ bệnh nhân"
@@ -163,16 +156,14 @@ function RequestInfoScreen(props) {
                     </View>
                 </View>
             </BackgroundImage>
-        </SafeAreaView>
-    );
+        </View>
+    )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: "column",
-        backgroundColor: "white",
-        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+        flexDirection: "column"
     },
 
     placeYouAndPatient: {

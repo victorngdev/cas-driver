@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, ScrollView, StyleSheet, Text, TextInput, View, SafeAreaView , StatusBar} from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, TextInput, View , StatusBar} from 'react-native';
 import BackgroundImage from '../../components/background-screen.component';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Header from '../../components/header.component';
@@ -15,7 +15,7 @@ const colors = {
 function AccountScreen(props) {
   return (
 
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <BackgroundImage>
         {/* Header */}
         <Header 
@@ -233,7 +233,7 @@ function AccountScreen(props) {
           </ScrollView>
         </View>
       </BackgroundImage>
-    </SafeAreaView>
+    </View>
   )
 }
 
@@ -241,9 +241,7 @@ function AccountScreen(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "column",
-    backgroundColor: "white",
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
+    flexDirection: "column"
   },
   textInputInfo: {
     paddingLeft: 10,
