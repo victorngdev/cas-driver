@@ -1,5 +1,7 @@
-import { StyleSheet, StatusBar } from "react-native";
-import { Dimensions } from 'react-native';
+
+import { StyleSheet } from "react-native";
+import { Dimensions , StatusBar} from "react-native";
+
 
 const styles = StyleSheet.create({
     container: {
