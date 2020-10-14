@@ -1,10 +1,10 @@
-import React from "react";
-import { StyleSheet, View, ImageBackground, Text } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
-import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import ButtonText from "../../components/button-text.component";
-import Icon from "react-native-vector-icons/FontAwesome";
+import React from 'react'
+import { StyleSheet, View, ImageBackground, Text, SafeAreaView, StatusBar } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import ButtonText from '../../components/button-text.component';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 function AcceptRequestScreen(props) {
     return (
