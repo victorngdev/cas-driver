@@ -1,12 +1,13 @@
 
 import React, { useState } from 'react';
-import { View, Image, Alert } from 'react-native';
+import { View, Image, Alert, SafeAreaView } from 'react-native';
 import { Avatar, Title, Text, TouchableRipple, Switch } from 'react-native-paper';
 import BackgroundImage from '../../components/background-screen.component';
 import styles from './home-style';
 import { createStackNavigator } from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import Header from '../../components/header.component';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MapView, { Marker } from "react-native-maps";
 import CountDown from 'react-native-countdown-component';
 
@@ -40,28 +41,17 @@ function HomeScreen(props) {
 
   return (
 
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <BackgroundImage>
-
-        <View style={styles.header}>
-          <View style={styles.childHeader}>
-            <Icon name='menu' size={30} color='#a2a2db' style={{
-              width: 20, marginLeft: 10, marginTop: 20
-            }} onPress={() => props.navigation.openDrawer()} />
-            <View style={styles.headerTitle}>
-              <Text style={styles.appName}>Charity Ambulance</Text>
-            </View>
-            <View style={styles.icon}>
-              <TouchableOpacity style={styles.iconNotification} >
-                <Image style={styles.iconNoti}
-                  source={require("../../../assets/icons/notifi.png")} />
-              </TouchableOpacity>
-            </View>
-
-          </View>
-        </View>
-
-
+        <Header
+          title='Trang chủ'
+          passedIcon={() =>
+            <Icon name='menu' size={30} color='#a2a2db' style={{ width: 20 }}
+              onPress={() => props.navigation.openDrawer()}
+            />}
+        ><MaterialIcons name='notifications' size={30} color='#a2a2db' style={{ marginLeft: 'auto', marginRight: 10 }}
+          onPress={() => props.navigation.openDrawer()}
+          /></Header>
 
         <View style={styles.viewMap}>
           <MapView style={styles.map}
@@ -114,13 +104,9 @@ function HomeScreen(props) {
             <Text style={styles.text}>{text}</Text>
           </View>
         </View>
-
-
-
-
-
       </BackgroundImage>
-    </View>
+    </SafeAreaView >
+
   )
 }
 

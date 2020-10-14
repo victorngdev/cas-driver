@@ -10,7 +10,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 function AcceptRequestScreen(props) {
 
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView style={styles.container}>
             <ScrollView
                 contentContainerStyle={{
                     flex: 1,
@@ -107,8 +107,8 @@ function AcceptRequestScreen(props) {
                                     fontWeight: 'bold',
                                     color: 'white',
                                     fontSize: 17
-                                }} 
-                                />
+                                }}
+                            />
                         </View>
                     </View>
                 </ImageBackground>
@@ -121,7 +121,9 @@ function AcceptRequestScreen(props) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: "column"
+        flexDirection: "column",
+        backgroundColor: "white",
+        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
     },
     image: {
         flex: 1,

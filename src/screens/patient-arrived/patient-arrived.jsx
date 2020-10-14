@@ -8,7 +8,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 function PatientArrivedScreen() {
     return (
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView style={styles.container}>
             <ScrollView
                 contentContainerStyle={{
                     flex: 1,
@@ -102,6 +102,12 @@ function PatientArrivedScreen() {
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        flexDirection: 'column',
+        backgroundColor: "white",
+        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
+    },
     headerView: {
         flex: 2,
         flexDirection: 'row'

@@ -1,34 +1,33 @@
 import React from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View, SafeAreaView } from 'react-native';
 import BackgroundImage from '../../components/background-screen.component';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import CountDown from 'react-native-countdown-component';
+import Header from '../../components/header.component';
+
 
 function RequestInfoScreen(props) {
     return (
-        <View style={styles.container}>
-            <BackgroundImage>
-                <View style={{
-                    flexDirection: 'row',
-                    marginTop: 40,
-                    alignItems: 'center',
-                    paddingHorizontal: 20
-                }}>
-                    <MaterialCommunityIcons name='chevron-left' size={30} color='#a2a2db' style={{
-                        width: 20
-                    }} onPress={() => props.navigation.navigate('Home')} />
+        <SafeAreaView style={styles.container}>
 
-                    <Text style={{
+            <BackgroundImage>
+
+                <Header
+                    title='Yêu cầu mới từ bệnh nhân'
+                    passedIcon={() =>
+                        <MaterialCommunityIcons name='chevron-left' size={50} color='#a2a2db' style={{ }}
+                            onPress={() => props.navigation.openDrawer()}
+                        />}
+                    styleText={{
                         fontSize: 18,
-                        fontWeight: 'bold',
                         color: '#522289',
                         marginLeft: 20
-                    }}>Yêu cầu mới từ bệnh nhân</Text>
-                </View>
+                    }}
+                />
                 {/* Điểm đến */}
                 <View style={{
-                    flex: 1,
+                    flex: 2,
                     flexDirection: 'row',
                     alignItems: "center",
                     paddingHorizontal: 10,
@@ -55,7 +54,7 @@ function RequestInfoScreen(props) {
 
                 {/* Vị trí bạn & bệnh nhân */}
                 <View style={{
-                    flex: 2,
+                    flex: 4,
                     flexDirection: 'column',
                     backgroundColor: 'rgba(211, 219, 240, 0.5)',
                     marginTop: 10,
@@ -96,29 +95,30 @@ function RequestInfoScreen(props) {
                     <CountDown
                         until={10}
                         digitStyle={styles.timeCountdown}
-                        onFinish={() => {}}
+                        onFinish={() => { }}
                         size={20}
                         timeToShow={['S']}
-                        timeLabels={{s: 'giây'}}
+                        timeLabels={{ s: 'giây' }}
                     />
                     <View style={{
                         flexDirection: 'row',
                         justifyContent: 'center',
                         paddingVertical: 20
                     }}>
-                        <Button 
+                        <Button
                             title='Chấp nhận'
-                            onPress={() => {props.navigation.navigate('AcceptRequest')}}
+                            onPress={() => { props.navigation.navigate('AcceptRequest') }}
                         />
-                        <Button 
+                        <Button
                             title='Hủy'
                             color='red'
-                            onPress={() => {}}    
+                            onPress={() => { }}
                         />
                     </View>
                 </View>
             </BackgroundImage>
-        </View>
+        </SafeAreaView>
+
     )
 }
 
@@ -126,6 +126,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: "column",
+        backgroundColor: "white",
+        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0
     },
 
     placeYouAndPatient: {
