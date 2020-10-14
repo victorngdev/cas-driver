@@ -1,7 +1,5 @@
 import { StyleSheet } from "react-native";
-import rem from "../../components/constant.unit";
-import { Dimensions } from "react-native";
-import { absoluteFill } from "react-native-extended-stylesheet";
+import { Dimensions , StatusBar} from "react-native";
 
 const styles = StyleSheet.create({
     container: {
