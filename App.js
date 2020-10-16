@@ -20,13 +20,17 @@ import HistoryScreen from "./src/screens/history/history";
 import HistoryDetailScreen from "./src/screens/history-detail/history-detail";
 import AcceptRequestScreen from "./src/screens/accept-request/accept-request";
 import PatientArrivedScreen from "./src/screens/patient-arrived/patient-arrived";
+import RegisterScreen from "./src/screens/register-screen/register-screen";
+import OtpScreen from "./src/screens/otp/otp.component";
+import ResetPassScreen from "./src/screens/reset-password-screen/reset-password-screen";
+import GoogleMapScreen from "./src/screens/google-map/google-map";
 
 const Drawer = createDrawerNavigator();
 
 export function App() {
     return (
         <NavigationContainer>
-            <Drawer.Navigator initialRouteName="RequestInfo" drawerContent={props => <DrawerContent {...props} />}>
+            <Drawer.Navigator initialRouteName="Login" drawerContent={props => <DrawerContent {...props} />}>
                 <Drawer.Screen name="Home" component={HomeScreen} />
                 <Drawer.Screen name="Login" component={LoginScreen} />
                 <Drawer.Screen name="AccountInfo" component={AccountScreen} />
@@ -34,9 +38,13 @@ export function App() {
                 <Drawer.Screen name="AcceptRequest" component={AcceptRequestScreen} />
                 <Drawer.Screen name="History" component={HistoryScreen} />
                 <Drawer.Screen name="RegisterCar" component={RegisterCarScreen} />
+                <Drawer.Screen name="Register" component={RegisterScreen} />
+                <Drawer.Screen name="Otp" component={OtpScreen} />
+                <Drawer.Screen name="ResetPass" component={ResetPassScreen} />
                 <Drawer.Screen name="RegisterCarImage" component={RegisterCarImageScreen} />
                 <Drawer.Screen name="HistoryDetail" component={HistoryDetailScreen} />
                 <Drawer.Screen name="PatientArrived" component={PatientArrivedScreen} />
+                <Drawer.Screen name="GoogleMap" component={GoogleMapScreen} />
             </Drawer.Navigator>
         </NavigationContainer>
     );

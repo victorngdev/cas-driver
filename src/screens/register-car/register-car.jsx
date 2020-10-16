@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, TextInput } from 'react-native';
 import BackgroundImage from '../../components/background-screen.component';
 import ButtonText from '../../components/button-text.component';
-
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 
 
@@ -10,6 +10,14 @@ function RegisterCarScreen(props) {
   return (
     <View style={styles.container}>
       <BackgroundImage>
+        <View style={{
+          flexDirection: 'row',
+          marginTop: 40,
+          alignItems: 'center',
+          paddingHorizontal: 10
+        }}>
+          <Icon name='menu' size={30} color='#a2a2db'   style={{ width: 20 }} onPress={() => props.navigation.openDrawer()} />
+          </View>
         <View style={styles.header}>
           <Text style={styles.headerTitle}>Đăng kí xe</Text>
           <Text style={styles.securityText}>Thông tin cá nhân sẽ được bảo mật theo chính sách, quy định của nhà nước</Text>
@@ -47,7 +55,7 @@ const styles = StyleSheet.create({
 
   },
   header: {
-    marginTop: 80,
+    marginTop: 30,
     alignContent: 'center',
   },
   headerTitle: {
