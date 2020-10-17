@@ -305,9 +305,7 @@ class AcceptRequestScreen extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: "column",
-        backgroundColor: "white",
-        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+        flexDirection: "column"
     },
     image: {
         flex: 1,

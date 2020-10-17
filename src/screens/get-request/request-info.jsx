@@ -1,33 +1,29 @@
 import React from 'react';
+
 import { Button, StyleSheet, Text, View, Linking } from 'react-native';
 import BackgroundImage from '../../components/background-screen.component';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import CountDown from 'react-native-countdown-component';
 import Header from '../../components/header.component';
-import ButtonText from "../../components/button-text.component";
-import rem from "../../components/constant.unit";
+import { Button } from 'react-native-paper';
 
 function RequestInfoScreen(props) {
     return (
         <View style={styles.container}>
             <BackgroundImage>
                 <Header
-                    title="Yêu cầu mới từ bệnh nhân"
-                    passedIcon={() => (
-                        <MaterialCommunityIcons
-                            name="chevron-left"
-                            size={50}
-                            color="#a2a2db"
-                            style={{}}
+                    title='Yêu cầu mới từ bệnh nhân'
+                    passedIcon={() =>
+                        <MaterialCommunityIcons name='chevron-left' size={50} color='#a2a2db' style={{}}
+
                             onPress={() => props.navigation.openDrawer()}
-                        />
-                    )}
+                        />}
                     styleText={{
-                        fontSize: 18,
-                        color: "#522289",
-                        marginLeft: 20,
-                    }}
+                    fontSize: 18,
+                    color: "#522289",
+                    marginLeft: 20,
+                }}
                 />
                 {/* Điểm đến */}
                 <View
@@ -127,35 +123,29 @@ function RequestInfoScreen(props) {
                     <CountDown
                         until={10}
                         digitStyle={styles.timeCountdown}
-                        onFinish={() => {}}
+                        onFinish={() => { }}
                         size={20}
                         timeToShow={["S"]}
                         timeLabels={{ s: "giây" }}
                     />
-                    <View
-                        style={{
-                            flexDirection: "row",
-                            justifyContent: "space-around",
-                            marginHorizontal: 20,
-                            paddingVertical: 20,
-                        }}
-                    >
-                        <ButtonText
-                            textContent="Chấp nhận"
-                            gotoScreen={() => {
-                                props.navigation.navigate("AcceptRequest");
-                            }}
-                            styleButton={styles.button_accept}
-                            styleText={styles.button_accept_content}
-                        />
-                        <ButtonText
-                            textContent="Hủy"
-                            gotoScreen={() => {
-                                props.navigation.navigate("Home");
-                            }}
-                            styleButton={styles.button_cancel}
-                            styleText={styles.button_cancel_content}
-                        />
+                    <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        paddingVertical: 20
+                    }}>
+
+                        <Button mode="contained" color='#1c942c' labelStyle={{ fontSize: 17, fontWeight: 'bold' }} compact={true}
+                            onPress={() => { props.navigation.navigate('AcceptRequest') }}
+                            style={{ marginRight: 5 }}
+                        >
+                            CHẤP NHẬN
+                            </Button>
+                        <Button mode="contained" color='red'
+                            labelStyle={{ fontSize: 17, fontWeight: 'bold' }} compact={true}
+                            style={{ marginLeft: 5 }}
+                        >
+                            HỦY
+                        </Button>
                     </View>
                 </View>
             </BackgroundImage>
@@ -180,22 +170,7 @@ const styles = StyleSheet.create({
         borderRadius: 96,
         backgroundColor: "white",
         marginTop: 20,
-    },
-    button_accept: {
-        backgroundColor: "green",
-        width: 10 * rem,
-    },
-    button_accept_content: {
-        color: "#FFF",
-        fontFamily: "Nunito_400Regular",
-    },
-    button_cancel: {
-        width: 10 * rem,
-    },
-    button_cancel_content: {
-        color: "#000000",
-        fontFamily: "Nunito_400Regular",
-    },
+    }
 });
 
 export default RequestInfoScreen;

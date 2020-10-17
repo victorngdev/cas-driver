@@ -1,8 +1,9 @@
 import React from 'react';
-import { Image, ScrollView, StyleSheet, Text, TextInput, View , StatusBar} from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, TextInput, View, StatusBar } from 'react-native';
 import BackgroundImage from '../../components/background-screen.component';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Header from '../../components/header.component';
+import { Button } from 'react-native-paper';
 
 const colors = {
   themeColor: '#4263ec',
@@ -18,20 +19,22 @@ function AccountScreen(props) {
     <View style={styles.container}>
       <BackgroundImage>
         {/* Header */}
-        <Header 
-          title='Thông tin cá nhân'
-          passedIcon={() => 
-            <Icon name='menu' size={30} color='#a2a2db' style={{width: 20}}
-              onPress={() => props.navigation.openDrawer()} 
-            />}
-        />
+        <View style={{ flex: 1, marginTop: 10 }}>
+          <Header
+            title='Thông tin cá nhân'
+            passedIcon={() =>
+              <Icon name='menu' size={30} color='#a2a2db' style={{ width: 20 }}
+                onPress={() => props.navigation.openDrawer()}
+              />}
+          />
+        </View>
 
         <View style={{
-          paddingHorizontal: 40,
-          marginTop: 18
+          flex: 1
         }}>
           <Text style={{
             fontFamily: 'Roboto_Regular',
+            paddingHorizontal: 10,
             fontSize: 15,
             color: '#a2a2db',
             textAlign: 'center'
@@ -39,9 +42,7 @@ function AccountScreen(props) {
             Những thông tin cá nhân sẽ được bảo mật theo chính sách quy định của Nhà Nước
           </Text>
         </View>
-
-        {/* Edit Information */}
-        <View>
+        <View style={{ flex: 4.5 }}>
           <View>
             <Text style={{
               flexDirection: 'row',
@@ -82,31 +83,22 @@ function AccountScreen(props) {
             />
           </View>
         </View>
-
-        {/* Image Confirm */}
-        <View style={{
-          flexDirection: 'column',
-          marginTop: 10,
-          paddingHorizontal: 20,
-          textAlign: 'center'
-        }}>
+        <View style={{ flex: 1, alignItems: 'center' }}>
           <Text style={{
             fontSize: 20,
             fontWeight: 'bold',
-            color: '#522289',
-            marginLeft: 50
+            color: '#522289'
           }}>Hình ảnh xác thực</Text>
-
+        </View>
+        <View style={{ flex: 4 }}>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
-            style={{ marginHorizontal: -28, marginTop: 10 }}
+            style={{ marginHorizontal: -28 }}
           >
-
-            {/* Component Image Confirm */}
             <View style={{
               backgroundColor: '#FEFEFE',
-              height: 200,
+              height: 170,
               width: 190,
               borderRadius: 15,
               padding: 5
@@ -134,11 +126,9 @@ function AccountScreen(props) {
                   </Text>
               </View>
             </View>
-
-            {/* Component Image Confirm */}
             <View style={{
               backgroundColor: '#FEFEFE',
-              height: 200,
+              height: 170,
               width: 190,
               borderRadius: 15,
               padding: 5
@@ -166,11 +156,9 @@ function AccountScreen(props) {
                   </Text>
               </View>
             </View>
-
-            {/* Component Image Confirm */}
             <View style={{
               backgroundColor: '#FEFEFE',
-              height: 200,
+              height: 170,
               width: 190,
               borderRadius: 15,
               padding: 5
@@ -198,11 +186,9 @@ function AccountScreen(props) {
                   </Text>
               </View>
             </View>
-
-            {/* Component Image Confirm */}
             <View style={{
               backgroundColor: '#FEFEFE',
-              height: 200,
+              height: 170,
               width: 190,
               borderRadius: 15,
               padding: 5
@@ -232,6 +218,11 @@ function AccountScreen(props) {
             </View>
           </ScrollView>
         </View>
+        <View style={{ flex: 1, paddingHorizontal: 10}}>
+          <Button mode="contained" color='green' labelStyle={{fontSize: 17, fontWeight: 'bold'}}>
+            CẬP NHẬP
+          </Button>
+        </View>
       </BackgroundImage>
     </View>
   )
@@ -251,6 +242,20 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingVertical: 10,
     fontSize: 15
+  },
+  policy: {
+    flex: 1,
+    paddingHorizontal: 40,
+    marginTop: 18
+  },
+  editInfo: {
+    flex: 2
+  },
+  imageConfirm: {
+    flexDirection: 'column',
+    marginTop: 10,
+    paddingHorizontal: 20,
+    textAlign: 'center'
   }
 })
 
