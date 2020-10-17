@@ -42,47 +42,52 @@ function AccountScreen(props) {
             Những thông tin cá nhân sẽ được bảo mật theo chính sách quy định của Nhà Nước
           </Text>
         </View>
+
         <View style={{ flex: 4.5 }}>
-          <View>
-            <Text style={{
-              flexDirection: 'row',
-              marginHorizontal: 16,
-              marginVertical: 4,
-              borderRadius: 20,
-              fontSize: 15
-            }}>Họ và tên:</Text>
-            <TextInput
-              placeholder='Lê Quang Huy'
-              style={styles.textInputInfo}
-            />
-          </View>
-          <View>
-            <Text style={{
-              flexDirection: 'row',
-              marginHorizontal: 16,
-              marginVertical: 4,
-              borderRadius: 20,
-              fontSize: 15
-            }}>Số điện thoại:</Text>
-            <TextInput
-              placeholder='0359680538'
-              style={styles.textInputInfo}
-            />
-          </View>
-          <View>
-            <Text style={{
-              flexDirection: 'row',
-              marginHorizontal: 16,
-              marginVertical: 4,
-              borderRadius: 20,
-              fontSize: 15
-            }}>Biển số xe:</Text>
-            <TextInput
-              placeholder='71 - B1 963.32'
-              style={styles.textInputInfo}
-            />
-          </View>
+          <ScrollView style={styles.scrollViewInfoText}>
+            <View>
+              <Text style={{
+                flexDirection: 'row',
+                marginHorizontal: 16,
+                marginVertical: 4,
+                borderRadius: 20,
+                fontSize: 15
+              }}>Họ và tên:</Text>
+              <TextInput
+                placeholder='Lê Quang Huy'
+                style={styles.textInputInfo}
+              />
+            </View>
+            <View>
+              <Text style={{
+                flexDirection: 'row',
+                marginHorizontal: 16,
+                marginVertical: 4,
+                borderRadius: 20,
+                fontSize: 15
+              }}>Số điện thoại:</Text>
+              <TextInput
+                placeholder='0359680538'
+                style={styles.textInputInfo}
+              />
+            </View>
+            <View>
+              <Text style={{
+                flexDirection: 'row',
+                marginHorizontal: 16,
+                marginVertical: 4,
+                borderRadius: 20,
+                fontSize: 15
+              }}>Biển số xe:</Text>
+              <TextInput
+                placeholder='71 - B1 963.32'
+                style={styles.textInputInfo}
+              />
+            </View>
+
+          </ScrollView>
         </View>
+
         <View style={{ flex: 1, alignItems: 'center' }}>
           <Text style={{
             fontSize: 20,
@@ -218,8 +223,8 @@ function AccountScreen(props) {
             </View>
           </ScrollView>
         </View>
-        <View style={{ flex: 1, paddingHorizontal: 10}}>
-          <Button mode="contained" color='green' labelStyle={{fontSize: 17, fontWeight: 'bold'}}>
+        <View style={{ flex: 1, paddingHorizontal: 10 }}>
+          <Button mode="contained" color='green' labelStyle={{ fontSize: 17, fontWeight: 'bold' }}>
             CẬP NHẬP
           </Button>
         </View>
@@ -256,6 +261,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
     paddingHorizontal: 20,
     textAlign: 'center'
+  },
+  scrollViewInfoText:{
+    marginTop: 5
   }
 })
 

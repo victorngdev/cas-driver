@@ -1,6 +1,6 @@
 import React from 'react';
-
 import { StyleSheet, Text, View, Linking } from 'react-native';
+
 import BackgroundImage from '../../components/background-screen.component';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
