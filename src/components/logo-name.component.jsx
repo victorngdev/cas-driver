@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
         borderRadius: 18
     },
     app_name: {
-        fontFamily: "Roboto_900Black",
+        fontFamily: "Texgyreadventor-bold",
         fontSize: 30,
         marginTop: 10,
         color: "#FFFFFF"

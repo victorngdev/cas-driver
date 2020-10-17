@@ -1,4 +1,5 @@
 import React from "react";
+import * as Font from "expo-font";
 
 import { AppLoading } from "expo";
 import { useFonts, Roboto_500Medium, Roboto_900Black, Roboto_700Bold } from "@expo-google-fonts/roboto";
@@ -27,41 +28,43 @@ import GoogleMapScreen from "./src/screens/google-map/google-map";
 
 const Drawer = createDrawerNavigator();
 
-export function App() {
-    return (
-        <NavigationContainer>
-            <Drawer.Navigator initialRouteName="Login" drawerContent={props => <DrawerContent {...props} />}>
-                <Drawer.Screen name="Home" component={HomeScreen} />
-                <Drawer.Screen name="Login" component={LoginScreen} />
-                <Drawer.Screen name="AccountInfo" component={AccountScreen} />
-                <Drawer.Screen name="RequestInfo" component={RequestInfoScreen} />
-                <Drawer.Screen name="AcceptRequest" component={AcceptRequestScreen} />
-                <Drawer.Screen name="History" component={HistoryScreen} />
-                <Drawer.Screen name="RegisterCar" component={RegisterCarScreen} />
-                <Drawer.Screen name="Register" component={RegisterScreen} />
-                <Drawer.Screen name="Otp" component={OtpScreen} />
-                <Drawer.Screen name="ResetPass" component={ResetPassScreen} />
-                <Drawer.Screen name="RegisterCarImage" component={RegisterCarImageScreen} />
-                <Drawer.Screen name="HistoryDetail" component={HistoryDetailScreen} />
-                <Drawer.Screen name="PatientArrived" component={PatientArrivedScreen} />
-                <Drawer.Screen name="GoogleMap" component={GoogleMapScreen} />
-            </Drawer.Navigator>
-        </NavigationContainer>
-    );
+class App extends React.Component {
+    state = {
+        assetsLoaded: false
+    };
+
+    async componentDidMount() {
+        await Font.loadAsync({
+            "Texgyreadventor-bold": require("./assets/fonts/texgyreadventor-bold.otf"),
+            "Texgyreadventor-regular": require("./assets/fonts/texgyreadventor-regular.otf")
+        });
+        this.setState({ assetsLoaded: true });
+    }
+
+    render() {
+        return this.state.assetsLoaded ? (
+            <NavigationContainer>
+                <Drawer.Navigator initialRouteName="Login" drawerContent={props => <DrawerContent {...props} />}>
+                    <Drawer.Screen name="Home" component={HomeScreen} />
+                    <Drawer.Screen name="Login" component={LoginScreen} />
+                    <Drawer.Screen name="AccountInfo" component={AccountScreen} />
+                    <Drawer.Screen name="RequestInfo" component={RequestInfoScreen} />
+                    <Drawer.Screen name="AcceptRequest" component={AcceptRequestScreen} />
+                    <Drawer.Screen name="History" component={HistoryScreen} />
+                    <Drawer.Screen name="RegisterCar" component={RegisterCarScreen} />
+                    <Drawer.Screen name="Register" component={RegisterScreen} />
+                    <Drawer.Screen name="Otp" component={OtpScreen} />
+                    <Drawer.Screen name="ResetPass" component={ResetPassScreen} />
+                    <Drawer.Screen name="RegisterCarImage" component={RegisterCarImageScreen} />
+                    <Drawer.Screen name="HistoryDetail" component={HistoryDetailScreen} />
+                    <Drawer.Screen name="PatientArrived" component={PatientArrivedScreen} />
+                    <Drawer.Screen name="GoogleMap" component={GoogleMapScreen} />
+                </Drawer.Navigator>
+            </NavigationContainer>
+        ) : (
+            <AppLoading />
+        );
+    }
 }
 
-export default () => {
-    let [fontsLoaded] = useFonts({
-        Roboto_500Medium,
-        Roboto_900Black,
-        Roboto_700Bold,
-        Nunito_400Regular,
-        Nunito_800ExtraBold,
-        Roboto_Regular
-    });
-    if (!fontsLoaded) {
-        return <AppLoading />;
-    }
-    // from the custom App we return the component we assigned to AppContainer.
-    return <App />;
-};
+export default App;

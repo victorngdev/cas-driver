@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Linking, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 
 const TextLinking = props => {
     return (
@@ -21,13 +21,13 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 16,
-        fontFamily: "Roboto_500Medium",
+        fontFamily: "Texgyreadventor-regular",
         color: "#FFF",
         marginRight: 7
     },
     link: {
-        fontSize: 16,
-        fontFamily: "Roboto_500Medium",
+        fontSize: 14,
+        fontFamily: "Texgyreadventor-regular",
         textDecorationLine: "underline",
         color: "#0038FD"
     }

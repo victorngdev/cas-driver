@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     },
     text_input: {
         fontSize: 16,
-        fontFamily: "Roboto_500Medium",
+        fontFamily: "Texgyreadventor-regular",
         color: "#FFF",
         marginLeft: 7,
         width: 15 * rem

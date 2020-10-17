@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     },
     text: {
+        fontFamily: "Texgyreadventor-regular",
         fontSize: 20,
         color: "red"
     }
