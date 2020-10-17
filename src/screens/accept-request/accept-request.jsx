@@ -1,17 +1,14 @@
+
 import React, { Component } from "react";
 import {
     StyleSheet,
     View,
     ImageBackground,
     Text,
-    SafeAreaView,
-    StatusBar,
     TouchableOpacity,
     Linking,
     Modal,
-    Dimensions,
-    Button,
-    ButtonGroup
+    Dimensions
 
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -199,23 +196,35 @@ class AcceptRequestScreen extends React.Component {
                                     </TouchableOpacity>
                                     <Text>Hủy</Text>
 
-                                    <Modal transparent={true} visible={this.state.show}>
+                                    <Modal
+                                        animationType={"slide"}
+                                        transparent={true}
+                                        visible={this.state.show}
+                                    >
+                                        {/* Reason Cancel  */}
                                         <View style={{
-                                            backgroundColor: "#e9eff8",
-                                            marginTop: 100,
-                                            marginLeft: 30,
-                                            shadowRadius: 10,
-                                            width: 300,
-                                            height: 300,
-                                            borderColor: 'red'
-                                        }} >
-                                            {/* Reason Cancel  */}
-                                            <View style={styles.reasonCancel}>
-                                                <View style={styles.popupTitle}>
-                                                    <Text style={styles.text}>Lý do huỷ chuyến xe này</Text>
+                                            flex: 1,
+                                            flexDirection: 'column',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            backgroundColor: 'rgba(0,0,0,0.7)'
+                                        }}>
+                                            <View style={{
+                                                flex: 0.7,
+                                                borderRadius: 20,
+                                                justifyContent: 'center',
+                                                paddingHorizontal: 10,
+                                                flexDirection: 'column',
+                                                backgroundColor: '#c4def6'
+                                            }}>
+                                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                                    <Text style={{
+                                                        color: "#000",
+                                                        fontSize: 20,
+                                                        fontFamily: "Roboto_500Medium"
+                                                    }}>Lý do huỷ chuyến xe này</Text>
                                                 </View>
-
-                                                <View style={styles.rdReason}>
+                                                <View style={{ flex: 3 }}>
                                                     <RadioButton.Group onValueChange={value => this.setState({ value })}
                                                         value={this.state.value}>
                                                         <View style={styles.option}>
@@ -237,35 +246,39 @@ class AcceptRequestScreen extends React.Component {
                                                         </View>
                                                     </RadioButton.Group>
                                                 </View>
-                                                <TextInput placeholder='Khác' style={styles.OtherReasonCancel} />
-
-
-
-                                                <View style={styles.confirm}>
-                                                    <TouchableOpacity onPress={() => { this.setState({ show: false }) }}>
-                                                        <ButtonText textContent="Thoát"
-                                                            styleButton={styles.buttonNotCancel}
-                                                            styleText={{
-                                                                fontWeight: "bold",
-                                                                color: "blue",
-                                                                fontSize: 15,
-
-                                                            }} />
-                                                    </TouchableOpacity>
-                                                    <TouchableOpacity onPress={() => { this.setState({ show: false }) }}>
-                                                        <ButtonText textContent="Huỷ"
-                                                            styleButton={styles.buttonToCancel}
-                                                            styleText={{
-                                                                fontWeight: "bold",
-                                                                color: "#fff",
-                                                                fontSize: 15,
-                                                            }} />
-                                                    </TouchableOpacity>
+                                                <View style={{ flex: 2 }}>
+                                                    <TextInput placeholder='Lí do khác...' style={{
+                                                        backgroundColor: '#fff',
+                                                        height: screen.height * 0.2,
+                                                        borderRadius: 10
+                                                    }} />
                                                 </View>
+                                                <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                                                    <View style={{ flex: 1 }}>
+                                                        <TouchableOpacity onPress={() => { this.setState({ show: false }) }}>
+                                                            <ButtonText textContent="Đồng ý"
+                                                                styleButton={styles.buttonAccept}
+                                                                styleText={{
+                                                                    fontWeight: "bold",
+                                                                    color: "white",
+                                                                    fontSize: 15,
 
+                                                                }} />
+                                                        </TouchableOpacity>
+                                                    </View>
+                                                    <View style={{ flex: 1 }}>
+                                                        <TouchableOpacity onPress={() => { this.setState({ show: false }) }}>
+                                                            <ButtonText textContent="Hủy"
+                                                                styleButton={styles.buttonToCancel}
+                                                                styleText={{
+                                                                    fontWeight: "bold",
+                                                                    color: "white",
+                                                                    fontSize: 15,
+                                                                }} />
+                                                        </TouchableOpacity>
+                                                    </View>
+                                                </View>
                                             </View>
-
-
                                         </View>
                                     </Modal>
 
@@ -305,9 +318,7 @@ class AcceptRequestScreen extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: "column",
-        backgroundColor: "white",
-        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+        flexDirection: "column"
     },
     image: {
         flex: 1,
@@ -342,8 +353,13 @@ const styles = StyleSheet.create({
     },
     buttonToCancel: {
         width: 80,
+        borderRadius: 8,
+        backgroundColor: "red",
+    },
+    buttonAccept: {
+        width: 80,
+        borderRadius: 8,
         backgroundColor: "green",
-        marginLeft: 20,
     },
     buttonGoTo: {
         width: 100,
@@ -351,7 +367,6 @@ const styles = StyleSheet.create({
     },
     buttonNotCancel: {
         width: 80,
-        marginHorizontal: 40
     },
     text: {
         color: "#000",
@@ -364,20 +379,6 @@ const styles = StyleSheet.create({
     },
     rdReason: {
         marginTop: 10
-    },
-    confirm: {
-        marginTop: 0,
-        flexDirection: 'row'
-    }
-    , OtherReasonCancel: {
-
-        backgroundColor: '#fff',
-        height: 35,
-        borderRadius: 10
-    },
-    popupTitle: {
-        height: 35,
-        backgroundColor: '#c4def6',
     }
 });
 
