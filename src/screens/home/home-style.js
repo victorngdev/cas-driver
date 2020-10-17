@@ -1,106 +1,176 @@
-
 import { StyleSheet, StatusBar } from "react-native";
-import { Dimensions } from "react-native";
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: "column",
-        backgroundColor: "white",
+        backgroundColor: "#fff",
         paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-    },
-    header: {
-        flex: 1,
-        flexDirection: "row",
-        marginTop: 20,
-    },
-    childHeader: {
-        flexDirection: "row",
-        flex: 1,
-        marginTop: 10,
-    },
-    headerTitle: {
-        flex: 5,
-    },
-    appName: {
-        fontFamily: "Roboto_900Black",
-        fontSize: 25,
-        marginLeft: "10%",
-        marginTop: 18,
-        color: "#522289",
-    },
-    iconNotification: {
-        borderRadius:
-            Math.round(
-                Dimensions.get("window").width + Dimensions.get("window").height
-            ) / 2,
-        width: 40,
-        height: 40,
-        backgroundColor: "#fff",
-        marginTop: 18,
-        marginLeft: "20%",
-        backgroundColor: "#fff",
-    },
-    icon: {
-        flex: 1,
-    },
-    iconNoti: {
-        borderRadius:
-            Math.round(
-                Dimensions.get("window").width + Dimensions.get("window").height
-            ) / 2,
-        width: 40,
-        height: 40,
+        position: "relative"
     },
     map: {
-        marginVertical: 5,
-        marginHorizontal: 10,
-        flex: 5.5,
         width: "100%",
-        height: 380,
+        height: "75%"
     },
-    viewMap: {
-        flex: 4,
-        alignItems: "center",
+    modal: {
+        width: "100%",
+        height: "100%",
+        position: "absolute",
         justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#000",
+        opacity: 0,
+        zIndex: -1
     },
-    rate: {
-        flex: 1,
-        width: "100%",
-        marginTop: "5%",
-        marginHorizontal: 10,
+    modalContent: {
+        width: "90%",
+        height: "90%",
+        backgroundColor: "#fff",
+        alignItems: "center",
+        borderRadius: 10,
+        paddingVertical: 5
     },
-    starList: {
+    groupTitle: {
+        display: "flex",
         flexDirection: "row",
-        width: "100%",
-        height: 40,
+        alignItems: "center"
     },
-    iconStar: {
-        marginHorizontal: 5,
-        width: 30,
-        height: 30,
-    },
-    text: {
+    modalTitle: {
+        fontFamily: "Texgyreadventor-bold",
         color: "#000",
-        fontSize: 17,
-        fontFamily: "Roboto_500Medium",
+        fontSize: 16,
+        textTransform: "uppercase"
+    },
+    requestType: {
+        fontFamily: "Texgyreadventor-bold",
+        color: "#00960F",
+        borderColor: "#00960F",
+        borderWidth: 1,
+        paddingVertical: 2,
+        paddingHorizontal: 5,
+        borderRadius: 15,
+        fontSize: 10,
+        textTransform: "uppercase",
+        marginLeft: 10
+    },
+    range: {
+        fontFamily: "Texgyreadventor-regular",
+        color: "#000",
+        fontSize: 10,
+        marginLeft: 10,
+        borderWidth: 1,
+        borderRadius: 15,
+        paddingVertical: 2,
+        paddingHorizontal: 5
+    },
+    requestDetails: {
+        width: "85%",
+        marginVertical: 5
+    },
+    requesterInfo: {
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        borderRadius: 10,
+        borderColor: "#444",
+        borderWidth: 0.25,
+        marginVertical: 2
+    },
+    itemInfo: {
+        marginVertical: 2
+    },
+    itemLabel: {
+        fontFamily: "Texgyreadventor-regular",
+        fontSize: 12,
+        color: "#000"
+    },
+    itemValue: {
+        fontFamily: "Texgyreadventor-bold",
+        fontSize: 13,
+        color: "#000"
+    },
+    groupAction: {
+        width: "90%",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-around",
+        marginVertical: 10
+    },
+    action: {
+        fontFamily: "Texgyreadventor-regular",
+        fontSize: 15,
+        color: "#000",
+        borderColor: "#00960F",
+        borderWidth: 1,
+        borderRadius: 25,
+        color: "#00960F",
+        paddingVertical: 5,
+        paddingHorizontal: 15
+    },
+    reject: {
+        color: "#ff0000",
+        borderColor: "#ff0000"
+    },
+    finish: {
+        marginTop: 20,
+        paddingVertical: 8,
+        paddingHorizontal: 30
+    },
+    counter: {
+        fontFamily: "Texgyreadventor-bold"
+    },
+    transportationContainer: {
+        flex: 1,
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    transportation: {
+        width: "85%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    groupContact: {
+        width: "80%",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginVertical: 5
+    },
+    optionContainer: {
+        flex: 1,
+        paddingVertical: 20
+    },
+    option: {
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center"
+    },
+    optionValue: {
+        fontFamily: "Texgyreadventor-regular",
+        fontSize: 14,
+        color: "#444"
+    },
+    optionOther: {
+        paddingVertical: 7,
+        paddingHorizontal: 15,
+        borderWidth: 0.5,
+        borderRadius: 25,
         marginTop: 10,
+        fontFamily: "Texgyreadventor-regular",
+        fontSize: 14
     },
-    status: {
-        flex: 1,
-        width: "100%",
+    requestStatus: {
+        fontFamily: "Texgyreadventor-bold",
+        fontSize: 18
     },
-    statusText: {
-        flex: 1,
-        alignSelf: "center",
-        color: "#000",
-        fontSize: 17,
-        fontFamily: "Roboto_500Medium",
-    },
-    preference: {
-        flex: 0.5,
-        alignSelf: "center",
-    },
+    message: {
+        fontFamily: "Texgyreadventor-regular",
+        fontSize: 14,
+        color: "#444",
+        marginVertical: 10
+    }
 });
 
 export default styles;

@@ -22,23 +22,23 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         width: "80%",
         borderRadius: 60,
-        marginBottom: 15,
+        marginBottom: 15
     },
     bgr_image: {
         backgroundColor: "#FFF",
         padding: 13,
-        borderRadius: 70,
+        borderRadius: 70
     },
     image: {
         width: 16,
-        height: 16,
+        height: 16
     },
     text_input: {
         fontSize: 16,
-        fontFamily: "Roboto_500Medium",
+        fontFamily: "Texgyreadventor-regular",
         color: "#FFF",
         marginLeft: 7,
-        width: 15 * rem,
-    },
+        width: 15 * rem
+    }
 });
 export default TextInputIcon;

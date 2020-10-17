@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
 
-const Header = (props) => {
+const Header = props => {
     const Icon = props.passedIcon;
     const title = props.title;
 
@@ -26,15 +26,16 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "row",
         alignItems: "center",
+        justifyContent: "center",
         marginLeft: 10,
         marginTop: 10
     },
     text: {
         fontSize: 20,
-        fontWeight: "bold",
+        fontFamily: "Texgyreadventor-bold",
         color: "#522289",
-        marginLeft: 50,
-    },
+        marginLeft: 50
+    }
 });
 
 export default Header;
