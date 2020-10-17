@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+
+import { StyleSheet, Text, View, Linking } from 'react-native';
 import BackgroundImage from '../../components/background-screen.component';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -70,6 +71,8 @@ function RequestInfoScreen(props) {
                         borderRadius: 10,
                     }}
                 >
+                     {/* Khoảng cách giữa tài xế và bệnh nhân  */}
+                     <Text style={{marginLeft:14, marginTop: 10}}>5 km</Text>
                     {/* Vị trí của bạn */}
                     <View style={styles.placeYouAndPatient}>
                         <View style={{}}>
@@ -82,15 +85,16 @@ function RequestInfoScreen(props) {
                                 }}
                             />
                         </View>
+                        
                         <View
                             style={{
                                 paddingHorizontal: 20,
                             }}
-                        >
+                        >  
                             <Text style={{ fontWeight: "bold", fontSize: 20 }}>
                                 Vị trí của bạn
                             </Text>
-                            <Text>365 Lê Văn Việt, Quận 9, TP.HCM</Text>
+                            <Text>12 Tân Chánh Hiệp, Quận 12, TP.HCM</Text>
                         </View>
                     </View>
                     {/* Vị trí bệnh nhân */}

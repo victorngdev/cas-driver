@@ -1,3 +1,4 @@
+
 import { StyleSheet, StatusBar } from "react-native";
 import { Dimensions } from "react-native";
 

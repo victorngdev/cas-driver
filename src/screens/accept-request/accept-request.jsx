@@ -1,188 +1,318 @@
-import React from 'react'
-import { StyleSheet, View, ImageBackground, Text, SafeAreaView, StatusBar } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
-import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { Button } from 'react-native-paper';
+
+import React, { Component } from "react";
+import {
+    StyleSheet,
+    View,
+    ImageBackground,
+    Text,
+    TouchableOpacity,
+    Linking,
+    Modal,
+    Dimensions
+
+} from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
+import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import ButtonText from "../../components/button-text.component";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { RadioButton, TextInput } from 'react-native-paper';
 
 
-function AcceptRequestScreen(props) {
-    return (
-        <View style={styles.container}>
-            <ScrollView
-                contentContainerStyle={{
-                    flex: 1,
-                }}
-            >
-                <ImageBackground
-                    source={require("../../../assets/icons/background.png")}
-                    style={styles.image}
+var screen = Dimensions.get('window');
+
+
+
+class AcceptRequestScreen extends React.Component {
+
+    constructor() {
+        super();
+        this.state = {
+            show: false,
+            value: 'first'
+        }
+
+    }
+
+    render() {
+
+        return (
+            <View style={styles.container}>
+                <ScrollView
+                    contentContainerStyle={{
+                        flex: 1,
+                    }}
                 >
-                    {/* Header */}
-                    <View style={styles.headerView}>
-                        <ImageBackground
-                            source={require("../../../assets/icons/header-accept-request.png")}
-                            style={{
-                                width: "100%",
-                                flexDirection: "row",
-                            }}
-                        >
+                    <ImageBackground
+                        source={require("../../../assets/icons/background.png")}
+                        style={styles.image}
+                    >
+                        {/* Header */}
+                        <View style={styles.headerView}>
+                            <ImageBackground
+                                source={require("../../../assets/icons/header-accept-request.png")}
+                                style={{
+                                    width: "100%",
+                                    flexDirection: "row",
+                                }}
+                            >
+                                <View
+                                    style={{
+                                        flex: 1,
+                                        flexDirection: "column",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontWeight: "bold",
+                                            fontSize: 15,
+                                            color: "blue",
+                                        }}
+                                    >
+                                        ĐÓN BỆNH NHÂN
+                                </Text>
+                                    <Text style={{ fontSize: 15, marginTop: 10 }}>
+                                        Huy
+                                </Text>
+                                </View>
+                                <View
+                                    style={{
+                                        flex: 1,
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontWeight: "bold",
+                                            fontSize: 20,
+                                            color: "green",
+                                        }}
+                                    >
+                                        ĐẾN NƠI
+                                </Text>
+                                </View>
+                            </ImageBackground>
+                        </View>
+                        {/* Info */}
+                        <View style={styles.infoView}>
+                            <View
+                                style={{
+                                    flex: 1,
+                                    flexDirection: "row",
+                                }}
+                            >
+                                <View
+                                    style={{
+                                        flex: 4,
+                                        flexDirection: "column",
+                                        justifyContent: "center",
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontWeight: "bold",
+                                            fontSize: 20,
+                                            marginLeft: 10,
+                                        }}
+                                        numberOfLines={1}
+                                    >
+                                        Bệnh viện Quân Y
+                                </Text>
+                                    <Text
+                                        style={{
+                                            fontWeight: "bold",
+                                            fontSize: 15,
+                                            marginLeft: 10,
+                                        }}
+                                        numberOfLines={2}
+                                    >
+                                        365, Lê Văn Việt, Quận 9, TP.Hồ Chí Minh
+                                </Text>
+                                </View>
+                                <View
+                                    style={{
+                                        flex: 1,
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                    }}
+                                >
+                                    <TouchableOpacity onPress={() => { props.navigation.navigate("GoogleMap"); }}>
+                                        <Icon name="location-arrow" size={35} />
+                                    </TouchableOpacity>
+
+                                </View>
+                            </View>
+                            {/* Note */}
                             <View
                                 style={{
                                     flex: 1,
                                     flexDirection: "column",
-                                    justifyContent: "center",
-                                    alignItems: "center",
+                                    backgroundColor: "white",
                                 }}
                             >
                                 <Text
                                     style={{
                                         fontWeight: "bold",
-                                        fontSize: 15,
-                                        color: "blue",
-                                    }}
-                                >
-                                    ĐÓN BỆNH NHÂN
-                                </Text>
-                                <Text style={{ fontSize: 15, marginTop: 10 }}>
-                                    Huy
-                                </Text>
-                            </View>
-                            <View
-                                style={{
-                                    flex: 1,
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        fontWeight: "bold",
-                                        fontSize: 20,
-                                        color: "green",
-                                    }}
-                                >
-                                    ĐẾN NƠI
-                                </Text>
-                            </View>
-                        </ImageBackground>
-                    </View>
-                    {/* Info */}
-                    <View style={styles.infoView}>
-                        <View
-                            style={{
-                                flex: 1,
-                                flexDirection: "row",
-                            }}
-                        >
-                            <View
-                                style={{
-                                    flex: 4,
-                                    flexDirection: "column",
-                                    justifyContent: "center",
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        fontWeight: "bold",
-                                        fontSize: 20,
                                         marginLeft: 10,
+                                        fontSize: 18,
                                     }}
-                                    numberOfLines={1}
                                 >
-                                    Bệnh viện Quân Y
-                                </Text>
-                                <Text
-                                    style={{
-                                        fontWeight: "bold",
-                                        fontSize: 15,
-                                        marginLeft: 10,
-                                    }}
-                                    numberOfLines={2}
-                                >
-                                    365, Lê Văn Việt, Quận 9, TP.Hồ Chí Minh
-                                </Text>
-                            </View>
-                            <View
-                                style={{
-                                    flex: 1,
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                }}
-                            >
-                                <Icon name="location-arrow" size={35} />
-                            </View>
-                        </View>
-                        {/* Note */}
-                        <View
-                            style={{
-                                flex: 1,
-                                flexDirection: "column",
-                                backgroundColor: "white",
-                            }}
-                        >
-                            <Text
-                                style={{
-                                    fontWeight: "bold",
-                                    marginLeft: 10,
-                                    fontSize: 18,
-                                }}
-                            >
-                                Ghi chú:
+                                    Ghi chú:
                             </Text>
-                            <Text style={{ marginLeft: 20, fontSize: 15 }}>
-                                Bệnh nhân cần người sơ cứu, vì đang bị gãy chân
+                                <Text style={{ marginLeft: 20, fontSize: 15 }}>
+                                    Bệnh nhân cần người sơ cứu, vì đang bị gãy chân
                             </Text>
-                        </View>
-                    </View>
-                    {/* Map */}
-                    <View style={{ flex: 4 }}>
-                        <MapView
-                            mapType={
-                                Platform.OS == "android" ? "none" : "standard"
-                            }
-                            provider={PROVIDER_GOOGLE}
-                            style={{ flex: 1 }}
-                            showsUserLocation={true}
-                            showsMyLocationButton={true}
-                        />
-                    </View>
-                    {/* Call, Exit... */}
-                    <View style={styles.footerView}>
-                        <View
-                            style={{
-                                flex: 3,
-                                flexDirection: "row",
-                            }}
-                        >
-                            <View style={styles.layoutIconAndText}>
-                                <MaterialIcons name="local-phone" size={50} />
-                                <Text>Gọi</Text>
-                            </View>
-                            <View style={styles.layoutIconAndText}>
-                                <MaterialIcons name="cancel" size={50} />
-                                <Text>Hủy</Text>
                             </View>
                         </View>
-                        <View style={{ flex: 4, flexDirection: "row", justifyContent: 'center', alignItems: 'center' }}>
-                            <Button mode="contained" color='white' labelStyle={{ fontSize: 17, fontWeight: 'bold' }} compact={true}
-                                style={{marginRight: 5}}
-                            >
-                                ĐẾN ĐIỂM
-                            </Button>
-                            <Button mode="contained" color='#1c942c' labelStyle={{ fontSize: 17, fontWeight: 'bold' }} compact={true}
-                                style={{marginLeft: 5}}
-                            >
-                                ĐÓN BỆNH NHÂN
-                            </Button>
+                        {/* Map */}
+                        <View style={{ flex: 4 }}>
+                            <MapView
+                                provider={PROVIDER_GOOGLE}
+                                style={{ flex: 1 }}
+                                showsUserLocation={true}
+                                showsMyLocationButton={true}
+                            />
 
                         </View>
-                    </View>
-                </ImageBackground>
-            </ScrollView>
-        </View>
-    );
+                        {/* Call, Exit... */}
+                        <View style={styles.footerView}>
+                            <View
+                                style={{
+                                    flex: 3,
+                                    flexDirection: "row",
+                                }}
+                            >
+                                <View style={styles.layoutIconAndText}>
+                                    <MaterialIcons name="local-phone" size={50} onPress={() => Linking.openURL('tel: 0907766357')}
+                                    />
+                                    <Text>Gọi</Text>
+                                </View>
+                                <View style={styles.layoutIconAndText}>
+                                    <TouchableOpacity onPress={() => { this.setState({ show: true }) }}>
+                                        <MaterialIcons name="cancel" size={50} />
+                                    </TouchableOpacity>
+                                    <Text>Hủy</Text>
+
+                                    <Modal
+                                        animationType={"slide"}
+                                        transparent={true}
+                                        visible={this.state.show}
+                                    >
+                                        {/* Reason Cancel  */}
+                                        <View style={{
+                                            flex: 1,
+                                            flexDirection: 'column',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            backgroundColor: 'rgba(0,0,0,0.7)'
+                                        }}>
+                                            <View style={{
+                                                flex: 0.7,
+                                                borderRadius: 20,
+                                                justifyContent: 'center',
+                                                paddingHorizontal: 10,
+                                                flexDirection: 'column',
+                                                backgroundColor: '#c4def6'
+                                            }}>
+                                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                                    <Text style={{
+                                                        color: "#000",
+                                                        fontSize: 20,
+                                                        fontFamily: "Roboto_500Medium"
+                                                    }}>Lý do huỷ chuyến xe này</Text>
+                                                </View>
+                                                <View style={{ flex: 3 }}>
+                                                    <RadioButton.Group onValueChange={value => this.setState({ value })}
+                                                        value={this.state.value}>
+                                                        <View style={styles.option}>
+
+                                                            <RadioButton value="first" title='Hello' />
+                                                            <Text style={{ marginTop: 7 }}>Bấm nhầm nhận chuyến</Text>
+                                                        </View>
+                                                        <View style={styles.option}>
+                                                            <RadioButton value="second" />
+                                                            <Text style={{ marginTop: 7 }}>Không thể đón bệnh nhân đúng giờ</Text>
+                                                        </View>
+                                                        <View style={styles.option}>
+                                                            <RadioButton value="third" />
+                                                            <Text style={{ marginTop: 7 }}>Không liên lạc được với bệnh nhân</Text>
+                                                        </View>
+                                                        <View style={styles.option}>
+                                                            <RadioButton value="four" />
+                                                            <Text style={{ marginTop: 7 }}>Bệnh nhân đề nghị huỷ</Text>
+                                                        </View>
+                                                    </RadioButton.Group>
+                                                </View>
+                                                <View style={{ flex: 2 }}>
+                                                    <TextInput placeholder='Lí do khác...' style={{
+                                                        backgroundColor: '#fff',
+                                                        height: screen.height * 0.2,
+                                                        borderRadius: 10
+                                                    }} />
+                                                </View>
+                                                <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                                                    <View style={{ flex: 1 }}>
+                                                        <TouchableOpacity onPress={() => { this.setState({ show: false }) }}>
+                                                            <ButtonText textContent="Đồng ý"
+                                                                styleButton={styles.buttonAccept}
+                                                                styleText={{
+                                                                    fontWeight: "bold",
+                                                                    color: "white",
+                                                                    fontSize: 15,
+
+                                                                }} />
+                                                        </TouchableOpacity>
+                                                    </View>
+                                                    <View style={{ flex: 1 }}>
+                                                        <TouchableOpacity onPress={() => { this.setState({ show: false }) }}>
+                                                            <ButtonText textContent="Hủy"
+                                                                styleButton={styles.buttonToCancel}
+                                                                styleText={{
+                                                                    fontWeight: "bold",
+                                                                    color: "white",
+                                                                    fontSize: 15,
+                                                                }} />
+                                                        </TouchableOpacity>
+                                                    </View>
+                                                </View>
+                                            </View>
+                                        </View>
+                                    </Modal>
+
+                                </View>
+                            </View>
+                            <View style={{ flex: 2, flexDirection: "row" }}>
+                                <ButtonText
+                                    textContent="Đến điểm"
+                                    styleButton={styles.buttonGoTo}
+                                    styleText={{
+                                        fontWeight: "bold",
+                                        color: "blue",
+                                        fontSize: 17,
+                                    }}
+                                />
+                                <ButtonText
+                                    textContent="Đón bệnh nhân"
+                                    styleButton={styles.buttonGetPatient}
+                                    gotoScreen={() =>
+                                        this.props.navigation.navigate("PatientArrived")
+                                    }
+                                    styleText={{
+                                        fontWeight: "bold",
+                                        color: "white",
+                                        fontSize: 17,
+                                    }}
+                                />
+                            </View>
+                        </View>
+                    </ImageBackground>
+                </ScrollView >
+            </View >
+        )
+    };
 }
 
 const styles = StyleSheet.create({
@@ -221,10 +351,35 @@ const styles = StyleSheet.create({
         backgroundColor: "green",
         marginLeft: 20,
     },
+    buttonToCancel: {
+        width: 80,
+        borderRadius: 8,
+        backgroundColor: "red",
+    },
+    buttonAccept: {
+        width: 80,
+        borderRadius: 8,
+        backgroundColor: "green",
+    },
     buttonGoTo: {
         width: 100,
         borderRadius: 8,
     },
+    buttonNotCancel: {
+        width: 80,
+    },
+    text: {
+        color: "#000",
+        fontSize: 20,
+        textAlign: 'center',
+        fontFamily: "Roboto_500Medium",
+    },
+    option: {
+        flexDirection: 'row'
+    },
+    rdReason: {
+        marginTop: 10
+    }
 });
 
 export default AcceptRequestScreen;

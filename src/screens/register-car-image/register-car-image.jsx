@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, ToastAndroid } from 'react-native';
+import { StyleSheet, Text, View, Image, ToastAndroid, Alert } from 'react-native';
 import BackgroundImage from '../../components/background-screen.component';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import 'react-native';
@@ -38,14 +38,18 @@ function RegisterCarImageScreen(props) {
                         </View>
                         <View style={styles.ImageInfo}>
                             <Image style={styles.image}
-                                source={require("../../../assets/images/xecuuthuong.jpg")} />
-                            <Text style={styles.imgDescription}>Video xe</Text>
+                                source={require("../../../assets/images/giaydangkiem.jpg")} />
+                            <Text style={styles.imgDescription}>Giấy đăng kiểm</Text>
                         </View>
                     </View>
                 </View>
                 {/* //  <Button title='Đăng kí' color='#FFAB2E' borderRadius= '15' width='5'/> */}
-                <TouchableOpacity style={styles.button}
-                      >
+                <TouchableOpacity style={styles.button} onPress={() => {
+                    Alert.alert(
+                        "Đăng kí xong", "Hệ thống sẽ thông báo cho bạn sau khi kiểm duyệt"
+                    );
+                }}
+                >
                     <View>
                         <Text style={styles.text}>Đăng kí</Text>
                     </View>
