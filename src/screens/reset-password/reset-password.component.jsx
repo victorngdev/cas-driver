@@ -8,7 +8,7 @@ import TextLinking from "../../components/text-linking.component";
 import LogoName from "../../components/logo-name.component";
 import BackgroundLogin from "../../components/background-screen-login.component";
 
-import styles from "./reset-password-styles";
+import styles from "./reset-password.styles";
 
 const ResetPassScreen = ({ navigation }) => {
     return (
@@ -18,14 +18,8 @@ const ResetPassScreen = ({ navigation }) => {
                     <LogoName />
                 </View>
                 <View style={styles.block_button}>
-                    <TextInputIcon
-                        imgSrc={require("../../../assets/icons/phone.png")}
-                        placeholder="Số điện thoại"
-                    />
-                    <ButtonText
-                        textContent="Gửi mã OTP"
-                        gotoScreen={() => navigation.navigate("Otp")}
-                    />
+                    <TextInputIcon imgSrc={require("../../../assets/icons/phone.png")} placeholder="Số điện thoại" />
+                    <ButtonText textContent="Gửi mã OTP" gotoScreen={() => navigation.navigate("Otp")} />
                     <TextLinking
                         contentText="Chưa có tài khoản?"
                         contentLink="Đăng ký"

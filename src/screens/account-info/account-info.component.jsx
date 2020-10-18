@@ -1,9 +1,10 @@
 import React from "react";
-import { Image, ScrollView, StyleSheet, Text, TextInput, View, StatusBar } from "react-native";
-import BackgroundImage from "../../components/background-screen.component";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import Header from "../../components/header.component";
+import { Image, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { Button } from "react-native-paper";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+
+import BackgroundImage from "../../components/background-screen.component";
+import Header from "../../components/header.component";
 
 const colors = {
     themeColor: "#4263ec",

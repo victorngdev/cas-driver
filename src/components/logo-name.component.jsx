@@ -1,7 +1,7 @@
 import React from "react";
-
 import { View, Image, Text, StyleSheet } from "react-native";
-const LogoName = props => {
+
+const LogoName = () => {
     return (
         <View style={styles.container}>
             <Image source={require("../../assets/icons/logo.png")} style={styles.app_logo} />

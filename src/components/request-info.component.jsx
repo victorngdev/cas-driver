@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import RequestInfoItem from "./request-item-info.component";
+
+import RequestInfoItem from "./request-info-item.component";
 
 const RequestInfo = ({ title, items }) => (
     <View style={styles.requesterInfo}>

@@ -1,6 +1,8 @@
 import React from "react";
-import { View, Image, StyleSheet, TextInput, Dimensions } from "react-native";
+import { View, Image, StyleSheet, TextInput } from "react-native";
+
 import rem from "./constant.unit";
+
 const TextInputIcon = ({ placeholder, secureTextEntry, imgSrc }) => {
     return (
         <View style={styles.container}>

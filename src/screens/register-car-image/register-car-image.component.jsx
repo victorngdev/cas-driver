@@ -1,8 +1,8 @@
 import React from "react";
-import { StyleSheet, Text, View, Image, ToastAndroid, Alert } from "react-native";
+import { StyleSheet, Text, View, Image, Alert } from "react-native";
+
 import BackgroundImage from "../../components/background-screen.component";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import "react-native";
 
 function RegisterCarImageScreen(props) {
     return (

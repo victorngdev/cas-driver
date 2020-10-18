@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View, TextInput } from "react-native";
+
 import BackgroundImage from "../../components/background-screen.component";
 import ButtonText from "../../components/button-text.component";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";

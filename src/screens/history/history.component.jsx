@@ -1,5 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+
 import BackgroundImage from "../../components/background-screen.component";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 

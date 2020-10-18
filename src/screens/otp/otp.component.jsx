@@ -1,5 +1,4 @@
 import React from "react";
-
 import { View } from "react-native";
 
 import TextInputIcon from "../../components/text-input-with-icon.component";
@@ -18,22 +17,10 @@ const OtpScreen = ({ navigation }) => {
                     <LogoName />
                 </View>
                 <View style={styles.block_button}>
-                    <TextInputIcon
-                        imgSrc={require("../../../assets/icons/otp-icon.png")}
-                        placeholder="Nhập mã OTP"
-                    />
-                    <TextInputIcon
-                        imgSrc={require("../../../assets/icons/key.png")}
-                        placeholder="Nhập mật khẩu mới"
-                    />
-                    <TextInputIcon
-                        imgSrc={require("../../../assets/icons/key.png")}
-                        placeholder="Nhập lại mật khẩu"
-                    />
-                    <ButtonText
-                        textContent="XÁC NHẬN"
-                        gotoScreen={() => navigation.navigate("Home")}
-                    />
+                    <TextInputIcon imgSrc={require("../../../assets/icons/otp-icon.png")} placeholder="Nhập mã OTP" />
+                    <TextInputIcon imgSrc={require("../../../assets/icons/key.png")} placeholder="Nhập mật khẩu mới" />
+                    <TextInputIcon imgSrc={require("../../../assets/icons/key.png")} placeholder="Nhập lại mật khẩu" />
+                    <ButtonText textContent="XÁC NHẬN" gotoScreen={() => navigation.navigate("Home")} />
                     <TextLinking
                         contentText="Chưa nhận được mã OTP?"
                         contentLink="Gửi lại mã"
