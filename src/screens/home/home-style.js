@@ -124,10 +124,10 @@ const styles = StyleSheet.create({
         fontFamily: "Texgyreadventor-bold"
     },
     transportationContainer: {
-        flex: 1,
+        flex: 4,
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
     },
     transportation: {
         width: "85%",

@@ -38,7 +38,7 @@ const HomeScreen = ({ navigation }) => {
     const [isFinish, setIsFinish] = useState(true);
     const [rejectOption, setRejectOption] = useState("first");
 
-    function toggleAction() {
+    const toggleAction = () => {
         setIsReady(!isReady);
         setTitle(!isReady ? "Đang sẵn sàng" : "Chưa sẵn sàng");
         if (!isReady) {
@@ -48,12 +48,12 @@ const HomeScreen = ({ navigation }) => {
         }
     }
 
-    function accept() {
+    const accept = () => {
         setIsToggle(false);
         setRequest(m_request);
     }
 
-    function handleFinish() {
+    const handleFinish = () => {
         setIsArrived(false);
         setRequest(null);
         setIsReject(false);
@@ -142,8 +142,8 @@ const HomeScreen = ({ navigation }) => {
                                 <Text onPress={() => setIsToggle(false)} style={[styles.action, styles.reject]}>
                                     Từ chối
                             </Text>
-                                <TouchableOpacity>
-                                    <Text onPress={accept} style={styles.action}>
+                                <TouchableOpacity onPress={accept}>
+                                    <Text style={styles.action}>
                                         Chấp nhận <Text style={styles.counter}>4:56</Text>
                                     </Text>
                                 </TouchableOpacity>
@@ -164,15 +164,16 @@ const HomeScreen = ({ navigation }) => {
                     </View>
                 </View>
                 {/* Map screen */}
-                <View style={{ flex: 7 }}>
+                <View style={request ? { flex: 5 } : { flex: 7 }}>
                     <MapView
-                        style={[styles.map, request ? { height: "50%" } : null]}
+                        style={styles.map}
                         provider={PROVIDER_GOOGLE}
                         showsUserLocation={true}
                         showsMyLocationButton={true}
                         followsUserLocation={true}
                     />
                 </View>
+
                 {!request ? (
                     <View style={{ flex: 2 }}>
                         <HomeDriverInfo
@@ -181,6 +182,7 @@ const HomeScreen = ({ navigation }) => {
                             addressValue="1141 Quang Trung, Gò Vấp, HCM"
                         />
                     </View>
+
                 ) : (
                         <View style={styles.transportationContainer}>
                             <View style={styles.transportation}>
