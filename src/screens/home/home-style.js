@@ -6,11 +6,12 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         backgroundColor: "#fff",
         paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-        position: "relative"
+        position: "relative",
     },
     map: {
-        width: "100%",
-        height: "75%"
+        // width: "100%",
+        // height: "75%"
+        flex: 1
     },
     modal: {
         width: "100%",
@@ -28,12 +29,14 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         alignItems: "center",
         borderRadius: 10,
-        paddingVertical: 5
+        paddingVertical: 5,
+        paddingHorizontal: 5
     },
     groupTitle: {
         display: "flex",
         flexDirection: "row",
-        alignItems: "center"
+        alignItems: "center",
+        justifyContent: 'center'
     },
     modalTitle: {
         fontFamily: "Texgyreadventor-bold",
@@ -64,8 +67,10 @@ const styles = StyleSheet.create({
         paddingHorizontal: 5
     },
     requestDetails: {
-        width: "85%",
-        marginVertical: 5
+        width: "100%",
+        marginVertical: 5,
+        marginHorizontal: 10,
+        backgroundColor: 'green'
     },
     requesterInfo: {
         paddingVertical: 5,
@@ -89,7 +94,7 @@ const styles = StyleSheet.create({
         color: "#000"
     },
     groupAction: {
-        width: "90%",
+        width: "100%",
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-around",

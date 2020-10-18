@@ -20,17 +20,17 @@ export default HomeDriverInfo;
 const styles = StyleSheet.create({
     driverInfo: {
         flex: 1,
-        width: "100%",
         flexDirection: "row",
         paddingHorizontal: 10,
         backgroundColor: "#fff"
     },
     currentLocation: {
-        flexBasis: "70%",
+        flex: 3,
+        // flexBasis: "70%",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        paddingHorizontal: 10
+        paddingHorizontal: 10,
     },
     locationTitle: {
         fontSize: 16,
@@ -44,13 +44,15 @@ const styles = StyleSheet.create({
         color: "#444444"
     },
     rating: {
-        flexBasis: "25%",
-        justifyContent: "center"
+        // flexBasis: "25%",
+        flex: 1,
+        justifyContent: "center",
+        alignItems: 'center',
     },
     ratingTitle: {
         fontSize: 16,
         fontFamily: "Texgyreadventor-bold",
-        marginVertical: 5,
-        color: "#444444"
+        color: "#444444",
+        textAlign: 'center'
     }
 });

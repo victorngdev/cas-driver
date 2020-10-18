@@ -27,26 +27,30 @@ export default HomeHeader;
 
 const styles = StyleSheet.create({
     header: {
-        display: "flex",
+        flex: 1,
+        // display: "flex",
         flexDirection: "row",
-        justifyContent: "space-between",
+        justifyContent: "center",
         alignItems: "center",
-        paddingVertical: 15,
-        backgroundColor: "#fff"
+        backgroundColor: "#fff",
+        paddingTop: 10
     },
     hamburger: {
-        flexBasis: "25%",
+        flex: 1,
+        // flexBasis: "25%",
         paddingLeft: 10
     },
     title: {
-        flexBasis: "50%",
+        // flexBasis: "50%",
+        flex: 2,
         textAlign: "center",
         fontFamily: "Texgyreadventor-bold",
         fontSize: 16,
         color: "#444444"
     },
     status: {
-        flexBasis: "25%",
+        // flexBasis: "25%",
+        flex: 1,
         justifyContent: "center"
     }
 });

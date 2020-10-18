@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput } from "react-native";
+import { View, Text, TextInput, ScrollView } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 
 import BackgroundImage from "../../components/background-screen.component";
@@ -63,7 +63,10 @@ const HomeScreen = ({ navigation }) => {
     return (
         <View style={styles.container}>
             <BackgroundImage>
-                <HomeHeader title={title} isReady={isReady} toggleAction={toggleAction} navigation={navigation} />
+                <View style={{ flex: 1 }}>
+                    <HomeHeader title={title} isReady={isReady} toggleAction={toggleAction} navigation={navigation} />
+                </View>
+
                 <View style={[styles.modal, isReject ? { opacity: 0.85, zIndex: 10 } : null]}>
                     <View style={[styles.modalContent, { height: "60%" }]}>
                         <Text style={styles.modalTitle}>Lí do hủy yêu cầu</Text>
@@ -109,41 +112,43 @@ const HomeScreen = ({ navigation }) => {
                 </View>
                 <View style={[styles.modal, isToggle ? { opacity: 0.85, zIndex: 10 } : null]}>
                     <View style={styles.modalContent}>
-                        <View style={styles.groupTitle}>
-                            <Text style={styles.modalTitle}>Yêu cầu mới</Text>
-                            <Text style={styles.requestType}>Đặt giúp</Text>
-                            <Text style={styles.range}>120 km</Text>
-                        </View>
-                        <View style={styles.requestDetails}>
-                            <Place title="Điểm đón" place={pickUp} icon="https://i.ibb.co/D8HPk12/placeholder.png" />
-                            <Place title="Điểm đến" place={destination} icon="https://i.ibb.co/gWdQ69d/radar.png" />
-                            <RequestInfo
-                                title="Thông tin người gọi"
-                                items={[
-                                    { id: 1, label: "Tên", content: "Trương Ngọc Minh" },
-                                    { id: 2, label: "Số điện thoại", content: "0931738872" }
-                                ]}
-                            />
-                            <RequestInfo
-                                title="Thông tin người bệnh"
-                                items={[
-                                    { id: 1, label: "Tên", content: "Mai Thiên Toàn" },
-                                    { id: 2, label: "Số điện thoại", content: "0327008005" },
-                                    { id: 3, label: "Tình trạng bệnh", content: "Gãy xương chân do tai nạn giao thông" }
-                                ]}
-                            />
-                            <RequestInfo title="Ghi chú" items={[{ id: 1, content: "Cần dụng cụ sơ cứu tại chỗ" }]} />
-                        </View>
-                        <View style={styles.groupAction}>
-                            <Text onPress={() => setIsToggle(false)} style={[styles.action, styles.reject]}>
-                                Từ chối
+                        <ScrollView directionalLockEnabled={true}>
+                            <View style={styles.groupTitle}>
+                                <Text style={styles.modalTitle}>Yêu cầu mới</Text>
+                                <Text style={styles.requestType}>Đặt giúp</Text>
+                                <Text style={styles.range}>120 km</Text>
+                            </View>
+                            <View style={styles.requestDetails}>
+                                <Place title="Điểm đón" place={pickUp} icon="https://i.ibb.co/D8HPk12/placeholder.png" />
+                                <Place title="Điểm đến" place={destination} icon="https://i.ibb.co/gWdQ69d/radar.png" />
+                                <RequestInfo
+                                    title="Thông tin người gọi"
+                                    items={[
+                                        { id: 1, label: "Tên", content: "Trương Ngọc Minh" },
+                                        { id: 2, label: "Số điện thoại", content: "0931738872" }
+                                    ]}
+                                />
+                                <RequestInfo
+                                    title="Thông tin người bệnh"
+                                    items={[
+                                        { id: 1, label: "Tên", content: "Mai Thiên Toàn" },
+                                        { id: 2, label: "Số điện thoại", content: "0327008005" },
+                                        { id: 3, label: "Tình trạng bệnh", content: "Gãy xương chân do tai nạn giao thông" }
+                                    ]}
+                                />
+                                <RequestInfo title="Ghi chú" items={[{ id: 1, content: "Cần dụng cụ sơ cứu tại chỗ" }]} />
+                            </View>
+                            <View style={styles.groupAction}>
+                                <Text onPress={() => setIsToggle(false)} style={[styles.action, styles.reject]}>
+                                    Từ chối
                             </Text>
-                            <TouchableOpacity>
-                                <Text onPress={accept} style={styles.action}>
-                                    Chấp nhận <Text style={styles.counter}>4:56</Text>
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
+                                <TouchableOpacity>
+                                    <Text onPress={accept} style={styles.action}>
+                                        Chấp nhận <Text style={styles.counter}>4:56</Text>
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                        </ScrollView>
                     </View>
                 </View>
                 <View style={[styles.modal, isFinish ? { opacity: 0.85, zIndex: 10 } : null]}>
@@ -158,62 +163,67 @@ const HomeScreen = ({ navigation }) => {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <MapView
-                    style={[styles.map, request ? { height: "50%" } : null]}
-                    provider={PROVIDER_GOOGLE}
-                    showsUserLocation={true}
-                    showsMyLocationButton={true}
-                    followsUserLocation={true}
-                />
-                {!request ? (
-                    <HomeDriverInfo
-                        ratingLevel={5}
-                        addressName="Vị trí hiện tại"
-                        addressValue="1141 Quang Trung, Gò Vấp, HCM"
+                {/* Map screen */}
+                <View style={{ flex: 7 }}>
+                    <MapView
+                        style={[styles.map, request ? { height: "50%" } : null]}
+                        provider={PROVIDER_GOOGLE}
+                        showsUserLocation={true}
+                        showsMyLocationButton={true}
+                        followsUserLocation={true}
                     />
-                ) : (
-                    <View style={styles.transportationContainer}>
-                        <View style={styles.transportation}>
-                            <Place
-                                place={{ name: "Vị trí của bạn", address: "480 Xa lộ Hà Nội, Bình Thạnh, HCM" }}
-                                icon="https://i.ibb.co/D8HPk12/placeholder.png"
-                            />
-                            <Place
-                                title="Điểm đến"
-                                place={!isArrived ? request.pickUp : request.destination}
-                                icon="https://i.ibb.co/gWdQ69d/radar.png"
-                            />
-                            {!isArrived ? (
-                                <View style={styles.groupContact}>
-                                    <ContactItem
-                                        icon="https://i.ibb.co/z2krjnj/phone-contact.png"
-                                        label="Người gọi"
-                                        phone="0931738872"
-                                    />
-                                    <ContactItem
-                                        icon="https://i.ibb.co/fprdRyq/phone-contact-purple.png"
-                                        label="Bệnh nhân"
-                                        phone="0327008005"
-                                    />
-                                </View>
-                            ) : null}
-                            {!isArrived ? (
-                                <View style={styles.groupAction}>
-                                    <TouchableOpacity onPress={() => setIsReject(true)}>
-                                        <Text style={[styles.action, styles.reject]}>Hủy yêu cầu</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity onPress={() => setIsArrived(true)}>
-                                        <Text style={[styles.action]}>Đón bệnh nhân</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            ) : (
-                                <TouchableOpacity onPress={() => setIsFinish(true)}>
-                                    <Text style={[styles.action, styles.finish]}>Kết thúc</Text>
-                                </TouchableOpacity>
-                            )}
-                        </View>
+                </View>
+                {!request ? (
+                    <View style={{ flex: 2 }}>
+                        <HomeDriverInfo
+                            ratingLevel={5}
+                            addressName="Vị trí hiện tại"
+                            addressValue="1141 Quang Trung, Gò Vấp, HCM"
+                        />
                     </View>
-                )}
+                ) : (
+                        <View style={styles.transportationContainer}>
+                            <View style={styles.transportation}>
+                                <Place
+                                    place={{ name: "Vị trí của bạn", address: "480 Xa lộ Hà Nội, Bình Thạnh, HCM" }}
+                                    icon="https://i.ibb.co/D8HPk12/placeholder.png"
+                                />
+                                <Place
+                                    title="Điểm đến"
+                                    place={!isArrived ? request.pickUp : request.destination}
+                                    icon="https://i.ibb.co/gWdQ69d/radar.png"
+                                />
+                                {!isArrived ? (
+                                    <View style={styles.groupContact}>
+                                        <ContactItem
+                                            icon="https://i.ibb.co/z2krjnj/phone-contact.png"
+                                            label="Người gọi"
+                                            phone="0931738872"
+                                        />
+                                        <ContactItem
+                                            icon="https://i.ibb.co/fprdRyq/phone-contact-purple.png"
+                                            label="Bệnh nhân"
+                                            phone="0327008005"
+                                        />
+                                    </View>
+                                ) : null}
+                                {!isArrived ? (
+                                    <View style={styles.groupAction}>
+                                        <TouchableOpacity onPress={() => setIsReject(true)}>
+                                            <Text style={[styles.action, styles.reject]}>Hủy yêu cầu</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity onPress={() => setIsArrived(true)}>
+                                            <Text style={[styles.action]}>Đón bệnh nhân</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                ) : (
+                                        <TouchableOpacity onPress={() => setIsFinish(true)}>
+                                            <Text style={[styles.action, styles.finish]}>Kết thúc</Text>
+                                        </TouchableOpacity>
+                                    )}
+                            </View>
+                        </View>
+                    )}
             </BackgroundImage>
         </View>
     );
