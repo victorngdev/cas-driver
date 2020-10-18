@@ -12,21 +12,26 @@ function RegisterCarScreen(props) {
 
       <BackgroundImage>
 
-        <View style={{
-          flexDirection: 'row',
-          marginTop: 40,
-          alignItems: 'center',
-          paddingHorizontal: 10
-        }}>
-          <Icon name='menu' size={30} color='#a2a2db' style={{ width: 20 }} onPress={() => props.navigation.openDrawer()} />
-        </View>
-
         <View style={styles.contain}>
 
           <View style={styles.header}>
-            <Text style={styles.headerTitle}>Đăng kí xe</Text>
-            <Text style={styles.securityText}>Thông tin cá nhân sẽ được bảo mật theo chính sách, quy định của nhà nước</Text>
+
+            <View style={styles.childHeader}>
+              <View style={styles.iconMenu}>
+                <Icon name='menu' size={30} color='#a2a2db' style={{ width: 20 }} onPress={() => props.navigation.openDrawer()} />
+              </View>
+              <View style={styles.headerTitle}>
+                <Text style={styles.titleText}>Đăng kí xe</Text>
+              </View>
+
+            </View>
+
+            <View style={styles.security}>
+              <Text style={styles.securityText}>Thông tin cá nhân sẽ được bảo mật theo chính sách, quy định của nhà nước</Text>
+            </View>
           </View>
+
+
 
           <View style={styles.registerTextInfo}>
             <KeyboardAvoidingView behavior={Platform.OS == 'android' ? 'padding' : null} >
@@ -75,24 +80,43 @@ const styles = StyleSheet.create({
   },
   header: {
     flex: 1,
+    flexDirection: 'column'
+  },
+  childHeader: {
+    flex: 0.5,
+    flexDirection: 'row',
+    marginTop: 30
+  },
+  iconMenu: {
+    marginTop: 10,
+    alignItems: 'center',
+    flex: 1,
   },
   headerTitle: {
-    textAlign: "center",
-    marginTop: 10,
+    flex: 6,
+    marginLeft: '10%',
     color: '#000',
-    // fontWeight: 'bold',
-    fontSize: 30
+    marginTop: 10
+    
+  },
+  titleText:{
+    fontWeight: "bold",
+    color: "#522289",
+    fontSize: 20,
+  },
+  security: {
+    flex: 0.5
   },
   securityText: {
     marginHorizontal: 8,
     fontSize: 17,
     textAlign: 'center',
-    color: 'gray'
+    color: 'gray',
   },
   registerTextInfo: {
     flex: 3,
     marginHorizontal: 10,
-    marginTop:5
+    marginTop: 5
   },
   titleInfo: {
     marginTop: 5,
@@ -122,7 +146,8 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontFamily: "Roboto_500Medium",
     justifyContent: 'center'
-  }
+  },
+
 
 })
 
