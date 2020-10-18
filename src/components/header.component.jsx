@@ -13,7 +13,7 @@ const Header = props => {
             <View style={{ flex: 1 }}>
                 <Icon />
             </View>
-            <View style={{ flex: 9, flexDirection: "row" }}>
+            <View style={{ flex: 9, flexDirection: "row"}}>
                 <Text style={combineStylesText}>{title}</Text>
                 {props.children}
             </View>
