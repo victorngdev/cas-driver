@@ -36,7 +36,7 @@ class App extends React.Component {
     render() {
         return this.state.assetsLoaded ? (
             <NavigationContainer>
-                <Drawer.Navigator initialRouteName="HistoryDetail" drawerContent={props => <DrawerContent {...props} />}>
+                <Drawer.Navigator initialRouteName="History" drawerContent={props => <DrawerContent {...props} />}>
                     <Drawer.Screen name="Home" component={HomeScreen} />
                     <Drawer.Screen name="Login" component={LoginScreen} />
                     <Drawer.Screen name="AccountInfo" component={AccountScreen} />

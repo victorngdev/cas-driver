@@ -2,9 +2,7 @@ import React from "react";
 import { StyleSheet, Text, View, ScrollView, Dimensions, TouchableOpacity, Platform } from "react-native";
 import Header from '../../components/header.component';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { Rating } from 'react-native-ratings';
 import { Avatar } from 'react-native-paper';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import EntypoICon from 'react-native-vector-icons/Entypo';
 import Place from '../../components/place.component';
 import FeedbackShow from '../../components/feedback-show.component';
@@ -21,13 +19,7 @@ function HistoryDetailScreen(props) {
     return (
         <View style={styles.container}>
             <BackgroundImage>
-                <View style={{
-                    flex: 4,
-                    marginBottom: 20,
-                    backgroundColor: '#E5D7EE',
-                    borderBottomLeftRadius: 30,
-                    borderBottomRightRadius: 30
-                }}>
+                <View style={styles.headerContainer}>
                     <View style={{ flex: 1 }}>
                         <Header
                             title='Lịch sử'
@@ -42,16 +34,7 @@ function HistoryDetailScreen(props) {
                             styleText={{ marginLeft: 10 }}
                         />
 
-                        <Text style={{
-                            position: 'absolute',
-                            width: Platform.OS === 'ios' ? widthDevice * 0.35 : widthDevice * 0.26,
-                            right: Platform.OS === 'ios' ? widthDevice * 0.34 : widthDevice * 0.37,
-                            top: heightDevice * 0.33,
-                            backgroundColor: 'green',
-                            padding: 15,
-                            textAlign: 'center',
-                            borderRadius: 10
-                        }}>Thành công</Text>
+                        <Text style={styles.status}>Thành công</Text>
                     </View>
                     <View style={{ flex: 3, justifyContent: 'center', alignItems: 'center' }}>
                         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -157,8 +140,6 @@ function HistoryDetailScreen(props) {
                                     </View>
                                 </View>
                             </View>
-
-
                         </View>
                     </ScrollView>
                 </View>
@@ -171,32 +152,18 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "column"
     },
-    dateFinishedView: {
-        width: widthDevice,
-        height: heightDevice * 0.1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderBottomColor: 'silver',
-        borderBottomWidth: 0.5
-    },
-    dateFinishedView_Text: {
-        fontFamily: "Texgyreadventor-bold",
-        fontSize: 16,
-        color: "#444444"
-    },
-    ratingView: {
-        width: widthDevice,
-        height: heightDevice * 0.1,
-        borderBottomColor: 'silver',
-        borderBottomWidth: 0.5
-    },
-    infoPatinent: {
-        flexDirection: 'column',
-        width: widthDevice,
-        height: heightDevice * 0.15,
-        borderBottomColor: 'silver',
+    headerContainer: {
+        flex: 4,
+        marginBottom: 20,
+        backgroundColor: '#E5D7EE',
+        borderBottomLeftRadius: 30,
+        borderBottomRightRadius: 30,
         borderBottomWidth: 0.5,
-        paddingHorizontal: 10
+        borderBottomColor: 'silver',
+        borderLeftWidth: 0.5,
+        borderLeftColor: 'silver',
+        borderRightWidth: 0.5,
+        borderRightColor: 'silver'
     },
     detailTrip: {
         width: widthDevice,
@@ -218,6 +185,18 @@ const styles = StyleSheet.create({
         width: widthDevice,
         height: heightDevice * 0.5,
         paddingHorizontal: 10,
+    },
+    status: {
+        position: 'absolute',
+        width: Platform.OS === 'ios' ? widthDevice * 0.35 : widthDevice * 0.26,
+        right: Platform.OS === 'ios' ? widthDevice * 0.34 : widthDevice * 0.37,
+        top: heightDevice * 0.34,
+        backgroundColor: 'green',
+        padding: 13,
+        textAlign: 'center',
+        borderRadius: 20,
+        color: 'white',
+        fontFamily: 'Texgyreadventor-bold'
     }
 });
 export default HistoryDetailScreen;
