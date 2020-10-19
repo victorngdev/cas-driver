@@ -1,11 +1,14 @@
 import React from "react";
-import { StyleSheet, Text, View, ScrollView, Dimensions } from "react-native";
+import { StyleSheet, Text, View, ScrollView, Dimensions, TouchableOpacity, Platform } from "react-native";
 import Header from '../../components/header.component';
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { Rating } from 'react-native-ratings';
 import { Avatar } from 'react-native-paper';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import EntypoICon from 'react-native-vector-icons/Entypo';
+import Place from '../../components/place.component';
+import FeedbackShow from '../../components/feedback-show.component';
+
 
 import BackgroundImage from "../../components/background-screen.component";
 
@@ -15,133 +18,149 @@ const heightDevice = screen.height;
 
 function HistoryDetailScreen(props) {
 
-    let dotIcon = [];
-    for (let i = 0; i < 2; i++) {
-        dotIcon.push(
-            <EntypoICon
-                key={i}
-                name='dots-three-vertical'
-                color='silver'
-                size={15}
-            />
-        )
-    }
-
     return (
         <View style={styles.container}>
             <BackgroundImage>
-                <View style={{ flex: 1, marginTop: 10 }}>
-                    <Header
-                        title="Lịch Sử"
-                        passedIcon={() => (
-                            <Icon
-                                name="chevron-left"
-                                size={40}
-                                color="#a2a2db"
-                                width='30'
-                                onPress={() => { props.navigation.navigate('History') }}
+                <View style={{
+                    flex: 4,
+                    marginBottom: 20,
+                    backgroundColor: '#E5D7EE',
+                    borderBottomLeftRadius: 30,
+                    borderBottomRightRadius: 30
+                }}>
+                    <View style={{ flex: 1 }}>
+                        <Header
+                            title='Lịch sử'
+                            passedIcon={() => (
+                                <Icon
+                                    name='chevron-left'
+                                    size={40}
+                                    color='#a2a2db'
+                                    onPress={() => props.navigation.navigate('History')}
+                                />
+                            )}
+                            styleText={{ marginLeft: 10 }}
+                        />
+
+                        <Text style={{
+                            position: 'absolute',
+                            width: Platform.OS === 'ios' ? widthDevice * 0.35 : widthDevice * 0.26,
+                            right: Platform.OS === 'ios' ? widthDevice * 0.34 : widthDevice * 0.37,
+                            top: heightDevice * 0.33,
+                            backgroundColor: 'green',
+                            padding: 15,
+                            textAlign: 'center',
+                            borderRadius: 10
+                        }}>Thành công</Text>
+                    </View>
+                    <View style={{ flex: 3, justifyContent: 'center', alignItems: 'center' }}>
+                        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                            <Avatar.Image
+                                source={{
+                                    uri:
+                                        "https://scontent.fdad3-1.fna.fbcdn.net/v/t1.0-9/83012519_1497814183728497_1901903877645533184_o.jpg?_nc_cat=102&_nc_sid=09cbfe&_nc_ohc=l92aofIVAloAX99oBIy&_nc_ht=scontent.fdad3-1.fna&oh=ac2b60cb37775a47a9c2ccc98f38fd2d&oe=5FA585D7",
+                                }}
+                                size={70}
                             />
-                        )}
-                        styleText={{
-                            marginLeft: 10,
-                        }}
-                    />
+
+                        </View>
+                        <View style={{ flex: 1, marginBottom: 20, alignItems: 'center', flexDirection: 'column' }}>
+                            <View style={{
+                                flex: 1,
+                                width: widthDevice * 0.5,
+                                flexDirection: 'row',
+                                justifyContent: 'center',
+                                alignContent: 'center'
+                            }}>
+                                <View style={{ flex: 2, alignItems: 'center' }}>
+                                    <EntypoICon
+                                        name='user'
+                                        size={20}
+                                    />
+                                </View>
+                                <View style={{ flex: 8, alignItems: 'center' }}>
+                                    <Text style={{ fontFamily: 'Texgyreadventor-bold' }}>Lê Huy Huy</Text>
+                                </View>
+                            </View>
+                            <View style={{
+                                flex: 1,
+                                width: widthDevice * 0.5,
+                                flexDirection: 'row',
+                                justifyContent: 'center',
+                                alignContent: 'center'
+                            }}>
+                                <View style={{ flex: 2, alignItems: 'center' }}>
+                                    <Icon
+                                        name='phone'
+                                        size={20}
+                                    />
+                                </View>
+                                <View style={{ flex: 8, alignItems: 'center' }}>
+                                    <Text style={{ fontFamily: 'Texgyreadventor-bold' }}>098012342</Text>
+
+                                </View>
+                            </View>
+                        </View>
+                    </View>
                 </View>
-                <View style={{ flex: 9, flexDirection: 'column' }}>
+                <View style={{ flex: 6 }}>
                     <ScrollView contentContainerStyle={{
                         flexGrow: 1
                     }}>
-                        <View style={styles.dateFinishedView}>
-                            <Text style={styles.dateFinishedView_Text}>Thứ 5, 08/12/2020 12:43</Text>
-                        </View>
-                        <View style={styles.ratingView}>
-                            <Rating
-                                style={{ paddingVertical: 10 }}
-                                readonly={true}
-                            />
-                        </View>
-                        <View style={styles.infoPatinent}>
-                            <View style={{ flex: 1 }}>
-                                <Text style={styles.detailTrip_Title}>Người gửi yêu cầu</Text>
-                            </View>
-                            <View style={{ flex: 2, flexDirection: 'row' }}>
-                                <View style={{ flex: 2, justifyContent: 'center', alignItems: 'center' }}>
-                                    <Avatar.Image
-                                        source={{
-                                            uri:
-                                                "https://scontent.fdad3-1.fna.fbcdn.net/v/t1.0-9/83012519_1497814183728497_1901903877645533184_o.jpg?_nc_cat=102&_nc_sid=09cbfe&_nc_ohc=l92aofIVAloAX99oBIy&_nc_ht=scontent.fdad3-1.fna&oh=ac2b60cb37775a47a9c2ccc98f38fd2d&oe=5FA585D7",
-                                        }}
-                                        size={50}
-                                    />
-                                </View>
-                                <View style={{ flex: 8, flexDirection: 'column', justifyContent: 'center', marginLeft: 10 }}>
-                                    <Text style={{
-                                        fontFamily: "Texgyreadventor-bold",
-                                        fontSize: 16,
-                                        color: "#444444"
-                                    }}>Lê Quang Huy</Text>
-                                    <Text style={{ fontFamily: "Texgyreadventor-bold" }}>0907766123</Text>
-                                </View>
-                            </View>
-                        </View>
-                        <View style={styles.detailTrip}>
-                            <View style={{ flex: 1, justifyContent: 'center' }}>
-                                <Text style={styles.detailTrip_Title}>Chi Tiết Hành Trình</Text>
-                            </View>
-                            <View style={{ flex: 4, flexDirection: 'row' }}>
-                                <View style={{ flex: 2, justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-                                    <MaterialIcons
-                                        name="place"
-                                        size={30}
-                                        color="red"
-                                    />
-                                    {dotIcon}
-                                    <MaterialIcons
-                                        name="my-location"
-                                        size={30}
-                                        color="yellow"
-                                    />
-                                </View>
-                                <View style={{
-                                    flex: 8
 
-                                }}>
-                                    <View style={{ flex: 1, justifyContent: 'center' }}>
-                                        <Text style={{ fontStyle: 'italic' }}>Đón bệnh nhân</Text>
-                                        <Text numberOfLines={1} style={styles.detailTrip_Text_Location}>Bệnh viện Quân Y 175, 786 Nguyễn Kiệm</Text>
+                        <View style={{ flex: 9, flexDirection: 'column' }}>
+
+                            <View style={styles.infoPatinentDetailView}>
+                                <View style={{ flex: 1 }}>
+                                    <Text style={styles.detailTrip_Title}>Thông tin</Text>
+                                </View>
+                                <View style={{ flex: 6, flexDirection: 'column' }}>
+                                    <FeedbackShow
+                                        title="Đánh giá tài xế"
+                                        content="Bác chạy rất có tâm, hỗ trợ sơ cứu dọc đường nữa"
+                                        level={5}
+                                        size={12}
+                                    />
+                                    <FeedbackShow
+                                        title="Tình trạng bệnh"
+                                        content="Chân bị phù nặng do nhiễm trùng máu, hôn mê sâu, khá nguy kịch"
+                                    />
+                                    <FeedbackShow title="Ghi chú" content="Bệnh nhân không có giấy tờ tùy thân" />
+                                </View>
+                            </View>
+                            <View style={styles.detailTrip}>
+                            <View style={{ flex: 1 }}>
+                                    <Text style={styles.detailTrip_Title}>Hành Trình</Text>
+                                </View>
+                                <View style={{flex: 5}}>
+                                    <View style={{ flex: 1 }}>
+                                        <Place
+                                            place={{
+                                                name: "Vị trí bệnh nhân",
+                                                address: "480 Xa lộ Hà Nội, Bình Thạnh, HCM",
+                                                date: "20/07/2020",
+                                                time: '10:00'
+                                            }}
+                                            icon="https://i.ibb.co/D8HPk12/placeholder.png"
+                                        />
                                     </View>
-                                    <View style={{ flex: 1, justifyContent: 'center' }}>
-                                        <Text style={{ fontStyle: 'italic' }}>Đến</Text>
-                                        <Text numberOfLines={1} style={styles.detailTrip_Text_Location}>65/2R Ấp Đông</Text>
+                                    <View style={{ flex: 1 }}>
+                                        <Place
+                                            place={{
+                                                name: "Bệnh viện Quân Y",
+                                                address: "365 Lê Văn Việt, Quận 9, HCM",
+                                                date: "20/07/2020",
+                                                time: '10:00'
+                                            }}
+                                            icon="https://i.ibb.co/gWdQ69d/radar.png"
+                                        />
                                     </View>
                                 </View>
                             </View>
-                        </View>
-                        <View style={styles.infoPatinentDetailView}>
-                            <View style={{flex: 1}}>
-                                <Text style={styles.detailTrip_Title}>Thông tin về bệnh nhân</Text>
-                            </View>
-                            <View style={{flex: 6, flexDirection: 'column', marginLeft: 20}}>
-                                <View style={{flex: 1, flexDirection: 'column'}}>
-                                    <Text style={{fontWeight: 'bold'}}>Họ và tên:</Text>
-                                    <Text>Nguyễn Văn A</Text>
-                                </View>
-                                <View style={{flex: 1, flexDirection: 'column'}}>
-                                    <Text style={{fontWeight: 'bold'}}>Thông tin liên hệ:</Text>
-                                    <Text>098123123</Text>
-                                </View>
-                                <View style={{flex: 1, flexDirection: 'column'}}>
-                                    <Text style={{fontWeight: 'bold'}}>Tình trạng bệnh:</Text>
-                                    <Text>Bị ung thu giai đoạn cuối</Text>
-                                </View>
-                                <View style={{flex: 1, flexDirection: 'column'}}>
-                                    <Text style={{fontWeight: 'bold'}}>Yêu cầu thêm:</Text>
-                                    <Text>Bệnh viện trả về, không thể chữa khỏi nên muốn được an táng ở quê nhà</Text>
-                                </View>
-                            </View>
+
+
                         </View>
                     </ScrollView>
-
                 </View>
             </BackgroundImage>
         </View>
@@ -181,10 +200,11 @@ const styles = StyleSheet.create({
     },
     detailTrip: {
         width: widthDevice,
-        height: heightDevice * 0.3,
+        height: heightDevice * 0.4,
         paddingHorizontal: 10,
         borderBottomColor: 'silver',
-        borderBottomWidth: 0.5
+        borderBottomWidth: 0.5,
+        flexDirection: 'column'
     },
     detailTrip_Title: {
         fontFamily: "Texgyreadventor-bold",

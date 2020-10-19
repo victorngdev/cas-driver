@@ -1,15 +1,22 @@
 import React from "react";
 import { StyleSheet, Text, Image, View } from "react-native";
 
-const Place = ({ place: { name, address }, icon, title }) => (
+const Place = ({ place: { name, address, date, time }, icon }) => (
     <View style={styles.place}>
-        <View style={styles.icon}>
-            <Image style={{ width: 25, height: 25, marginRight: 10 }} source={{ uri: icon }} />
-            {title ? <Text style={styles.title}>{title}</Text> : null}
-        </View>
+        <Image style={{ width: 25, height: 25, marginRight: 10 }} source={{ uri: icon }} />
         <View style={styles.location}>
             <Text style={styles.name}>{name}</Text>
             <Text style={styles.address}>{address}</Text>
+            <View style={styles.dateTime}>
+                <View style={styles.item}>
+                    <Image style={styles.icon} source={require("../../assets/icons/date-icon.png")} />
+                    <Text style={styles.value}>{date}</Text>
+                </View>
+                <View style={styles.item}>
+                    <Image style={styles.icon} source={require("../../assets/icons/time-icon.png")} />
+                    <Text style={styles.value}>{time}</Text>
+                </View>
+            </View>
         </View>
     </View>
 );
@@ -18,30 +25,21 @@ export default Place;
 
 const styles = StyleSheet.create({
     place: {
-        width: "100%",
+        flex: 1,
         flexDirection: "row",
         alignItems: "center",
+        backgroundColor: "#fff",
+        opacity: 0.75,
         borderRadius: 10,
-        borderColor: "#000",
-        borderWidth: 0.5,
-        paddingVertical: 5,
-        paddingHorizontal: 10,
-        marginVertical: 2
-    },
-    icon: {
-        flexBasis: "25%",
-        alignItems: "center"
-    },
-    title: {
-        color: "#26324A",
-        fontFamily: "Texgyreadventor-regular",
-        fontSize: 12
+        paddingVertical: 10,
+        paddingLeft: 20,
+        paddingRight: 20,
+        marginBottom: 5
     },
     location: {
         display: "flex",
         flexDirection: "column",
-        justifyContent: "center",
-        paddingHorizontal: 5
+        justifyContent: "center"
     },
     name: {
         fontSize: 14,
@@ -52,6 +50,28 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: "#4F5C77",
         marginBottom: 5,
+        fontFamily: "Texgyreadventor-regular"
+    },
+    dateTime: {
+        width: "80%",
+        flexDirection: "row",
+        flexWrap: "nowrap",
+        justifyContent: "space-between",
+        alignItems: "center"
+    },
+    item: {
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center"
+    },
+    icon: {
+        width: 30,
+        height: 30,
+        borderRadius: 15
+    },
+    value: {
+        color: "#26324A",
+        fontSize: 13,
         fontFamily: "Texgyreadventor-regular"
     }
 });
