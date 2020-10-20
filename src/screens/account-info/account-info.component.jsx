@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Image, ScrollView, StyleSheet, Text, TextInput, View, Alert } from "react-native";
 import { Button } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
@@ -33,224 +33,77 @@ function AccountScreen(props) {
                         )}
                     />
                 </View>
-                <View
-                    style={{
-                        flex: 1
-                    }}
-                >
-                    <Text
-                        style={{
-                            fontFamily: "Texgyreadventor-regular",
-                            paddingHorizontal: 10,
-                            fontSize: 15,
-                            color: "#a2a2db",
-                            textAlign: "center"
-                        }}
-                    >
-                        Những thông tin cá nhân sẽ được bảo mật theo chính sách quy định của Nhà Nước
-                    </Text>
+                <View style={{ flex: 1 }}>
+                    <Text style={styles.policy}>Những thông tin cá nhân sẽ được bảo mật theo chính sách quy định của Nhà Nước</Text>
                 </View>
                 <View style={{ flex: 4.5 }}>
                     <View>
-                        <Text
-                            style={{
-                                flexDirection: "row",
-                                marginHorizontal: 16,
-                                marginVertical: 4,
-                                borderRadius: 20,
-                                fontSize: 15
-                            }}
-                        >
-                            Họ và tên:
-                        </Text>
+                        <Text style={styles.titleText}>Họ và tên:</Text>
                         <TextInput placeholder="Lê Quang Huy" style={styles.textInputInfo} />
                     </View>
                     <View>
-                        <Text
-                            style={{
-                                flexDirection: "row",
-                                marginHorizontal: 16,
-                                marginVertical: 4,
-                                borderRadius: 20,
-                                fontSize: 15
-                            }}
-                        >
-                            Số điện thoại:
-                        </Text>
+                        <Text style={styles.titleText}>Số điện thoại:</Text>
                         <TextInput placeholder="0359680538" style={styles.textInputInfo} />
                     </View>
                     <View>
-                        <Text
-                            style={{
-                                flexDirection: "row",
-                                marginHorizontal: 16,
-                                marginVertical: 4,
-                                borderRadius: 20,
-                                fontSize: 15
-                            }}
-                        >
-                            Biển số xe:
-                        </Text>
+                        <Text style={styles.titleText}>Biển số xe:</Text>
                         <TextInput placeholder="71 - B1 963.32" style={styles.textInputInfo} />
                     </View>
                 </View>
                 <View style={{ flex: 1, alignItems: "center" }}>
-                    <Text
-                        style={{
-                            fontSize: 20,
-                            fontFamily: "Texgyreadventor-bold",
-                            color: "#522289"
-                        }}
-                    >
-                        Hình ảnh xác thực
-                    </Text>
+                    <Text style={styles.textConfirm}>Hình ảnh xác thực</Text>
                 </View>
                 <View style={{ flex: 4 }}>
                     <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginHorizontal: -28 }}>
-                        <View
-                            style={{
-                                backgroundColor: "#FEFEFE",
-                                height: 170,
-                                width: 190,
-                                borderRadius: 15,
-                                padding: 5
-                            }}
-                        >
+                        <View style={styles.imageConfirmView}>
                             <Image
                                 source={require("../../../assets/images/chung-minh.jpg")}
-                                style={{
-                                    width: 180,
-                                    borderRadius: 10,
-                                    height: 130
-                                }}
+                                style={styles.imageConfirmView_Image}
                             />
-                            <View
-                                style={{
-                                    flexDirection: "column",
-                                    width: 180,
-                                    textAlign: "center"
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        fontSize: 13,
-                                        color: "#a2a2db",
-                                        textAlign: "center"
-                                    }}
-                                >
-                                    CMND/Thẻ căn cước hoặc hộ chiếu
-                                </Text>
+                            <View style={styles.imageConfirmView_Text_View}>
+                                <Text style={styles.imageConfirmView_Text}>CMND/Thẻ căn cước hoặc hộ chiếu</Text>
                             </View>
                         </View>
-                        <View
-                            style={{
-                                backgroundColor: "#FEFEFE",
-                                height: 170,
-                                width: 190,
-                                borderRadius: 15,
-                                padding: 5
-                            }}
-                        >
+                        <View style={styles.imageConfirmView}>
                             <Image
                                 source={require("../../../assets/images/giayphep.jpg")}
-                                style={{
-                                    width: 180,
-                                    borderRadius: 10,
-                                    height: 130
-                                }}
+                                style={styles.imageConfirmView_Image}
                             />
-                            <View
-                                style={{
-                                    flexDirection: "column",
-                                    width: 180,
-                                    textAlign: "center"
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        fontSize: 13,
-                                        color: "#a2a2db",
-                                        textAlign: "center"
-                                    }}
-                                >
-                                    Giấy phép lái xe
-                                </Text>
+                            <View style={styles.imageConfirmView_Text_View}>
+                                <Text style={styles.imageConfirmView_Text}>Giấy phép lái xe</Text>
                             </View>
                         </View>
-                        <View
-                            style={{
-                                backgroundColor: "#FEFEFE",
-                                height: 170,
-                                width: 190,
-                                borderRadius: 15,
-                                padding: 5
-                            }}
-                        >
+                        <View style={styles.imageConfirmView}>
                             <Image
                                 source={require("../../../assets/images/giaydangkyxe.jpg")}
-                                style={{
-                                    width: 180,
-                                    borderRadius: 10,
-                                    height: 130
-                                }}
+                                style={styles.imageConfirmView_Image}
                             />
-                            <View
-                                style={{
-                                    flexDirection: "column",
-                                    width: 180,
-                                    textAlign: "center"
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        fontSize: 13,
-                                        color: "#a2a2db",
-                                        textAlign: "center"
-                                    }}
-                                >
-                                    Giấy đăng ký xe
-                                </Text>
+                            <View style={styles.imageConfirmView_Text_View}>
+                                <Text style={styles.imageConfirmView_Text}>Giấy đăng ký xe</Text>
                             </View>
                         </View>
-                        <View
-                            style={{
-                                backgroundColor: "#FEFEFE",
-                                height: 170,
-                                width: 190,
-                                borderRadius: 15,
-                                padding: 5
-                            }}
-                        >
+                        <View style={styles.imageConfirmView}>
                             <Image
                                 source={require("../../../assets/images/xecuuthuong.jpg")}
-                                style={{
-                                    width: 180,
-                                    borderRadius: 10,
-                                    height: 130
-                                }}
+                                style={styles.imageConfirmView_Image}
                             />
-                            <View
-                                style={{
-                                    flexDirection: "column",
-                                    width: 180,
-                                    textAlign: "center"
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        fontSize: 13,
-                                        color: "#a2a2db",
-                                        textAlign: "center"
-                                    }}
-                                >
-                                    Xe cứu thương
-                                </Text>
+                            <View style={styles.imageConfirmView_Text_View}>
+                                <Text style={styles.imageConfirmView_Text}>Xe cứu thương</Text>
                             </View>
                         </View>
                     </ScrollView>
                 </View>
                 <View style={{ flex: 1, paddingHorizontal: 10 }}>
-                    <Button mode="contained" color="green" labelStyle={{ fontSize: 17, fontWeight: "bold" }}>
+                    <Button
+                        mode="contained"
+                        color="green"
+                        labelStyle={{ fontSize: 17, fontWeight: "bold" }}
+                        onPress={() => {
+                            Alert.alert(
+                                "Cập nhập thành công"
+                            );
+                        }}
+                    >
                         CẬP NHẬP
                     </Button>
                 </View>
@@ -274,18 +127,49 @@ const styles = StyleSheet.create({
         fontSize: 15
     },
     policy: {
-        flex: 1,
-        paddingHorizontal: 40,
-        marginTop: 18
+        fontFamily: "Texgyreadventor-regular",
+        paddingHorizontal: 10,
+        fontSize: 14,
+        color: "#a2a2db",
+        textAlign: "center"
     },
     editInfo: {
         flex: 2
     },
-    imageConfirm: {
+
+    titleText: {
+        flexDirection: "row",
+        marginHorizontal: 16,
+        marginVertical: 4,
+        borderRadius: 20,
+        fontSize: 15
+    },
+    textConfirm: {
+        fontSize: 20,
+        fontFamily: "Texgyreadventor-bold",
+        color: "#522289"
+    },
+    imageConfirmView: {
+        backgroundColor: "#FEFEFE",
+        height: 170,
+        width: 190,
+        borderRadius: 15,
+        padding: 5
+    },
+    imageConfirmView_Text_View: {
         flexDirection: "column",
-        marginTop: 10,
-        paddingHorizontal: 20,
+        width: 180,
         textAlign: "center"
+    },
+    imageConfirmView_Text: {
+        fontSize: 13,
+        color: "#a2a2db",
+        textAlign: "center"
+    },
+    imageConfirmView_Image: {
+        width: 180,
+        borderRadius: 10,
+        height: 130
     }
 });
 
