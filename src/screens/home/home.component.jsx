@@ -11,6 +11,8 @@ import RejectModal from "../../components/reject-modal.component";
 import MessageModal from "../../components/message-modal.component";
 import RequestModal from "../../components/request-modal.component";
 import TransportationInfo from "../../components/transportation-info.component";
+import ProblemModal from "../../components/problem-modal.component";
+import KeyboardAvoiding from "../../components/keyboard-avoding.component";
 
 const HomeScreen = ({ navigation }) => {
     const pickUp = {
@@ -36,6 +38,8 @@ const HomeScreen = ({ navigation }) => {
     const [isReject, setIsReject] = useState(false);
     const [isFinish, setIsFinish] = useState(false);
     const [rejectOption, setRejectOption] = useState("first");
+    const [isProblem, setIsProblem] = useState(false);
+    const [problem, setProblem] = useState("first");
 
     const toggleAction = () => {
         setIsReady(!isReady);
@@ -53,6 +57,21 @@ const HomeScreen = ({ navigation }) => {
         setRequest(null);
         setIsReject(false);
         setIsFinish(false);
+    };
+
+    const handleAccept = () => {
+        setIsToggle(false);
+        setTitle("Đang đón bệnh nhân");
+    };
+
+    const handleArrived = () => {
+        setIsArrived(true);
+        setTitle("Đang chở bệnh nhân");
+    };
+
+    const handleReport = () => {
+        setIsProblem(false);
+        setRequest(null);
     };
 
     return (
@@ -73,12 +92,19 @@ const HomeScreen = ({ navigation }) => {
                     <RequestModal
                         pickUp={pickUp}
                         destination={destination}
-                        setIsToggle={setIsToggle}
+                        handleAccept={handleAccept}
                         setRequest={setRequest}
                         isVisible={isToggle}
                     />
                 ) : null}
                 <MessageModal action={handleFinish} isVisible={isFinish} />
+                <ProblemModal
+                    isVisible={isProblem}
+                    setIsProblem={setIsProblem}
+                    handleReport={handleReport}
+                    problemOption={problem}
+                    setProblemOption={setProblem}
+                />
                 {/* Map screen */}
                 <View style={request ? (isArrived ? { flex: 6 } : { flex: 5 }) : { flex: 7 }}>
                     <MapView
@@ -101,9 +127,10 @@ const HomeScreen = ({ navigation }) => {
                     <TransportationInfo
                         isArrived={isArrived}
                         request={request}
-                        setIsArrived={setIsArrived}
+                        handleArrived={handleArrived}
                         setIsFinish={setIsFinish}
                         setIsReject={setIsReject}
+                        setIsProblem={setIsProblem}
                     />
                 )}
             </BackgroundImage>

@@ -3,10 +3,9 @@ import { View, StyleSheet } from "react-native";
 
 import Place from "./place.component";
 import ContactItem from "./contact-item.component";
-import CustomButton from "./custom-button.comonent";
 import GroupButton from "./group-button.component";
 
-const TransportationInfo = ({ isArrived, setIsReject, setIsArrived, setIsFinish, request }) => (
+const TransportationInfo = ({ isArrived, setIsReject, handleArrived, setIsFinish, request, setIsProblem }) => (
     <View style={styles.transportationContainer}>
         <View style={styles.transportation}>
             <Place
@@ -17,6 +16,7 @@ const TransportationInfo = ({ isArrived, setIsReject, setIsArrived, setIsFinish,
                 title="Điểm đến"
                 place={!isArrived ? request.pickUp : request.destination}
                 icon="https://i.ibb.co/gWdQ69d/radar.png"
+                isEditable={isArrived}
             />
             {!isArrived ? (
                 <View style={styles.groupContact}>
@@ -44,12 +44,27 @@ const TransportationInfo = ({ isArrived, setIsReject, setIsArrived, setIsFinish,
                         {
                             itemId: 2,
                             label: "Đón bệnh nhân",
-                            action: () => setIsArrived(true)
+                            action: () => handleArrived()
                         }
                     ]}
                 />
             ) : (
-                <CustomButton action={() => setIsFinish(true)} label="Kết thúc" type="finish" />
+                <GroupButton
+                    items={[
+                        {
+                            itemId: 1,
+                            label: "Báo cáo sự cố",
+                            type: "reject",
+                            action: () => setIsProblem(true)
+                        },
+                        {
+                            itemId: 2,
+                            label: "Kết thúc",
+                            type: "finish",
+                            action: () => setIsFinish(true)
+                        }
+                    ]}
+                />
             )}
         </View>
     </View>

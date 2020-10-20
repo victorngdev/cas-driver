@@ -25,8 +25,6 @@ const styles = StyleSheet.create({
         borderColor: "#ff0000"
     },
     finish: {
-        marginTop: 20,
-        paddingVertical: 8,
         paddingHorizontal: 30
     },
     action: {

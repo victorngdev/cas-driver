@@ -6,16 +6,15 @@ import GroupButton from "./group-button.component";
 import Place from "./place.component";
 import RequestInfo from "./request-info.component";
 
-const RequestModal = ({ isVisible, pickUp, destination, setRequest, setIsToggle }) => (
+const RequestModal = ({ isVisible, pickUp, destination, setRequest, handleAccept }) => (
     <CustomModal visible={isVisible}>
         <View style={styles.groupTitle}>
             <Text style={styles.modalTitle}>Yêu cầu mới</Text>
             <Text style={styles.requestType}>Đặt giúp</Text>
-            <Text style={styles.range}>120 km</Text>
         </View>
         <ScrollView showsVerticalScrollIndicator={false} directionalLockEnabled={true} style={styles.requestDetails}>
-            <Place title="Điểm đón" place={pickUp} icon="https://i.ibb.co/D8HPk12/placeholder.png" />
-            <Place title="Điểm đến" place={destination} icon="https://i.ibb.co/gWdQ69d/radar.png" />
+            <Place title="Điểm đón" place={pickUp} distance={120} icon="https://i.ibb.co/D8HPk12/placeholder.png" />
+            <Place title="Điểm đến" place={destination} distance={256} icon="https://i.ibb.co/gWdQ69d/radar.png" />
             <RequestInfo
                 title="Thông tin người gọi"
                 items={[
@@ -26,16 +25,20 @@ const RequestModal = ({ isVisible, pickUp, destination, setRequest, setIsToggle 
             <RequestInfo
                 title="Thông tin người bệnh"
                 items={[
-                    { id: 1, label: "Tên", content: "Mai Thiên Toàn" },
-                    { id: 2, label: "Số điện thoại", content: "0327008005" },
+                    { label: "Tên", content: "Mai Thiên Toàn" },
+                    { label: "Số điện thoại", content: "0327008005" },
                     {
-                        id: 3,
-                        label: "Tình trạng bệnh",
+                        label: "Tình trạng cấp cứu",
                         content: "Gãy xương chân do tai nạn giao thông"
+                    },
+                    {
+                        label: "Hồ sơ sức khỏe",
+                        content:
+                            "Giới tính: Nam, 64 tuổi, huyết áp 134/85. Mắc bệnh huyết áp cao. Mẫn cảm với carbamazepine, phenobarbital và phenytoin."
                     }
                 ]}
             />
-            <RequestInfo title="Ghi chú" items={[{ id: 1, content: "Cần dụng cụ sơ cứu tại chỗ" }]} />
+            <RequestInfo title="Ghi chú" items={[{ content: "Cần dụng cụ sơ cứu tại chỗ" }]} />
         </ScrollView>
         <GroupButton
             items={[
@@ -48,7 +51,7 @@ const RequestModal = ({ isVisible, pickUp, destination, setRequest, setIsToggle 
                 {
                     itemId: 2,
                     label: "Chấp nhận ",
-                    action: () => setIsToggle(false),
+                    action: () => handleAccept(),
                     counter: "4:56"
                 }
             ]}

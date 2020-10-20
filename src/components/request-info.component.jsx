@@ -3,11 +3,13 @@ import { View, Text, StyleSheet } from "react-native";
 
 import RequestInfoItem from "./request-info-item.component";
 
+const mapKey = {};
+
 const RequestInfo = ({ title, items }) => (
     <View style={styles.requesterInfo}>
         <Text style={styles.infoTitle}>{title}</Text>
-        {items.map(({ id, ...otherProps }) => (
-            <RequestInfoItem key={id} {...otherProps} />
+        {items.map(({ label, content }, index) => (
+            <RequestInfoItem key={index} label={label} content={content} />
         ))}
     </View>
 );
