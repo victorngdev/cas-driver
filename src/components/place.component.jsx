@@ -28,7 +28,6 @@ const Place = ({ place: { name, address, date, time }, icon, title, distance, is
                     ) : (
                         <Text style={styles.name}>{name}</Text>
                     )}
-                    {distance ? <Text style={styles.distance}>{distance} km</Text> : null}
                     {isEditable ? (
                         isEdit ? (
                             <Icon
@@ -49,6 +48,7 @@ const Place = ({ place: { name, address, date, time }, icon, title, distance, is
                         )
                     ) : null}
                 </View>
+                {distance ? <Text style={styles.distance}>{distance} km</Text> : null}
                 <Text style={styles.address}>{address}</Text>
                 {date ? (
                     <View style={styles.dateTime}>
@@ -89,7 +89,6 @@ const styles = StyleSheet.create({
     distance: {
         fontFamily: "Texgyreadventor-regular",
         fontSize: 10,
-        marginLeft: 10,
         color: "#460084",
         borderColor: "#460084"
     },
