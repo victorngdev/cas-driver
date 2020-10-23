@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, ScrollView, StyleSheet } from "react-native";
 
 import CustomModal from "./custom-modal.componet";
@@ -6,58 +6,74 @@ import GroupButton from "./group-button.component";
 import Place from "./place.component";
 import RequestInfo from "./request-info.component";
 
-const RequestModal = ({ isVisible, pickUp, destination, setRequest, handleAccept }) => (
-    <CustomModal visible={isVisible}>
-        <View style={styles.groupTitle}>
-            <Text style={styles.modalTitle}>Yêu cầu mới</Text>
-            <Text style={styles.requestType}>Đặt giúp</Text>
-        </View>
-        <ScrollView showsVerticalScrollIndicator={false} directionalLockEnabled={true} style={styles.requestDetails}>
-            <Place title="Điểm đón" place={pickUp} distance={120} icon="https://i.ibb.co/D8HPk12/placeholder.png" />
-            <Place title="Điểm đến" place={destination} distance={256} icon="https://i.ibb.co/gWdQ69d/radar.png" />
-            <RequestInfo
-                title="Thông tin người gọi"
+const RequestModal = ({ isVisible, pickUp, destination, setRequest, handleAccept }) => {
+    return (
+        <CustomModal visible={isVisible}>
+            <View style={styles.groupTitle}>
+                <Text style={styles.modalTitle}>Yêu cầu mới</Text>
+                <Text style={styles.requestType}>Đặt giúp</Text>
+            </View>
+            <ScrollView
+                showsVerticalScrollIndicator={false}
+                directionalLockEnabled={true}
+                style={styles.requestDetails}
+            >
+                <Place
+                    title="Điểm đón"
+                    place={pickUp}
+                    distance={`Cách bạn ${5}`}
+                    icon="https://i.ibb.co/D8HPk12/placeholder.png"
+                />
+                <Place
+                    title="Điểm đến"
+                    place={destination}
+                    distance={`Cách điểm đón ${20}`}
+                    icon="https://i.ibb.co/gWdQ69d/radar.png"
+                />
+                <RequestInfo
+                    title="Thông tin người gọi"
+                    items={[
+                        { id: 1, label: "Tên", content: "Trương Ngọc Minh" },
+                        { id: 2, label: "Số điện thoại", content: "0931738872" }
+                    ]}
+                />
+                <RequestInfo
+                    title="Thông tin người bệnh"
+                    items={[
+                        { label: "Tên", content: "Mai Thiên Toàn" },
+                        { label: "Số điện thoại", content: "0327008005" },
+                        {
+                            label: "Tình trạng cấp cứu",
+                            content: "Gãy xương chân do tai nạn giao thông"
+                        },
+                        {
+                            label: "Hồ sơ sức khỏe",
+                            content:
+                                "Giới tính: Nam, 64 tuổi, huyết áp 134/85. Mắc bệnh huyết áp cao. Mẫn cảm với carbamazepine, phenobarbital và phenytoin."
+                        }
+                    ]}
+                />
+                <RequestInfo title="Ghi chú" items={[{ content: "Cần dụng cụ sơ cứu tại chỗ" }]} />
+            </ScrollView>
+            <GroupButton
                 items={[
-                    { id: 1, label: "Tên", content: "Trương Ngọc Minh" },
-                    { id: 2, label: "Số điện thoại", content: "0931738872" }
-                ]}
-            />
-            <RequestInfo
-                title="Thông tin người bệnh"
-                items={[
-                    { label: "Tên", content: "Mai Thiên Toàn" },
-                    { label: "Số điện thoại", content: "0327008005" },
                     {
-                        label: "Tình trạng cấp cứu",
-                        content: "Gãy xương chân do tai nạn giao thông"
+                        itemId: 1,
+                        label: "Từ chối",
+                        type: "reject",
+                        action: () => setRequest(null)
                     },
                     {
-                        label: "Hồ sơ sức khỏe",
-                        content:
-                            "Giới tính: Nam, 64 tuổi, huyết áp 134/85. Mắc bệnh huyết áp cao. Mẫn cảm với carbamazepine, phenobarbital và phenytoin."
+                        itemId: 2,
+                        label: "Chấp nhận ",
+                        action: () => handleAccept(),
+                        counter: "4:56"
                     }
                 ]}
             />
-            <RequestInfo title="Ghi chú" items={[{ content: "Cần dụng cụ sơ cứu tại chỗ" }]} />
-        </ScrollView>
-        <GroupButton
-            items={[
-                {
-                    itemId: 1,
-                    label: "Từ chối",
-                    type: "reject",
-                    action: () => setRequest(null)
-                },
-                {
-                    itemId: 2,
-                    label: "Chấp nhận ",
-                    action: () => handleAccept(),
-                    counter: "4:56"
-                }
-            ]}
-        />
-    </CustomModal>
-);
+        </CustomModal>
+    );
+};
 
 export default RequestModal;
 

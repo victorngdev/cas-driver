@@ -3,28 +3,14 @@ import { StyleSheet, Text, View, TextInput } from "react-native";
 
 import BackgroundImage from "../../components/background-screen.component";
 import ButtonText from "../../components/button-text.component";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import KeyboardAvoiding from "../../components/keyboard-avoding.component";
+import Header from "../../components/header.component";
 
 function RegisterCarScreen(props) {
     return (
-        <View style={styles.container}>
-            <BackgroundImage>
-                <View
-                    style={{
-                        flexDirection: "row",
-                        marginTop: 40,
-                        alignItems: "center",
-                        paddingHorizontal: 10
-                    }}
-                >
-                    <Icon
-                        name="menu"
-                        size={30}
-                        color="#a2a2db"
-                        style={{ width: 20 }}
-                        onPress={() => props.navigation.openDrawer()}
-                    />
-                </View>
+        <BackgroundImage>
+            <KeyboardAvoiding style={styles.container}>
+                <Header title="Đăng kí xe" />
                 <View style={styles.header}>
                     <Text style={styles.headerTitle}>Đăng kí xe</Text>
                     <Text style={styles.securityText}>
@@ -34,15 +20,20 @@ function RegisterCarScreen(props) {
                 <View style={styles.registerTextInfo}>
                     <View style={styles.name}>
                         <Text style={styles.titleInfo}>Họ và tên</Text>
-                        <TextInput style={styles.titleInput} placeholder="" />
+                        <TextInput defaultValue="Lê Quang Huy" style={styles.titleInput} placeholder="" />
                     </View>
                     <View style={styles.phone}>
                         <Text style={styles.titleInfo}>Số điện thoại</Text>
-                        <TextInput style={styles.titleInput} keyboardType="numeric" placeholder="" />
+                        <TextInput
+                            defaultValue="0931738872"
+                            keyboardType="numeric"
+                            style={styles.titleInput}
+                            placeholder=""
+                        />
                     </View>
                     <View style={styles.licensePlate}>
                         <Text style={styles.titleInfo}>Biển số xe</Text>
-                        <TextInput style={styles.titleInput} placeholder="" />
+                        <TextInput defaultValue="71 - C1 825.23" style={styles.titleInput} placeholder="" />
                     </View>
                 </View>
 
@@ -52,14 +43,16 @@ function RegisterCarScreen(props) {
                     styleButton={styles.button}
                     gotoScreen={() => props.navigation.navigate("RegisterCarImage")}
                 />
-            </BackgroundImage>
-        </View>
+            </KeyboardAvoiding>
+        </BackgroundImage>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        width: "90%",
+        height: "100%",
         flexDirection: "column"
     },
     header: {
@@ -69,39 +62,43 @@ const styles = StyleSheet.create({
     headerTitle: {
         textAlign: "center",
         color: "#000",
-        fontSize: 30
+        fontSize: 30,
+        fontFamily: "Texgyreadventor-regular"
     },
     securityText: {
         marginTop: 10,
         marginHorizontal: 8,
-        fontSize: 17,
+        fontSize: 12,
         textAlign: "center",
-        color: "gray"
+        fontFamily: "Texgyreadventor-regular",
+        color: "#777"
     },
     registerTextInfo: {
         marginTop: 25,
         marginHorizontal: 10
     },
     titleInfo: {
-        marginTop: 15,
-        fontSize: 18,
-        color: "#000"
+        marginTop: 10,
+        fontSize: 14,
+        color: "#000",
+        fontFamily: "Texgyreadventor-regular",
+        color: "#4F5C77"
     },
     titleInput: {
-        borderWidth: 0.1,
-        marginTop: 10,
-        fontSize: 18,
-        height: 40,
-        color: "#000",
-        backgroundColor: "#D4EAF6"
+        marginTop: 5,
+        fontSize: 16,
+        fontFamily: "Texgyreadventor-regular",
+        backgroundColor: "#fff",
+        opacity: 0.75,
+        paddingVertical: 7,
+        paddingHorizontal: 20,
+        borderRadius: 25,
+        color: "#4F5C77"
     },
     button: {
         marginTop: 30,
         backgroundColor: "#FFAB2E",
-        borderRadius: 15,
-        width: 100,
-        height: 35,
-        alignSelf: "center"
+        borderRadius: 25
     },
     text: {
         textAlign: "center",

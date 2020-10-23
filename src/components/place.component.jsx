@@ -90,10 +90,6 @@ const styles = StyleSheet.create({
         fontFamily: "Texgyreadventor-regular",
         fontSize: 10,
         marginLeft: 10,
-        paddingVertical: 2,
-        paddingHorizontal: 8,
-        borderRadius: 15,
-        borderWidth: 0.5,
         color: "#460084",
         borderColor: "#460084"
     },

@@ -6,13 +6,14 @@ import LogoName from "../../components/logo-name.component";
 import TextInputIcon from "../../components/text-input-with-icon.component";
 import ButtonText from "../../components/button-text.component";
 import TextLinking from "../../components/text-linking.component";
+import KeyboardAvoiding from "../../components/keyboard-avoding.component";
 
 import styles from "./login.style";
 
 const LoginScreen = ({ navigation }) => {
     return (
-        <View style={styles.container}>
-            <BackgroundLogin>
+        <BackgroundLogin>
+            <KeyboardAvoiding style={styles.container}>
                 <View style={styles.block_logo_name}>
                     <LogoName />
                 </View>
@@ -31,8 +32,8 @@ const LoginScreen = ({ navigation }) => {
                     />
                     <TextLinking contentLink="Quên mật khẩu?" link={() => navigation.navigate("ResetPass")} />
                 </View>
-            </BackgroundLogin>
-        </View>
+            </KeyboardAvoiding>
+        </BackgroundLogin>
     );
 };
 

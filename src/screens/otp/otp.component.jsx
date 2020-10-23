@@ -8,11 +8,12 @@ import LogoName from "../../components/logo-name.component";
 import BackgroundLogin from "../../components/background-screen-login.component";
 
 import styles from "./otp.styles";
+import KeyboardAvoiding from "../../components/keyboard-avoding.component";
 
 const OtpScreen = ({ navigation }) => {
     return (
-        <View style={styles.container}>
-            <BackgroundLogin>
+        <BackgroundLogin>
+            <KeyboardAvoiding style={styles.container}>
                 <View style={styles.block_logo_name}>
                     <LogoName />
                 </View>
@@ -27,8 +28,8 @@ const OtpScreen = ({ navigation }) => {
                         link={() => navigation.navigate("Otp")}
                     />
                 </View>
-            </BackgroundLogin>
-        </View>
+            </KeyboardAvoiding>
+        </BackgroundLogin>
     );
 };
 

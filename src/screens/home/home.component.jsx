@@ -12,7 +12,6 @@ import MessageModal from "../../components/message-modal.component";
 import RequestModal from "../../components/request-modal.component";
 import TransportationInfo from "../../components/transportation-info.component";
 import ProblemModal from "../../components/problem-modal.component";
-import KeyboardAvoiding from "../../components/keyboard-avoding.component";
 
 const HomeScreen = ({ navigation }) => {
     const pickUp = {
@@ -40,6 +39,12 @@ const HomeScreen = ({ navigation }) => {
     const [rejectOption, setRejectOption] = useState("first");
     const [isProblem, setIsProblem] = useState(false);
     const [problem, setProblem] = useState("first");
+    const [location, setLocation] = useState({
+        latitude: 10.86494,
+        longitude: 106.61501,
+        latitudeDelta: 0.001,
+        longitudeDelta: 0.001
+    });
 
     const toggleAction = () => {
         setIsReady(!isReady);
@@ -108,19 +113,26 @@ const HomeScreen = ({ navigation }) => {
                 {/* Map screen */}
                 <View style={request ? (isArrived ? { flex: 6 } : { flex: 5 }) : { flex: 7 }}>
                     <MapView
+                        initialRegion={location}
                         style={styles.map}
                         provider={PROVIDER_GOOGLE}
                         showsUserLocation={true}
                         showsMyLocationButton={true}
                         followsUserLocation={true}
-                    />
+                    >
+                        <MapView.Marker
+                            coordinate={{ latitude: location.latitude, longitude: location.longitude }}
+                            title={"Your Location"}
+                            draggable
+                        />
+                    </MapView>
                 </View>
                 {!request ? (
                     <View style={{ flex: 2 }}>
                         <HomeDriverInfo
                             ratingLevel={5}
                             addressName="Vị trí hiện tại"
-                            addressValue="1141 Quang Trung, Gò Vấp, HCM"
+                            addressValue="1141/15/7, Nguyễn Ảnh Thủ, P. Trung Mỹ Tây, Quận 12"
                         />
                     </View>
                 ) : (

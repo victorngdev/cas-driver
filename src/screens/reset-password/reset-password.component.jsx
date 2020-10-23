@@ -9,11 +9,12 @@ import LogoName from "../../components/logo-name.component";
 import BackgroundLogin from "../../components/background-screen-login.component";
 
 import styles from "./reset-password.styles";
+import KeyboardAvoiding from "../../components/keyboard-avoding.component";
 
 const ResetPassScreen = ({ navigation }) => {
     return (
-        <View style={styles.container}>
-            <BackgroundLogin>
+        <BackgroundLogin>
+            <KeyboardAvoiding style={styles.container}>
                 <View style={styles.block_logo_name}>
                     <LogoName />
                 </View>
@@ -26,8 +27,8 @@ const ResetPassScreen = ({ navigation }) => {
                         link={() => navigation.navigate("Register")}
                     />
                 </View>
-            </BackgroundLogin>
-        </View>
+            </KeyboardAvoiding>
+        </BackgroundLogin>
     );
 };
 

@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Text, View, Dimensions, Image, TouchableOpacity } from "react-native";
 import LabelIcon from "./label-icon.component";
 
-const screen = Dimensions.get('screen');
+const screen = Dimensions.get("screen");
 const widthDevice = screen.width;
 const heightDevice = screen.height;
 
@@ -14,12 +14,8 @@ const HistoryComponent = ({ image_url, title, address, goToDetails }) => {
                     <Image source={{ uri: image_url }} style={styles.image} />
                 </View>
                 <View style={styles.details}>
-                    <View style={styles.container_detail_and_description}>
-                        <Text style={styles.title}>{title}</Text>
-                    </View>
-                    <View style={styles.container_detail_and_description}>
-                        <Text style={styles.description}>{address}</Text>
-                    </View>
+                    <Text style={styles.title}>{title}</Text>
+                    <Text style={styles.description}>{address}</Text>
                     <View style={styles.container_date_time}>
                         <LabelIcon
                             iconSrc={require("../../assets/icons/date-icon.png")}
@@ -35,8 +31,8 @@ const HistoryComponent = ({ image_url, title, address, goToDetails }) => {
                 </View>
             </TouchableOpacity>
         </View>
-    )
-}
+    );
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -76,10 +72,6 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: "#3E5075",
         fontFamily: "Texgyreadventor-regular"
-    },
-    container_detail_and_description: {
-        flex: 1,
-        justifyContent: 'center'
     },
     container_date_time: {
         flex: 1,

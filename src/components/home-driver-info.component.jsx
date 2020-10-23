@@ -25,12 +25,12 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff"
     },
     currentLocation: {
-        flex: 3,
+        flex: 4,
         // flexBasis: "70%",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
-        paddingHorizontal: 10,
+        paddingHorizontal: 10
     },
     locationTitle: {
         fontSize: 16,
@@ -45,14 +45,14 @@ const styles = StyleSheet.create({
     },
     rating: {
         // flexBasis: "25%",
-        flex: 1,
+        flex: 2,
         justifyContent: "center",
-        alignItems: 'center',
+        alignItems: "center"
     },
     ratingTitle: {
         fontSize: 16,
         fontFamily: "Texgyreadventor-bold",
         color: "#444444",
-        textAlign: 'center'
+        textAlign: "center"
     }
 });
