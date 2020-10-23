@@ -46,8 +46,12 @@ const HistoryDetailScreen = ({ navigation, isFeedback = true }) => (
                     </>
                 ) : null}
                 <FeedbackShow
-                    title="Tình trạng bệnh"
+                    title="Tình trạng cấp cứu"
                     content="Chân bị phù nặng do nhiễm trùng máu, hôn mê sâu, khá nguy kịch"
+                />
+                <FeedbackShow
+                    title="Hồ sơ bệnh"
+                    content="Giới tính: Nam, 64 tuổi, huyết áp 134/85. Mắc bệnh huyết áp cao. Mẫn cảm với carbamazepine, phenobarbital và phenytoin."
                 />
                 <FeedbackShow title="Ghi chú" content="Bệnh nhân không có giấy tờ tùy thân" />
             </ScrollView>
