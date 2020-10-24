@@ -33,8 +33,8 @@ const RequestModal = ({ isVisible, pickUp, destination, setRequest, handleAccept
                 <RequestInfo
                     title="Thông tin người gọi"
                     items={[
-                        { id: 1, label: "Tên", content: "Trương Ngọc Minh" },
-                        { id: 2, label: "Số điện thoại", content: "0931738872" }
+                        { id: 1, label: "Tên", content: "Hữu Công" },
+                        { id: 2, label: "Số điện thoại", content: "0931738872" },
                     ]}
                 />
                 <RequestInfo
@@ -44,13 +44,13 @@ const RequestModal = ({ isVisible, pickUp, destination, setRequest, handleAccept
                         { label: "Số điện thoại", content: "0327008005" },
                         {
                             label: "Tình trạng cấp cứu",
-                            content: "Gãy xương chân do tai nạn giao thông"
+                            content: "Gãy xương chân do tai nạn giao thông",
                         },
                         {
                             label: "Hồ sơ sức khỏe",
                             content:
-                                "Giới tính: Nam, 64 tuổi, huyết áp 134/85. Mắc bệnh huyết áp cao. Mẫn cảm với carbamazepine, phenobarbital và phenytoin."
-                        }
+                                "Giới tính: Nam, 64 tuổi, huyết áp 134/85. Mắc bệnh huyết áp cao. Mẫn cảm với carbamazepine, phenobarbital và phenytoin.",
+                        },
                     ]}
                 />
                 <RequestInfo title="Ghi chú" items={[{ content: "Cần dụng cụ sơ cứu tại chỗ" }]} />
@@ -61,14 +61,14 @@ const RequestModal = ({ isVisible, pickUp, destination, setRequest, handleAccept
                         itemId: 1,
                         label: "Từ chối",
                         type: "reject",
-                        action: () => setRequest(null)
+                        action: () => setRequest(null),
                     },
                     {
                         itemId: 2,
                         label: "Chấp nhận ",
                         action: () => handleAccept(),
-                        counter: "4:56"
-                    }
+                        counter: "4:56",
+                    },
                 ]}
             />
         </CustomModal>
@@ -82,13 +82,13 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
     },
     modalTitle: {
         fontFamily: "Texgyreadventor-bold",
         color: "#000",
         fontSize: 16,
-        textTransform: "uppercase"
+        textTransform: "uppercase",
     },
     requestType: {
         fontFamily: "Texgyreadventor-bold",
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         fontSize: 10,
         textTransform: "uppercase",
-        marginLeft: 10
+        marginLeft: 10,
     },
     range: {
         fontFamily: "Texgyreadventor-regular",
@@ -110,11 +110,11 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 15,
         paddingVertical: 2,
-        paddingHorizontal: 5
+        paddingHorizontal: 5,
     },
     requestDetails: {
         width: "100%",
         marginVertical: 5,
-        marginHorizontal: 10
-    }
+        marginHorizontal: 10,
+    },
 });
