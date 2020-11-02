@@ -9,12 +9,13 @@ const styles = StyleSheet.create({
     //css for block app_logo-name
     block_logo_name: {
         flex: 2,
-        marginVertical: 40
+        marginTop: 40
     },
     //css for block button
     block_button: {
-        flex: 4,
+        flex: 5,
         flexDirection: "column",
+        marginTop: 20,
         alignItems: "center"
     }
 });

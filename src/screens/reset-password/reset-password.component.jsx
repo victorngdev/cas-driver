@@ -1,4 +1,5 @@
 import React from "react";
+
 import { View } from "react-native";
 
 import TextInputIcon from "../../components/text-input-with-icon.component";
@@ -7,10 +8,10 @@ import TextLinking from "../../components/text-linking.component";
 import LogoName from "../../components/logo-name.component";
 import BackgroundLogin from "../../components/background-screen-login.component";
 
-import styles from "./otp.styles";
+import styles from "./reset-password.styles";
 import KeyboardAvoiding from "../../components/keyboard-avoding.component";
 
-const OtpScreen = ({ navigation }) => {
+const ResetPassScreen = ({ navigation }) => {
     return (
         <BackgroundLogin>
             <KeyboardAvoiding style={styles.container}>
@@ -18,14 +19,12 @@ const OtpScreen = ({ navigation }) => {
                     <LogoName />
                 </View>
                 <View style={styles.block_button}>
-                    <TextInputIcon imgSrc={require("../../../assets/icons/otp-icon.png")} placeholder="Nhập mã OTP" />
-                    <TextInputIcon imgSrc={require("../../../assets/icons/key.png")} placeholder="Nhập mật khẩu mới" />
-                    <TextInputIcon imgSrc={require("../../../assets/icons/key.png")} placeholder="Nhập lại mật khẩu" />
-                    <ButtonText textContent="XÁC NHẬN" gotoScreen={() => navigation.navigate("Home")} />
+                    <TextInputIcon imgSrc={require("../../../assets/icons/phone.png")} placeholder="Số điện thoại" />
+                    <ButtonText textContent="Gửi mã OTP" gotoScreen={() => navigation.navigate("Otp")} />
                     <TextLinking
-                        contentText="Chưa nhận được mã OTP?"
-                        contentLink="Gửi lại mã"
-                        link={() => navigation.navigate("Otp")}
+                        contentText="Chưa có tài khoản?"
+                        contentLink="Đăng ký"
+                        link={() => navigation.navigate("Register")}
                     />
                 </View>
             </KeyboardAvoiding>
@@ -33,4 +32,4 @@ const OtpScreen = ({ navigation }) => {
     );
 };
 
-export default OtpScreen;
+export default ResetPassScreen;

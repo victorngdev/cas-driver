@@ -7,10 +7,10 @@ import TextLinking from "../../components/text-linking.component";
 import LogoName from "../../components/logo-name.component";
 import BackgroundLogin from "../../components/background-screen-login.component";
 
-import styles from "./otp.styles";
+import styles from "./register.styles";
 import KeyboardAvoiding from "../../components/keyboard-avoding.component";
 
-const OtpScreen = ({ navigation }) => {
+const RegisterScreen = ({ navigation }) => {
     return (
         <BackgroundLogin>
             <KeyboardAvoiding style={styles.container}>
@@ -18,14 +18,15 @@ const OtpScreen = ({ navigation }) => {
                     <LogoName />
                 </View>
                 <View style={styles.block_button}>
-                    <TextInputIcon imgSrc={require("../../../assets/icons/otp-icon.png")} placeholder="Nhập mã OTP" />
-                    <TextInputIcon imgSrc={require("../../../assets/icons/key.png")} placeholder="Nhập mật khẩu mới" />
-                    <TextInputIcon imgSrc={require("../../../assets/icons/key.png")} placeholder="Nhập lại mật khẩu" />
-                    <ButtonText textContent="XÁC NHẬN" gotoScreen={() => navigation.navigate("Home")} />
+                    <TextInputIcon imgSrc={require("../../../assets/icons/phone.png")} placeholder="Số điện thoại" />
+                    <TextInputIcon imgSrc={require("../../../assets/icons/key.png")} placeholder="Mật khẩu" />
+                    <TextInputIcon imgSrc={require("../../../assets/icons/key.png")} placeholder="Xác nhận mật khẩu" />
+                    <TextInputIcon imgSrc={require("../../../assets/icons/user.png")} placeholder="Tên" />
+                    <ButtonText textContent="TẠO TÀI KHOẢN" gotoScreen={() => navigation.navigate("Login")} />
                     <TextLinking
-                        contentText="Chưa nhận được mã OTP?"
-                        contentLink="Gửi lại mã"
-                        link={() => navigation.navigate("Otp")}
+                        contentText="Đã có tài khoản?"
+                        contentLink="Đăng nhập"
+                        link={() => navigation.navigate("Login")}
                     />
                 </View>
             </KeyboardAvoiding>
@@ -33,4 +34,4 @@ const OtpScreen = ({ navigation }) => {
     );
 };
 
-export default OtpScreen;
+export default RegisterScreen;

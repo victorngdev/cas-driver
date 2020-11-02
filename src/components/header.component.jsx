@@ -1,40 +1,52 @@
 import React from "react";
-import { StyleSheet, View, Text } from "react-native";
 
-const Header = (props) => {
-    const Icon = props.passedIcon;
-    const title = props.title;
+import { Text, View, StyleSheet } from "react-native";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-    const { text } = styles;
-    const combineStylesText = StyleSheet.flatten([text, props.styleText]);
-
+const Header = ({ title, gotoScreen }) => {
     return (
         <View style={styles.container}>
-            <View style={{ flex: 1 }}>
-                <Icon />
+            <View style={styles.container_back_button}>
+                <MaterialCommunityIcons name="chevron-left" size={28} color="#494958" onPress={gotoScreen} />
             </View>
-            <View style={{ flex: 9, flexDirection: "row" }}>
-                <Text style={combineStylesText}>{title}</Text>
-                {props.children}
+            <View style={styles.container_header_title}>
+                <Text style={styles.text_content}>{title}</Text>
             </View>
+            <View style={{ flex: 1 }}></View>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
+    //css for parents:
     container: {
-        flex: 1,
+        flexDirection: "row",
+        marginTop: 20,
+        justifyContent: "center",
+        marginLeft: 10
+    },
+    container_back_button: {
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    container_header_title: {
+        flex: 7,
         flexDirection: "row",
         alignItems: "center",
-        marginLeft: 10,
-        marginTop: 10
+        justifyContent: "center"
     },
-    text: {
-        fontSize: 20,
-        fontWeight: "bold",
-        color: "#522289",
-        marginLeft: 50,
+    //css for child:
+    image: {
+        width: 21,
+        height: 21
     },
+    text_content: {
+        fontSize: 18,
+        fontFamily: "Texgyreadventor-bold",
+        color: "#494958",
+        textAlign: "center"
+    }
 });
 
 export default Header;
