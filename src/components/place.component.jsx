@@ -89,7 +89,8 @@ const styles = StyleSheet.create({
     distance: {
         fontFamily: "Texgyreadventor-regular",
         fontSize: 10,
-        color: "#4F5C77"
+        color: "#460084",
+        borderColor: "#460084"
     },
     place_history: {
         flex: 1,
