@@ -8,9 +8,10 @@ const mapKey = {};
 const RequestInfo = ({ title, items }) => (
     <View style={styles.requesterInfo}>
         <Text style={styles.infoTitle}>{title}</Text>
-        {items.map(({ label, content }, index) => (
-            <RequestInfoItem key={index} label={label} content={content} />
-        ))}
+        {items.map(
+            ({ label, content }, index) =>
+                content && <RequestInfoItem key={index} label={label} content={content} />
+        )}
     </View>
 );
 

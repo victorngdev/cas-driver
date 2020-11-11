@@ -10,7 +10,10 @@ const Place = ({ place: { name, address, date, time }, icon, title, distance, is
         <View style={date ? styles.place_history : styles.place}>
             {!date ? (
                 <View style={styles.icon}>
-                    <Image style={{ width: 25, height: 25, marginRight: 10 }} source={{ uri: icon }} />
+                    <Image
+                        style={{ width: 25, height: 25, marginRight: 10 }}
+                        source={{ uri: icon }}
+                    />
                     {title ? <Text style={styles.title}>{title}</Text> : null}
                 </View>
             ) : (
@@ -53,11 +56,17 @@ const Place = ({ place: { name, address, date, time }, icon, title, distance, is
                 {date ? (
                     <View style={styles.dateTime}>
                         <View style={styles.item_history}>
-                            <Image style={styles.iconDateTime} source={require("../../assets/icons/date-icon.png")} />
+                            <Image
+                                style={styles.iconDateTime}
+                                source={require("../../assets/icons/date-icon.png")}
+                            />
                             <Text style={styles.value_history}>{date}</Text>
                         </View>
                         <View style={styles.item_history}>
-                            <Image style={styles.iconDateTime} source={require("../../assets/icons/time-icon.png")} />
+                            <Image
+                                style={styles.iconDateTime}
+                                source={require("../../assets/icons/time-icon.png")}
+                            />
                             <Text style={styles.value_history}>{time}</Text>
                         </View>
                     </View>
@@ -71,6 +80,7 @@ export default Place;
 
 const styles = StyleSheet.create({
     place: {
+        display: "flex",
         width: "100%",
         flexDirection: "row",
         alignItems: "center",
@@ -119,6 +129,7 @@ const styles = StyleSheet.create({
         fontSize: 12
     },
     location: {
+        flex: 1,
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
