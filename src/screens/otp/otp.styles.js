@@ -3,12 +3,13 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        width: "100%",
         flexDirection: "column"
     },
     //css for block app_logo-name
     block_logo_name: {
         flex: 2,
-        marginTop: 40
+        marginVertical: 40
     },
     //css for block button
     block_button: {

@@ -8,7 +8,7 @@ const CustomButton = ({ action, label, type, style, counter }) => {
     };
 
     return (
-        <TouchableOpacity onPress={() => action()}>
+        <TouchableOpacity onPress={action}>
             <Text style={[styles.action, mapKey[type], style]}>
                 {label}
                 {counter ? <Text style={styles.counter}>{counter}</Text> : null}
@@ -25,8 +25,6 @@ const styles = StyleSheet.create({
         borderColor: "#ff0000"
     },
     finish: {
-        marginTop: 20,
-        paddingVertical: 8,
         paddingHorizontal: 30
     },
     action: {

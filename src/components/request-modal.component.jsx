@@ -1,62 +1,111 @@
 import React from "react";
 import { View, Text, ScrollView, StyleSheet } from "react-native";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
+
+import { clearRequest } from "../redux/request/request.actions";
+import { selectCurrentRequest } from "../redux/request/request.selectors";
 
 import CustomModal from "./custom-modal.componet";
 import GroupButton from "./group-button.component";
 import Place from "./place.component";
 import RequestInfo from "./request-info.component";
 
-const RequestModal = ({ isVisible, pickUp, destination, setRequest, setIsToggle }) => (
-    <CustomModal visible={isVisible}>
-        <View style={styles.groupTitle}>
-            <Text style={styles.modalTitle}>Yêu cầu mới</Text>
-            <Text style={styles.requestType}>Đặt giúp</Text>
-            <Text style={styles.range}>120 km</Text>
-        </View>
-        <ScrollView showsVerticalScrollIndicator={false} directionalLockEnabled={true} style={styles.requestDetails}>
-            <Place title="Điểm đón" place={pickUp} icon="https://i.ibb.co/D8HPk12/placeholder.png" />
-            <Place title="Điểm đến" place={destination} icon="https://i.ibb.co/gWdQ69d/radar.png" />
-            <RequestInfo
-                title="Thông tin người gọi"
+const RequestModal = ({ isVisible, currentRequest, clearRequest, handleAccept }) => {
+    return (
+        <CustomModal visible={isVisible}>
+            <View style={styles.groupTitle}>
+                <Text style={styles.modalTitle}>Yêu cầu mới</Text>
+                <Text style={styles.requestType}>Đặt giúp</Text>
+            </View>
+            <ScrollView
+                showsVerticalScrollIndicator={false}
+                directionalLockEnabled={true}
+                style={styles.requestDetails}
+            >
+                <Place
+                    title="Điểm đón"
+                    place={currentRequest.pickUp}
+                    distance={`Cách bạn ${5}`}
+                    icon="https://i.ibb.co/D8HPk12/placeholder.png"
+                />
+                <Place
+                    title="Điểm đến"
+                    place={currentRequest.destination}
+                    distance={`Cách điểm đón ${20}`}
+                    icon="https://i.ibb.co/gWdQ69d/radar.png"
+                />
+                {currentRequest.patientName && (
+                    <RequestInfo
+                        title="Thông tin người gọi"
+                        items={[
+                            {
+                                id: 1,
+                                label: "Tên",
+                                content: currentRequest.requesterName
+                            },
+                            {
+                                id: 2,
+                                label: "Số điện thoại",
+                                content: currentRequest.requesterPhone
+                            }
+                        ]}
+                    />
+                )}
+                <RequestInfo
+                    title="Thông tin người bệnh"
+                    items={[
+                        {
+                            label: "Tên",
+                            content: currentRequest.patientName || currentRequest.requesterName
+                        },
+                        {
+                            label: "Số điện thoại",
+                            content: currentRequest.patientPhone || currentRequest.requesterPhone
+                        },
+                        {
+                            label: "Tình trạng cấp cứu",
+                            content: currentRequest.morbidity
+                        },
+                        {
+                            label: "Hồ sơ sức khỏe",
+                            content: currentRequest.healthInformation
+                        }
+                    ]}
+                />
+                {currentRequest.note && (
+                    <RequestInfo title="Ghi chú" items={[{ content: currentRequest.note }]} />
+                )}
+            </ScrollView>
+            <GroupButton
                 items={[
-                    { id: 1, label: "Tên", content: "Trương Ngọc Minh" },
-                    { id: 2, label: "Số điện thoại", content: "0931738872" }
-                ]}
-            />
-            <RequestInfo
-                title="Thông tin người bệnh"
-                items={[
-                    { id: 1, label: "Tên", content: "Mai Thiên Toàn" },
-                    { id: 2, label: "Số điện thoại", content: "0327008005" },
                     {
-                        id: 3,
-                        label: "Tình trạng bệnh",
-                        content: "Gãy xương chân do tai nạn giao thông"
+                        itemId: 1,
+                        label: "Từ chối",
+                        type: "reject",
+                        action: () => clearRequest()
+                    },
+                    {
+                        itemId: 2,
+                        label: "Chấp nhận ",
+                        action: handleAccept,
+                        counter: "4:56"
                     }
                 ]}
             />
-            <RequestInfo title="Ghi chú" items={[{ id: 1, content: "Cần dụng cụ sơ cứu tại chỗ" }]} />
-        </ScrollView>
-        <GroupButton
-            items={[
-                {
-                    itemId: 1,
-                    label: "Từ chối",
-                    type: "reject",
-                    action: () => setRequest(null)
-                },
-                {
-                    itemId: 2,
-                    label: "Chấp nhận ",
-                    action: () => setIsToggle(false),
-                    counter: "4:56"
-                }
-            ]}
-        />
-    </CustomModal>
-);
+        </CustomModal>
+    );
+};
 
-export default RequestModal;
+const mapStateToProps = createStructuredSelector({
+    currentRequest: selectCurrentRequest
+});
+
+const mapDispatchToProps = dispatch => ({
+    clearRequest: () => dispatch(clearRequest())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(RequestModal);
 
 const styles = StyleSheet.create({
     groupTitle: {

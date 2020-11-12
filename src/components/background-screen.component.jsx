@@ -5,7 +5,10 @@ import { View, Image, StyleSheet } from "react-native";
 const BackgroundImage = props => {
     return (
         <View style={styles.container}>
-            <Image style={styles.backgroundImage} source={require("../../assets/icons/background.png")} />
+            <Image
+                style={styles.backgroundImage}
+                source={require("../../assets/images/background-main.png")}
+            />
             {props.children}
         </View>
     );

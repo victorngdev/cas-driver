@@ -23,11 +23,13 @@ const styles = StyleSheet.create({
     },
     button: {
         backgroundColor: "#FFF",
-        width: 18 * rem,
-        height: 3.8 * rem,
+        // width: 18 * rem,
+        // height: 3.8 * rem,
         borderRadius: 50,
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        paddingVertical: 5,
+        paddingHorizontal: 30
     },
     text: {
         fontFamily: "Texgyreadventor-regular",

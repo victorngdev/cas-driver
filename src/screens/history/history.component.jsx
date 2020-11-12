@@ -1,19 +1,18 @@
 import React from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, Dimensions } from "react-native";
-import Header from '../../components/header.component';
+import Header from "../../components/header.component";
 import BackgroundImage from "../../components/background-screen.component";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import HistoryComponent from "../../components/history-row.component";
 
-const screen = Dimensions.get('screen');
+const screen = Dimensions.get("screen");
 const widthDevice = screen.width;
 const heightDevice = screen.height;
 
-
 function HistoryScreen(props) {
     return (
-        <View style={styles.container}>
-            <BackgroundImage>
+        <BackgroundImage>
+            <View style={styles.container}>
                 <View style={{ flex: 1 }}>
                     <Header
                         title="Lịch Sử"
@@ -28,125 +27,34 @@ function HistoryScreen(props) {
                         )}
                     />
                 </View>
-                <View style={{ flex: 9, flexDirection: 'column', justifyContent: 'flex-start' }}>
-                    <ScrollView contentContainerStyle={{
-                        flexGrow: 1
-                    }}>
-                        <HistoryComponent 
-                            image_url='https://scontent.fdad3-1.fna.fbcdn.net/v/t1.0-9/83012519_1497814183728497_1901903877645533184_o.jpg?_nc_cat=102&_nc_sid=09cbfe&_nc_ohc=l92aofIVAloAX99oBIy&_nc_ht=scontent.fdad3-1.fna&oh=ac2b60cb37775a47a9c2ccc98f38fd2d&oe=5FA585D7'
-                            title='Bệnh Viện A'
-                            address='321 Lê Văn Việt, Quận 9'
-                            goToDetails={() => props.navigation.navigate('HistoryDetail')}
+                <View style={{ flex: 9, flexDirection: "column", justifyContent: "flex-start" }}>
+                    <ScrollView
+                        contentContainerStyle={{
+                            flexGrow: 1
+                        }}
+                    >
+                        <HistoryComponent
+                            image_url="https://scontent.fdad3-1.fna.fbcdn.net/v/t1.0-9/83012519_1497814183728497_1901903877645533184_o.jpg?_nc_cat=102&_nc_sid=09cbfe&_nc_ohc=l92aofIVAloAX99oBIy&_nc_ht=scontent.fdad3-1.fna&oh=ac2b60cb37775a47a9c2ccc98f38fd2d&oe=5FA585D7"
+                            title="Bệnh Viện A"
+                            address="321 Lê Văn Việt, Quận 9"
+                            goToDetails={() => props.navigation.navigate("HistoryDetail")}
                         />
-                        <HistoryComponent 
-                            image_url='https://scontent.fdad3-1.fna.fbcdn.net/v/t1.0-9/83012519_1497814183728497_1901903877645533184_o.jpg?_nc_cat=102&_nc_sid=09cbfe&_nc_ohc=l92aofIVAloAX99oBIy&_nc_ht=scontent.fdad3-1.fna&oh=ac2b60cb37775a47a9c2ccc98f38fd2d&oe=5FA585D7'
-                            title='Bệnh Viện Quân Y'
-                            address='321 Lê Văn Việt, Quận 9'
-                            goToDetails={() => props.navigation.navigate('HistoryDetail')}
-                        
+                        <HistoryComponent
+                            image_url="https://scontent.fdad3-1.fna.fbcdn.net/v/t1.0-9/83012519_1497814183728497_1901903877645533184_o.jpg?_nc_cat=102&_nc_sid=09cbfe&_nc_ohc=l92aofIVAloAX99oBIy&_nc_ht=scontent.fdad3-1.fna&oh=ac2b60cb37775a47a9c2ccc98f38fd2d&oe=5FA585D7"
+                            title="Bệnh Viện Quân Y"
+                            address="321 Lê Văn Việt, Quận 9"
+                            goToDetails={() => props.navigation.navigate("HistoryDetail")}
                         />
-                        <HistoryComponent 
-                            image_url='https://scontent.fdad3-1.fna.fbcdn.net/v/t1.0-9/83012519_1497814183728497_1901903877645533184_o.jpg?_nc_cat=102&_nc_sid=09cbfe&_nc_ohc=l92aofIVAloAX99oBIy&_nc_ht=scontent.fdad3-1.fna&oh=ac2b60cb37775a47a9c2ccc98f38fd2d&oe=5FA585D7'
-                            title='Bệnh Viện Chợ Rẫy'
-                            address='321 Lê Văn Việt, Quận 9'
-                            goToDetails={() => props.navigation.navigate('HistoryDetail')}
+                        <HistoryComponent
+                            image_url="https://scontent.fdad3-1.fna.fbcdn.net/v/t1.0-9/83012519_1497814183728497_1901903877645533184_o.jpg?_nc_cat=102&_nc_sid=09cbfe&_nc_ohc=l92aofIVAloAX99oBIy&_nc_ht=scontent.fdad3-1.fna&oh=ac2b60cb37775a47a9c2ccc98f38fd2d&oe=5FA585D7"
+                            title="Bệnh Viện Chợ Rẫy"
+                            address="321 Lê Văn Việt, Quận 9"
+                            goToDetails={() => props.navigation.navigate("HistoryDetail")}
                         />
                     </ScrollView>
                 </View>
-                {/* <View
-                    style={{
-                        flexDirection: "row",
-                        marginTop: 40,
-                        alignItems: "center",
-                        paddingHorizontal: 20
-                    }}
-                >
-                    <Icon
-                        name="menu"
-                        size={30}
-                        color="#a2a2db"
-                        style={{ width: 20 }}
-                        onPress={() => props.navigation.openDrawer()}
-                    />
-                    <Text
-                        style={{ fontSize: 20, fontFamily: "Texgyreadventor-bold", color: "#522289", marginLeft: 50 }}
-                    >
-                        Lịch sử
-                    </Text>
-                </View>
-
-                <View style={styles.listHistory}>
-                    <TouchableOpacity onPress={() => props.navigation.navigate("HistoryDetail")}>
-                        <View style={styles.history}>
-                            <View style={styles.logo}>
-                                <Image source={require("../../../assets/icons/logo.png")} style={styles.app_logo} />
-                            </View>
-                            <View stype={styles.destinationPlace}>
-                                <Text style={styles.textTitle}>Bệnh viện Quân Y </Text>
-                                <Text style={styles.textAdd}>365 Lê Văn Việt, quận 9, TPHCM</Text>
-                            </View>
-                            <View style={styles.status}>
-                                <Image
-                                    source={require("../../../assets/icons/success.png")}
-                                    style={styles.statusLogo}
-                                />
-                            </View>
-                            <View style={styles.date}>
-                                <Text style={styles.textDate}>11 Oct</Text>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
-
-                    <View style={styles.history}>
-                        <View style={styles.logo}>
-                            <Image source={require("../../../assets/icons/logo.png")} style={styles.app_logo} />
-                        </View>
-                        <View stype={styles.destinationPlace}>
-                            <Text style={styles.textTitle}>Bệnh viện Quận 9 </Text>
-                            <Text style={styles.textAdd}>125 Lê Văn Việt, quận 9, TPHCM</Text>
-                        </View>
-                        <View style={styles.status}>
-                            <Image source={require("../../../assets/icons/success.png")} style={styles.statusLogo} />
-                        </View>
-                        <View style={styles.date}>
-                            <Text style={styles.textDate}>11 Jan</Text>
-                        </View>
-                    </View>
-
-                    <View style={styles.history}>
-                        <View style={styles.logo}>
-                            <Image source={require("../../../assets/icons/logo.png")} style={styles.app_logo} />
-                        </View>
-                        <View stype={styles.destinationPlace}>
-                            <Text style={styles.textTitle}>Bệnh viện Quận 12 </Text>
-                            <Text style={styles.textAdd}>365 Tân Chánh Hiệp, quận 12, TPHCM</Text>
-                        </View>
-                        <View style={styles.status}>
-                            <Image source={require("../../../assets/icons/fail.png")} style={styles.statusLogo} />
-                        </View>
-                        <View style={styles.date}>
-                            <Text style={styles.textDate}>18 Dec</Text>
-                        </View>
-                    </View>
-
-                    <View style={styles.history}>
-                        <View style={styles.logo}>
-                            <Image source={require("../../../assets/icons/logo.png")} style={styles.app_logo} />
-                        </View>
-                        <View stype={styles.destinationPlace}>
-                            <Text style={styles.textTitle}>Bệnh viện Thủ Đức </Text>
-                            <Text style={styles.textAdd}>365 Võ Văn Ngân, quận 9, TPHCM</Text>
-                        </View>
-                        <View style={styles.status}>
-                            <Image source={require("../../../assets/icons/success.png")} style={styles.statusLogo} />
-                        </View>
-                        <View style={styles.date}>
-                            <Text style={styles.textDate}>20 Aug</Text>
-                        </View>
-                    </View>
-                </View> */}
-            </BackgroundImage>
-        </View>
+            </View>
+        </BackgroundImage>
     );
 }
 
@@ -163,7 +71,6 @@ const styles = StyleSheet.create({
         height: 70,
         marginHorizontal: 10,
         marginVertical: 8,
-        backgroundColor: "#bed3f3",
         margin: 10
     },
     logo: {},
@@ -213,8 +120,8 @@ const styles = StyleSheet.create({
     historyView: {
         width: widthDevice,
         height: heightDevice * 0.2,
-        backgroundColor: 'red',
-        borderBottomColor: 'black',
+        backgroundColor: "red",
+        borderBottomColor: "black",
         borderBottomWidth: 1
     }
 });
