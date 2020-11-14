@@ -12,7 +12,6 @@ import LoginScreen from "./src/screens/login/login.component";
 import HomeScreen from "./src/screens/home/home.component";
 import AccountScreen from "./src/screens/account-info/account-info.component";
 import RegisterCarScreen from "./src/screens/register-car/register-car.component";
-import RegisterCarImageScreen from "./src/screens/register-car-image/register-car-image.component";
 import HistoryScreen from "./src/screens/history/history.component";
 import HistoryDetailScreen from "./src/screens/history-detail/history-detail.component";
 import RegisterScreen from "./src/screens/register/register.component";
@@ -51,7 +50,6 @@ class App extends React.Component {
                         <Drawer.Screen name="Register" component={RegisterScreen} />
                         <Drawer.Screen name="Otp" component={OtpScreen} />
                         <Drawer.Screen name="ResetPass" component={ResetPassScreen} />
-                        <Drawer.Screen name="RegisterCarImage" component={RegisterCarImageScreen} />
                         <Drawer.Screen name="HistoryDetail" component={HistoryDetailScreen} />
                         <Drawer.Screen name="GoogleMap" component={GoogleMapScreen} />
                     </Drawer.Navigator>

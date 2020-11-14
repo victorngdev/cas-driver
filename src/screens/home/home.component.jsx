@@ -101,7 +101,6 @@ const HomeScreen = ({
 
     const handleAccept = () => {
         setIsToggle(false);
-        acceptRequest(token, currentUser.userId, currentRequest.requestId);
         syncLocationToRequest(currentUser.username, location.latitude, location.longitude);
         updateRequest(
             currentUser.userId,
@@ -109,6 +108,7 @@ const HomeScreen = ({
             currentRequest.requestId,
             "accepted"
         );
+        acceptRequest(token, currentUser.userId, currentRequest.requestId);
         setTitle("Đang đón bệnh nhân");
     };
 
@@ -124,9 +124,9 @@ const HomeScreen = ({
     };
 
     const handleFinish = () => {
+        initLocation(currentUser.username, location.latitude, location.longitude);
         finishRequest(token, currentRequest.requestId);
         finishRequestFirestore(currentRequest.requestId);
-        initLocation(currentUser.username, location.latitude, location.longitude);
         setIsFinish(false);
     };
 
