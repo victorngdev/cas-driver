@@ -1,15 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { View, StyleSheet } from "react-native";
-import { createStructuredSelector } from "reselect";
-
-import { firestore, updateRequest } from "../firebase/firebase.utils";
-import { useDocumentData } from "react-firebase-hooks/firestore";
-import { selectCurrentRequest } from "../redux/request/request.selectors";
 
 import Place from "./place.component";
 import ContactItem from "./contact-item.component";
 import GroupButton from "./group-button.component";
-import { connect } from "react-redux";
 
 const TransportationInfo = ({
     isArrived,
@@ -17,13 +11,8 @@ const TransportationInfo = ({
     handleArrived,
     setIsFinish,
     request,
-    setIsProblem,
-    currentRequest
+    setIsProblem
 }) => {
-    useEffect(() => {
-        updateRequest(currentRequest.requestId, 10.06523, 106.90823);
-    }, []);
-
     return (
         <View style={styles.transportationContainer}>
             <View style={styles.transportation}>
@@ -88,11 +77,7 @@ const TransportationInfo = ({
     );
 };
 
-const mapStateToProps = createStructuredSelector({
-    currentRequest: selectCurrentRequest
-});
-
-export default connect(mapStateToProps)(TransportationInfo);
+export default TransportationInfo;
 
 const styles = StyleSheet.create({
     transportationContainer: {

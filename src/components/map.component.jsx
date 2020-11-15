@@ -5,7 +5,7 @@ import { useDocumentData } from "react-firebase-hooks/firestore";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 
-import { firestore, syncLocationToRequest } from "../firebase/firebase.utils";
+import { firestore, syncLocationToRequest, initLocation } from "../firebase/firebase.utils";
 import {
     selectIsAccepted,
     selectIsArrived,
@@ -45,18 +45,6 @@ const Map = ({ source, setLocation, requestId, currentUser, isArrived, isAccepte
         }
     }, [request]);
 
-    // useEffect(() => {
-    //     if (isAccepted && source.latitude && source.longitude) {
-    //         setTimeout(() => {
-    //             try {
-    //                 syncLocationToRequest(requestId, source.latitude, source.longitude);
-    //             } catch (error) {
-    //                 return;
-    //             }
-    //         }, 1000);
-    //     }
-    // }, [source]);
-
     useEffect(() => {
         !requestId && setDestination(null);
     });
@@ -66,9 +54,11 @@ const Map = ({ source, setLocation, requestId, currentUser, isArrived, isAccepte
     };
 
     const handleLocationChange = (latitude, longitude) => {
-        if (latitude && longitude && requestId) {
+        if (requestId) {
             setLocation({ latitude, longitude });
             isAccepted && syncLocationToRequest(currentUser.username, latitude, longitude);
+        } else {
+            initLocation(currentUser.username, latitude, longitude);
         }
     };
 

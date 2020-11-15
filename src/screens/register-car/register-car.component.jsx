@@ -1,63 +1,72 @@
-import React from "react";
-import { StyleSheet, Text, View, TextInput } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 
 import BackgroundImage from "../../components/background-screen.component";
 import ButtonText from "../../components/button-text.component";
 import KeyboardAvoiding from "../../components/keyboard-avoding.component";
 import Header from "../../components/header.component";
+import CustomInputLabel from "../../components/custom-input-label.component";
+import ImageCapture from "../../components/image-capture.component";
 
-function RegisterCarScreen(props) {
+const RegisterCarScreen = ({ navigation }) => {
+    const [identiyCard, setIdentityCard] = useState("");
+    const [driverLicense, setDriverLicense] = useState("https://i.ibb.co/mv2t1Gz/giayphep.jpg");
+    const [registerLicense, setRegisterLicense] = useState(
+        "https://i.ibb.co/L59LBBJ/giaydangkyxe.jpg"
+    );
+    const [registryCertificate, setRegistryCertificate] = useState(
+        "https://i.ibb.co/Yb8CyJJ/giaydangkiem.jpg"
+    );
+
     return (
         <BackgroundImage>
+            <Header title="Đăng kí xe" gotoScreen={() => navigation.goBack(null)} />
+            <Text style={styles.header}>
+                Cung cấp thông tin và hình ảnh để xác thực danh tính và phương tiện cứu thương
+            </Text>
             <KeyboardAvoiding style={styles.container}>
-            <Header
-                        title="Đăng kí xe"
-                        passedIcon={() => (
-                            <Icon
-                                name="menu"
-                                size={30}
-                                color="#a2a2db"
-                                style={{ width: 20 }}
-                                onPress={() => props.navigation.openDrawer()}
-                            />
-                        )}
+                <View style={styles.basicInfo}>
+                    <CustomInputLabel label="Họ và tên" isRequire defaultValue="Lê Quang Huy" />
+                    <CustomInputLabel
+                        label="Số điện thoại"
+                        isRequire
+                        defaultValue="0931738872"
+                        keyboardType="numeric"
                     />
-                <View style={styles.header}>
-                   
-                    <Text style={styles.securityText}>
-                        Thông tin cá nhân sẽ được bảo mật theo chính sách, quy định của nhà nước
-                    </Text>
+                    <CustomInputLabel label="Biển số xe" isRequire defaultValue="71 - C1 825.23" />
                 </View>
-                <View style={styles.registerTextInfo}>
-                    <View style={styles.name}>
-                        <Text style={styles.titleInfo}>Họ và tên</Text>
-                        <TextInput defaultValue="Lê Quang Huy" style={styles.titleInput} placeholder="" />
-                    </View>
-                    <View style={styles.phone}>
-                        <Text style={styles.titleInfo}>Số điện thoại</Text>
-                        <TextInput
-                            defaultValue="0931738872"
-                            keyboardType="numeric"
-                            style={styles.titleInput}
-                            placeholder=""
-                        />
-                    </View>
-                    <View style={styles.licensePlate}>
-                        <Text style={styles.titleInfo}>Biển số xe</Text>
-                        <TextInput defaultValue="71 - C1 825.23" style={styles.titleInput} placeholder="" />
-                    </View>
+                <View style={styles.imagePicker}>
+                    <ImageCapture
+                        source={(identiyCard && identiyCard.uri) || ""}
+                        label="Chứng minh nhân dân"
+                        action={setIdentityCard}
+                    />
+                    <ImageCapture
+                        source={driverLicense}
+                        label="Giấy đăng ký xe"
+                        action={setDriverLicense}
+                    />
+                    <ImageCapture
+                        source={registerLicense}
+                        label="Giấy phép lái xe"
+                        action={setRegisterLicense}
+                    />
+                    <ImageCapture
+                        source={registryCertificate}
+                        label="Giấy đăng kiểm"
+                        action={setRegistryCertificate}
+                    />
                 </View>
-
-                <ButtonText
-                    textContent="Tiếp tục"
-                    styleText={styles.text}
-                    styleButton={styles.button}
-                    gotoScreen={() => props.navigation.navigate("RegisterCarImage")}
-                />
             </KeyboardAvoiding>
+            <ButtonText
+                textContent="Đăng ký"
+                styleText={styles.text}
+                styleButton={styles.button}
+                gotoScreen={() => navigation.navigate("RegisterCarImage")}
+            />
         </BackgroundImage>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -67,16 +76,6 @@ const styles = StyleSheet.create({
         flexDirection: "column"
     },
     header: {
-        marginTop: 30,
-        alignContent: "center"
-    },
-    headerTitle: {
-        textAlign: "center",
-        color: "#000",
-        fontSize: 30,
-        fontFamily: "Texgyreadventor-regular"
-    },
-    securityText: {
         marginTop: 10,
         marginHorizontal: 8,
         fontSize: 12,
@@ -84,9 +83,16 @@ const styles = StyleSheet.create({
         fontFamily: "Texgyreadventor-regular",
         color: "#777"
     },
-    registerTextInfo: {
-        marginTop: 25,
+    basicInfo: {
+        marginTop: 10,
         marginHorizontal: 10
+    },
+    imagePicker: {
+        display: "flex",
+        flexWrap: "wrap",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginTop: 10
     },
     titleInfo: {
         marginTop: 10,
@@ -107,15 +113,15 @@ const styles = StyleSheet.create({
         color: "#4F5C77"
     },
     button: {
-        marginTop: 30,
+        marginVertical: 10,
         backgroundColor: "#FFAB2E",
         borderRadius: 25
     },
     text: {
         textAlign: "center",
-        marginVertical: 5,
+        marginVertical: 3,
         color: "#FFF",
-        fontSize: 17,
+        fontSize: 16,
         fontFamily: "Texgyreadventor-regular",
         justifyContent: "center"
     }
