@@ -54,8 +54,8 @@ const Map = ({ source, setLocation, requestId, currentUser, isArrived, isAccepte
     };
 
     const handleLocationChange = (latitude, longitude) => {
+        setLocation({ latitude, longitude });
         if (requestId) {
-            setLocation({ latitude, longitude });
             isAccepted && syncLocationToRequest(currentUser.username, latitude, longitude);
         } else {
             initLocation(currentUser.username, latitude, longitude);

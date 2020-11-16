@@ -66,7 +66,9 @@ const requestReducer = (state = INITIAL_STATE, action) => {
         case RequestActionTypes.CLEAR_REQUEST:
             return {
                 ...state,
-                currentRequest: null
+                currentRequest: null,
+                isAccepted: false,
+                isArrived: false
             };
         default:
             return state;

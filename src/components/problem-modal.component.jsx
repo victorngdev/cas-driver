@@ -13,16 +13,29 @@ const problems = [
     { itemId: 3, value: "third", label: "Bệnh nhân yêu cầu xuống xe" }
 ];
 
-const ProblemModal = ({ isVisible, setIsProblem, handleReport, setProblemOption, problemOption }) => (
-    <CustomModal title="Báo cáo sự cố" visible={isVisible} contentSize={{ height: "50%" }}>
+const ProblemModal = ({
+    isVisible,
+    setIsProblem,
+    handleReport,
+    setProblemOption,
+    problemOption
+}) => (
+    <CustomModal title="Báo cáo sự cố" visible={isVisible}>
         <KeyboardAvoiding style={styles.content}>
             <View style={styles.optionContainer}>
-                <RadioButton.Group value={problemOption} onValueChange={value => setProblemOption(value)}>
+                <RadioButton.Group
+                    value={problemOption}
+                    onValueChange={value => setProblemOption(value)}
+                >
                     {problems.map(({ itemId, ...otherProps }) => (
                         <CustomOption key={itemId} {...otherProps} />
                     ))}
                 </RadioButton.Group>
-                <TextInput style={styles.optionOther} placeholder="Khác" />
+                <TextInput
+                    placeholderTextColor="#444"
+                    style={styles.optionOther}
+                    placeholder="Khác"
+                />
             </View>
             <GroupButton
                 items={[
@@ -49,14 +62,13 @@ export default ProblemModal;
 
 const styles = StyleSheet.create({
     content: {
-        width: "90%"
+        width: "100%"
     },
     optionContainer: {
-        flex: 1,
         paddingVertical: 20
     },
     optionOther: {
-        paddingVertical: 7,
+        paddingVertical: 5,
         paddingHorizontal: 15,
         borderWidth: 0.5,
         borderRadius: 25,

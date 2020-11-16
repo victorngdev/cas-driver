@@ -7,6 +7,7 @@ import {
     finishRequestFirestore,
     firestore,
     initLocation,
+    rejectRequest,
     syncLocationToRequest,
     updateRequest
 } from "../../firebase/firebase.utils";
@@ -25,6 +26,7 @@ import {
     finishRequest,
     pickedPatient
 } from "../../redux/request/request.actions";
+import messages from "./message.data";
 
 import BackgroundImage from "../../components/background-screen.component";
 import HomeHeader from "../../components/home-header.component";
@@ -49,15 +51,18 @@ const HomeScreen = ({
     acceptRequest,
     cancelRequest,
     pickedPatient,
-    finishRequest
+    finishRequest,
+    clearRequest
 }) => {
     const [isReady, setIsReady] = useState(false);
     const [title, setTitle] = useState("Chưa sẵn sàng");
     const [isToggle, setIsToggle] = useState(false);
     const [isReject, setIsReject] = useState(false);
     const [isFinish, setIsFinish] = useState(false);
-    const [rejectOption, setRejectOption] = useState("Bấm nhầm chấp nhận yêu cầu");
     const [isProblem, setIsProblem] = useState(false);
+    const [isCancelled, setIsCancelled] = useState(false);
+    const [_isAccepted, setIsAccepted] = useState(false);
+    const [rejectOption, setRejectOption] = useState("Bấm nhầm chấp nhận yêu cầu");
     const [problem, setProblem] = useState("first");
     const [location, setLocation] = useState(null);
     const documentDriverRef = firestore.collection("drivers").doc(currentUser.username);
@@ -84,13 +89,22 @@ const HomeScreen = ({
     }, [isReady, request]);
 
     useEffect(() => {
+        if (!requestStatus) return;
         if (
-            requestStatus &&
-            requestStatus.status &&
+            currentRequest &&
+            requestStatus.status === "accepted" &&
             requestStatus.driverId !== currentUser.userId
         ) {
-            clearRequest();
             setIsToggle(false);
+            initLocation(currentUser.username, location.latitude, location.longitude);
+            clearRequest();
+            setIsAccepted(true);
+        }
+        if (currentRequest && requestStatus.status === "cancelled") {
+            setIsToggle(false);
+            initLocation(currentUser.username, location.latitude, location.longitude);
+            clearRequest();
+            setIsCancelled(true);
         }
     }, [requestStatus]);
 
@@ -115,6 +129,7 @@ const HomeScreen = ({
     const handelReject = () => {
         cancelRequest(token, currentRequest.requestId, rejectOption);
         initLocation(currentUser.username, location.latitude, location.longitude);
+        rejectRequest(currentRequest.requestId);
         setIsReject(false);
     };
 
@@ -133,6 +148,7 @@ const HomeScreen = ({
     const handleReport = () => {
         cancelRequest(token, currentRequest.requestId, problem);
         initLocation(currentUser.username, location.latitude, location.longitude);
+        rejectRequest(currentRequest.requestId);
         setIsProblem(false);
     };
 
@@ -158,7 +174,21 @@ const HomeScreen = ({
                 {currentRequest && (
                     <RequestModal handleAccept={handleAccept} isVisible={isToggle} />
                 )}
-                <MessageModal action={handleFinish} isVisible={isFinish} />
+                <MessageModal
+                    action={handleFinish}
+                    message={messages.finish}
+                    isVisible={isFinish}
+                />
+                <MessageModal
+                    action={() => setIsCancelled(false)}
+                    message={messages.cancelled}
+                    isVisible={isCancelled}
+                />
+                <MessageModal
+                    action={() => setIsAccepted(false)}
+                    message={messages.acceptedRequest}
+                    isVisible={_isAccepted}
+                />
                 <ProblemModal
                     isVisible={isProblem}
                     setIsProblem={setIsProblem}
@@ -166,7 +196,6 @@ const HomeScreen = ({
                     problemOption={problem}
                     setProblemOption={setProblem}
                 />
-                {/* Map screen */}
                 <View style={isAccepted ? (isArrived ? { flex: 6 } : { flex: 5 }) : { flex: 7 }}>
                     <Map source={location} setLocation={setLocation} />
                 </View>

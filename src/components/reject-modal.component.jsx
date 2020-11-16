@@ -15,7 +15,7 @@ const options = [
 ];
 
 const RejectModal = ({ rejectOption, setRejectOption, isVisible, setIsReject, handleReject }) => (
-    <CustomModal title="Lí do hủy yêu cầu" visible={isVisible} contentSize={{ height: "60%" }}>
+    <CustomModal title="Lí do hủy yêu cầu" visible={isVisible}>
         <View style={styles.optionContainer}>
             <RadioButton.Group value={rejectOption} onValueChange={value => setRejectOption(value)}>
                 {options.map(({ itemId, value }) => (
@@ -48,8 +48,7 @@ export default RejectModal;
 
 const styles = StyleSheet.create({
     optionContainer: {
-        flex: 1,
-        paddingVertical: 20
+        paddingVertical: 10
     },
     optionOther: {
         paddingVertical: 7,
