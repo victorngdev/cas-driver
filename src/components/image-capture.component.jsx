@@ -5,7 +5,7 @@ import { launchCameraAsync } from "expo-image-picker";
 const ImageCapture = ({ label, source, action }) => {
     const launchCamera = () => {
         launchCameraAsync({ base64: true }).then(response =>
-            action({ uri: response.uri, data: response.base64 })
+            action({ uri: response.uri, image: response.base64 })
         );
     };
 

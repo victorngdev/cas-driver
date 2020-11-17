@@ -1,5 +1,10 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
+
+import { selectCurrentUser, selectToken } from "../../redux/user/user.selectors";
+import { registerAmbulance } from "../../redux/ambulance/ambulance.actions";
 
 import BackgroundImage from "../../components/background-screen.component";
 import ButtonText from "../../components/button-text.component";
@@ -7,9 +12,14 @@ import KeyboardAvoiding from "../../components/keyboard-avoding.component";
 import Header from "../../components/header.component";
 import CustomInputLabel from "../../components/custom-input-label.component";
 import ImageCapture from "../../components/image-capture.component";
+import { uploadImage } from "../../apis/core.apis";
 
-const RegisterCarScreen = ({ navigation }) => {
-    const [identiyCard, setIdentityCard] = useState("");
+const RegisterCarScreen = ({ navigation, currentUser, token, registerAmbulance }) => {
+    const [displayName, setDisplayName] = useState(currentUser.displayName || "");
+    const [phone, setPhone] = useState(currentUser.phone || "");
+    const [licensePlate, setLicensePlate] = useState("71 - B3 253.56");
+    const [link, setLink] = useState(null);
+    const [identityCard, setIdentityCard] = useState(null);
     const [driverLicense, setDriverLicense] = useState("https://i.ibb.co/mv2t1Gz/giayphep.jpg");
     const [registerLicense, setRegisterLicense] = useState(
         "https://i.ibb.co/L59LBBJ/giaydangkyxe.jpg"
@@ -17,6 +27,23 @@ const RegisterCarScreen = ({ navigation }) => {
     const [registryCertificate, setRegistryCertificate] = useState(
         "https://i.ibb.co/Yb8CyJJ/giaydangkiem.jpg"
     );
+
+    const handleRegister = async () => {
+        await uploadImage(identityCard.image).then(response =>
+            setLink(response.data.data.display_url)
+        );
+        const ambulance = {
+            displayName,
+            phone,
+            licensePlate,
+            identityCard: link,
+            driverLicense,
+            registerLicense,
+            registryCertificate
+        };
+
+        registerAmbulance(token, currentUser.userId, ambulance);
+    };
 
     return (
         <BackgroundImage>
@@ -26,18 +53,29 @@ const RegisterCarScreen = ({ navigation }) => {
             </Text>
             <KeyboardAvoiding style={styles.container}>
                 <View style={styles.basicInfo}>
-                    <CustomInputLabel label="Họ và tên" isRequire defaultValue="Lê Quang Huy" />
+                    <CustomInputLabel
+                        label="Họ và tên"
+                        isRequire
+                        defaultValue={displayName}
+                        onChangeText={value => setDisplayName(value)}
+                    />
                     <CustomInputLabel
                         label="Số điện thoại"
+                        onChangeText={value => setPhone(value)}
                         isRequire
-                        defaultValue="0931738872"
+                        defaultValue={phone}
                         keyboardType="numeric"
                     />
-                    <CustomInputLabel label="Biển số xe" isRequire defaultValue="71 - C1 825.23" />
+                    <CustomInputLabel
+                        label="Biển số xe"
+                        isRequire
+                        defaultValue={licensePlate}
+                        onChangeText={value => setLicensePlate(value)}
+                    />
                 </View>
                 <View style={styles.imagePicker}>
                     <ImageCapture
-                        source={(identiyCard && identiyCard.uri) || ""}
+                        source={(identityCard && identityCard.uri) || ""}
                         label="Chứng minh nhân dân"
                         action={setIdentityCard}
                     />
@@ -62,17 +100,28 @@ const RegisterCarScreen = ({ navigation }) => {
                 textContent="Đăng ký"
                 styleText={styles.text}
                 styleButton={styles.button}
-                gotoScreen={() => navigation.navigate("RegisterCarImage")}
+                gotoScreen={handleRegister}
             />
         </BackgroundImage>
     );
 };
 
+const mapStateToProps = createStructuredSelector({
+    currentUser: selectCurrentUser,
+    token: selectToken
+});
+
+const mapDispatchToProps = dispatch => ({
+    registerAmbulance: (token, userId, ambulance) =>
+        dispatch(registerAmbulance(token, userId, ambulance))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterCarScreen);
+
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         width: "90%",
-        height: "100%",
+        height: "75%",
         flexDirection: "column"
     },
     header: {
@@ -126,5 +175,3 @@ const styles = StyleSheet.create({
         justifyContent: "center"
     }
 });
-
-export default RegisterCarScreen;

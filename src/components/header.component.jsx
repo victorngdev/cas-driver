@@ -7,7 +7,12 @@ const Header = ({ title, gotoScreen }) => {
     return (
         <View style={styles.container}>
             <View style={styles.container_back_button}>
-                <MaterialCommunityIcons name="chevron-left" size={28} color="#494958" onPress={gotoScreen} />
+                <MaterialCommunityIcons
+                    name="chevron-left"
+                    size={25}
+                    color="#494958"
+                    onPress={gotoScreen}
+                />
             </View>
             <View style={styles.container_header_title}>
                 <Text style={styles.text_content}>{title}</Text>
@@ -42,7 +47,7 @@ const styles = StyleSheet.create({
         height: 21
     },
     text_content: {
-        fontSize: 18,
+        fontSize: 16,
         fontFamily: "Texgyreadventor-bold",
         color: "#494958",
         textAlign: "center"
