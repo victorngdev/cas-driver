@@ -9,7 +9,8 @@ import {
     initLocation,
     rejectRequest,
     syncLocationToRequest,
-    updateRequest
+    updateRequest,
+    clearConfirmationRequest
 } from "../../firebase/firebase.utils";
 import { createStructuredSelector } from "reselect";
 import { selectCurrentUser, selectToken } from "../../redux/user/user.selectors";
@@ -65,8 +66,8 @@ const HomeScreen = ({
     const [rejectOption, setRejectOption] = useState("Bấm nhầm chấp nhận yêu cầu");
     const [problem, setProblem] = useState("first");
     const [location, setLocation] = useState(null);
-    const documentDriverRef = firestore.collection("drivers").doc(currentUser.username);
-    const [request] = useDocumentData(documentDriverRef);
+    const documentConfirmationRef = firestore.collection("confirmations").doc(currentUser.username);
+    const [confirmation] = useDocumentData(documentConfirmationRef);
 
     const documentRequestRef = firestore
         .collection("requests")
@@ -82,11 +83,12 @@ const HomeScreen = ({
     }, []);
 
     useEffect(() => {
-        if (isReady && request && request.requestId) {
-            fetchRequest(token, request.requestId);
+        if (isReady && confirmation && confirmation.requestId) {
+            fetchRequest(token, confirmation.requestId);
+            syncLocationToRequest(currentUser.username, location.latitude, location.longitude);
             setIsToggle(true);
         }
-    }, [isReady, request]);
+    }, [isReady, confirmation]);
 
     useEffect(() => {
         if (!requestStatus) return;
@@ -129,6 +131,7 @@ const HomeScreen = ({
     const handelReject = () => {
         cancelRequest(token, currentRequest.requestId, rejectOption);
         initLocation(currentUser.username, location.latitude, location.longitude);
+        clearConfirmationRequest(currentUser.username);
         rejectRequest(currentRequest.requestId);
         setIsReject(false);
     };
@@ -139,15 +142,17 @@ const HomeScreen = ({
     };
 
     const handleFinish = () => {
-        initLocation(currentUser.username, location.latitude, location.longitude);
         finishRequest(token, currentRequest.requestId);
         finishRequestFirestore(currentRequest.requestId);
+        initLocation(currentUser.username, location.latitude, location.longitude);
+        clearConfirmationRequest(currentUser.username);
         setIsFinish(false);
     };
 
     const handleReport = () => {
         cancelRequest(token, currentRequest.requestId, problem);
         initLocation(currentUser.username, location.latitude, location.longitude);
+        clearConfirmationRequest(currentUser.username);
         rejectRequest(currentRequest.requestId);
         setIsProblem(false);
     };

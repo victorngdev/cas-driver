@@ -35,6 +35,13 @@ export const finishRequestFirestore = async requestId => {
     });
 };
 
+export const clearConfirmationRequest = async poolId => {
+    const confirmationRef = firestore.collection("confirmations").doc(`${poolId}`);
+    await confirmationRef.update({
+        requestId: 0
+    });
+};
+
 export const syncLocationToRequest = async (poolId, latitude, longitude) => {
     if (latitude && longitude) {
         const driverRef = firestore.collection("drivers").doc(`${poolId}`);
