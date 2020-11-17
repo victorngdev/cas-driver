@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View } from "react-native";
 import { connect } from "react-redux";
 import { useDocumentData } from "react-firebase-hooks/firestore";
+import Geocoder from "react-native-geocoding";
 
 import {
     finishRequestFirestore,
@@ -41,6 +42,8 @@ import Map from "../../components/map.component";
 
 import styles from "./home.style";
 
+Geocoder.init("AIzaSyA3wjgHRZGPb4I96XDM-Eev7f1QQM_Mpp8", { language: "vi" });
+
 const HomeScreen = ({
     navigation,
     currentUser,
@@ -78,7 +81,7 @@ const HomeScreen = ({
     useEffect(() => {
         navigator.geolocation.getCurrentPosition(async position => {
             let { latitude, longitude } = position.coords;
-            setLocation({ latitude, longitude });
+            setLocation(latitude, longitude);
         });
     }, []);
 
@@ -159,70 +162,74 @@ const HomeScreen = ({
 
     return (
         <View style={styles.container}>
-            <BackgroundImage>
-                <View style={{ flex: 1 }}>
-                    <HomeHeader
-                        title={title}
-                        isReady={isReady}
-                        toggleAction={toggleAction}
-                        navigation={navigation}
-                    />
-                </View>
-                <RejectModal
-                    rejectOption={rejectOption}
-                    setRejectOption={setRejectOption}
-                    isReject={isReady}
-                    isVisible={isReject}
-                    setIsReject={setIsReject}
-                    handleReject={() => handelReject()}
-                />
-                {currentRequest && (
-                    <RequestModal handleAccept={handleAccept} isVisible={isToggle} />
-                )}
-                <MessageModal
-                    action={handleFinish}
-                    message={messages.finish}
-                    isVisible={isFinish}
-                />
-                <MessageModal
-                    action={() => setIsCancelled(false)}
-                    message={messages.cancelled}
-                    isVisible={isCancelled}
-                />
-                <MessageModal
-                    action={() => setIsAccepted(false)}
-                    message={messages.acceptedRequest}
-                    isVisible={_isAccepted}
-                />
-                <ProblemModal
-                    isVisible={isProblem}
-                    setIsProblem={setIsProblem}
-                    handleReport={handleReport}
-                    problemOption={problem}
-                    setProblemOption={setProblem}
-                />
-                <View style={isAccepted ? (isArrived ? { flex: 6 } : { flex: 5 }) : { flex: 7 }}>
-                    <Map source={location} setLocation={setLocation} />
-                </View>
-                {!isAccepted ? (
-                    <View style={{ flex: 2 }}>
-                        <HomeDriverInfo
-                            ratingLevel={5}
-                            addressName="Vị trí hiện tại"
-                            addressValue="1141/15/7, Nguyễn Ảnh Thủ, P. Trung Mỹ Tây, Quận 12"
+            {location && (
+                <BackgroundImage>
+                    <View style={{ flex: 1 }}>
+                        <HomeHeader
+                            title={title}
+                            isReady={isReady}
+                            toggleAction={toggleAction}
+                            navigation={navigation}
                         />
                     </View>
-                ) : (
-                    <TransportationInfo
-                        isArrived={isArrived}
-                        request={currentRequest}
-                        handleArrived={handleArrived}
-                        setIsFinish={setIsFinish}
+                    <RejectModal
+                        rejectOption={rejectOption}
+                        setRejectOption={setRejectOption}
+                        isReject={isReady}
+                        isVisible={isReject}
                         setIsReject={setIsReject}
-                        setIsProblem={setIsProblem}
+                        handleReject={() => handelReject()}
                     />
-                )}
-            </BackgroundImage>
+                    {currentRequest && (
+                        <RequestModal handleAccept={handleAccept} isVisible={isToggle} />
+                    )}
+                    <MessageModal
+                        action={handleFinish}
+                        message={messages.finish}
+                        isVisible={isFinish}
+                    />
+                    <MessageModal
+                        action={() => setIsCancelled(false)}
+                        message={messages.cancelled}
+                        isVisible={isCancelled}
+                    />
+                    <MessageModal
+                        action={() => setIsAccepted(false)}
+                        message={messages.acceptedRequest}
+                        isVisible={_isAccepted}
+                    />
+                    <ProblemModal
+                        isVisible={isProblem}
+                        setIsProblem={setIsProblem}
+                        handleReport={handleReport}
+                        problemOption={problem}
+                        setProblemOption={setProblem}
+                    />
+                    <View
+                        style={isAccepted ? (isArrived ? { flex: 6 } : { flex: 5 }) : { flex: 7 }}
+                    >
+                        <Map source={location} setLocation={setLocation} />
+                    </View>
+                    {!isAccepted ? (
+                        <View style={{ flex: 2 }}>
+                            <HomeDriverInfo
+                                ratingLevel={5}
+                                addressName="Vị trí của bạn"
+                                addressValue={location.address || ""}
+                            />
+                        </View>
+                    ) : (
+                        <TransportationInfo
+                            isArrived={isArrived}
+                            request={currentRequest}
+                            handleArrived={handleArrived}
+                            setIsFinish={setIsFinish}
+                            setIsReject={setIsReject}
+                            setIsProblem={setIsProblem}
+                        />
+                    )}
+                </BackgroundImage>
+            )}
         </View>
     );
 };
