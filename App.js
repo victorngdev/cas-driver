@@ -11,13 +11,12 @@ import DrawerContent from "./src/screens/drawer/drawer-content.component";
 import LoginScreen from "./src/screens/login/login.component";
 import HomeScreen from "./src/screens/home/home.component";
 import AccountScreen from "./src/screens/account-info/account-info.component";
-import RegisterCarScreen from "./src/screens/register-car/register-car.component";
+import RegisterAmbulanceScreen from "./src/screens/register-ambulance/register-ambulance.component";
 import HistoryScreen from "./src/screens/history/history.component";
 import HistoryDetailScreen from "./src/screens/history-detail/history-detail.component";
 import RegisterScreen from "./src/screens/register/register.component";
 import OtpScreen from "./src/screens/otp/otp.component";
 import ResetPassScreen from "./src/screens/reset-password/reset-password.component";
-import GoogleMapScreen from "./src/screens/google-map/google-map.component";
 
 const Drawer = createDrawerNavigator();
 
@@ -46,12 +45,14 @@ class App extends React.Component {
                         <Drawer.Screen name="Login" component={LoginScreen} />
                         <Drawer.Screen name="AccountInfo" component={AccountScreen} />
                         <Drawer.Screen name="History" component={HistoryScreen} />
-                        <Drawer.Screen name="RegisterCar" component={RegisterCarScreen} />
+                        <Drawer.Screen
+                            name="RegisterAmbulance"
+                            component={RegisterAmbulanceScreen}
+                        />
                         <Drawer.Screen name="Register" component={RegisterScreen} />
                         <Drawer.Screen name="Otp" component={OtpScreen} />
                         <Drawer.Screen name="ResetPass" component={ResetPassScreen} />
                         <Drawer.Screen name="HistoryDetail" component={HistoryDetailScreen} />
-                        <Drawer.Screen name="GoogleMap" component={GoogleMapScreen} />
                     </Drawer.Navigator>
                 </NavigationContainer>
             </Provider>

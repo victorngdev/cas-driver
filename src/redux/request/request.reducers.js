@@ -29,12 +29,6 @@ const requestReducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 error: action.payload
             };
-        case RequestActionTypes.CANCEL_REQUEST_SUCCESS:
-            return {
-                ...state,
-                isAccepted: false,
-                currentRequest: null
-            };
         case RequestActionTypes.CANCEL_REQUEST_FAIL:
             return {
                 ...state,
@@ -51,6 +45,7 @@ const requestReducer = (state = INITIAL_STATE, action) => {
                 error: action.payload
             };
         case RequestActionTypes.FINISH_REQUEST_SUCCESS:
+        case RequestActionTypes.CANCEL_REQUEST_SUCCESS:
             return {
                 ...state,
                 isArrived: false,

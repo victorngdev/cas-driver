@@ -43,7 +43,7 @@ const Map = ({ source, setLocation, requestId, currentUser, isArrived, isAccepte
                 longitude: request.destinationLongitude
             });
         }
-    }, [request]);
+    }, [request, isArrived]);
 
     useEffect(() => {
         !requestId && setDestination(null);

@@ -14,7 +14,7 @@ import CustomInputLabel from "../../components/custom-input-label.component";
 import ImageCapture from "../../components/image-capture.component";
 import { uploadImage } from "../../apis/core.apis";
 
-const RegisterCarScreen = ({ navigation, currentUser, token, registerAmbulance }) => {
+const RegisterAmbulanceScreen = ({ navigation, currentUser, token, registerAmbulance }) => {
     const [displayName, setDisplayName] = useState(currentUser.displayName || "");
     const [phone, setPhone] = useState(currentUser.phone || "");
     const [licensePlate, setLicensePlate] = useState("71 - B3 253.56");
@@ -116,7 +116,7 @@ const mapDispatchToProps = dispatch => ({
         dispatch(registerAmbulance(token, userId, ambulance))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(RegisterCarScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterAmbulanceScreen);
 
 const styles = StyleSheet.create({
     container: {

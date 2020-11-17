@@ -36,9 +36,9 @@ import MessageModal from "../../components/message-modal.component";
 import RequestModal from "../../components/request-modal.component";
 import TransportationInfo from "../../components/transportation-info.component";
 import ProblemModal from "../../components/problem-modal.component";
+import Map from "../../components/map.component";
 
 import styles from "./home.style";
-import Map from "../../components/map.component";
 
 const HomeScreen = ({
     navigation,

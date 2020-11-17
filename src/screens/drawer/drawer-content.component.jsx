@@ -31,14 +31,18 @@ function DrawerContent(props) {
                                 }}
                             >
                                 <Title style={styles.title}>Lê Quang Huy</Title>
-                                <Caption style={{ fontFamily: "Texgyreadventor-regular" }}>0931738872</Caption>
+                                <Caption style={{ fontFamily: "Texgyreadventor-regular" }}>
+                                    0931738872
+                                </Caption>
                             </View>
                         </View>
                     </View>
                     <Drawer.Section style={styles.drawerSection}>
                         <DrawerItem
                             labelStyle={styles.caption}
-                            icon={({ color, size }) => <Icon name="home-outline" color={color} size={size} />}
+                            icon={({ color, size }) => (
+                                <Icon name="home-outline" color={color} size={size} />
+                            )}
                             label="Trang chủ"
                             onPress={() => {
                                 props.navigation.navigate("Home");
@@ -46,16 +50,20 @@ function DrawerContent(props) {
                         />
                         <DrawerItem
                             labelStyle={styles.caption}
-                            icon={({ color, size }) => <Icon name="car-estate" color={color} size={size} />}
+                            icon={({ color, size }) => (
+                                <Icon name="car-estate" color={color} size={size} />
+                            )}
                             label="Đăng ký xe"
                             onPress={() => {
-                                props.navigation.navigate("RegisterCar");
+                                props.navigation.navigate("RegisterAmbulance");
                             }}
                         />
 
                         <DrawerItem
                             labelStyle={styles.caption}
-                            icon={({ color, size }) => <Icon name="history" color={color} size={size} />}
+                            icon={({ color, size }) => (
+                                <Icon name="history" color={color} size={size} />
+                            )}
                             label="Lịch sử"
                             onPress={() => {
                                 props.navigation.navigate("History");
@@ -63,7 +71,9 @@ function DrawerContent(props) {
                         />
                         <DrawerItem
                             labelStyle={styles.caption}
-                            icon={({ color, size }) => <Icon name="account-check-outline" color={color} size={size} />}
+                            icon={({ color, size }) => (
+                                <Icon name="account-check-outline" color={color} size={size} />
+                            )}
                             label="Tài khoản"
                             onPress={() => {
                                 props.navigation.navigate("AccountInfo");
@@ -90,7 +100,9 @@ function DrawerContent(props) {
             <Drawer.Section style={styles.bottomDrawerSection}>
                 <DrawerItem
                     labelStyle={styles.caption}
-                    icon={({ color, size }) => <Icon name="exit-to-app" color={color} size={size} />}
+                    icon={({ color, size }) => (
+                        <Icon name="exit-to-app" color={color} size={size} />
+                    )}
                     label="Đăng xuất"
                     onPress={() => {
                         props.navigation.navigate("Login");

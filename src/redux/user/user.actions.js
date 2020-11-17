@@ -23,3 +23,8 @@ export const updateUser = user => ({
     type: UserActionTypes.UPDATE_USER,
     payload: user
 });
+
+export const updateConfirmingStatus = status => ({
+    type: UserActionTypes.UPDATE_CONFIRMING_STATUS,
+    payload: status
+});

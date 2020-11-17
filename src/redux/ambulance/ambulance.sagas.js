@@ -1,7 +1,7 @@
 import { takeLatest, all, call, put } from "redux-saga/effects";
 
 import { registerAmbulance, updateAmbulance } from "../../apis/ambulance.apis";
-import { uploadImage } from "../../apis/core.apis";
+import { updateConfirmingStatus } from "../user/user.actions";
 import {
     registerAmbulanceFail,
     registerAmbulanceSuccess,
@@ -16,6 +16,7 @@ function* registerAmbulanceStart({ payload: { token, userId, ambulance } }) {
         const response = yield call(registerAmbulance, token, userId, ambulance);
 
         yield put(registerAmbulanceSuccess(response.data));
+        yield put(updateConfirmingStatus(!!response.data));
     } catch (error) {
         yield put(registerAmbulanceFail(error));
     }
