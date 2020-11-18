@@ -10,7 +10,7 @@ const MessageModal = ({ action, isVisible, message: { title, message } }) => (
         <Text style={styles.message}>{message}</Text>
         <CustomButton
             action={action}
-            label="Đóng"
+            label="Xác nhận"
             style={{ paddingHorizontal: 30, marginBottom: 10 }}
         />
     </CustomModal>

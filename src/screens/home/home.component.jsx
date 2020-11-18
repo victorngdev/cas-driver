@@ -59,13 +59,14 @@ const HomeScreen = ({
     clearRequest
 }) => {
     const [isReady, setIsReady] = useState(false);
-    const [title, setTitle] = useState("Chưa sẵn sàng");
+    const [isValid, setIsValid] = useState(false);
     const [isToggle, setIsToggle] = useState(false);
     const [isReject, setIsReject] = useState(false);
     const [isFinish, setIsFinish] = useState(false);
     const [isProblem, setIsProblem] = useState(false);
     const [isCancelled, setIsCancelled] = useState(false);
     const [_isAccepted, setIsAccepted] = useState(false);
+    const [title, setTitle] = useState("Chưa sẵn sàng");
     const [rejectOption, setRejectOption] = useState("Bấm nhầm chấp nhận yêu cầu");
     const [problem, setProblem] = useState("first");
     const [location, setLocation] = useState(null);
@@ -114,8 +115,12 @@ const HomeScreen = ({
     }, [requestStatus]);
 
     const toggleAction = () => {
-        setIsReady(!isReady);
-        setTitle(!isReady ? "Đang sẵn sàng" : "Chưa sẵn sàng");
+        if (currentUser.registerd) {
+            setIsReady(!isReady);
+            setTitle(!isReady ? "Đang sẵn sàng" : "Chưa sẵn sàng");
+        } else {
+            setIsValid(true);
+        }
     };
 
     const handleAccept = () => {
@@ -197,6 +202,11 @@ const HomeScreen = ({
                         action={() => setIsAccepted(false)}
                         message={messages.acceptedRequest}
                         isVisible={_isAccepted}
+                    />
+                    <MessageModal
+                        action={() => setIsValid(false)}
+                        message={messages.ready}
+                        isVisible={isValid}
                     />
                     <ProblemModal
                         isVisible={isProblem}

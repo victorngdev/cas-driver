@@ -3,6 +3,8 @@ import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import { View, StyleSheet } from "react-native";
 import { Avatar, Title, Caption, Drawer, Text, TouchableRipple, Switch } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { connect } from "react-redux";
+import { logout } from "../../redux/user/user.actions";
 
 function DrawerContent(props) {
     const [isAction, setIsAction] = React.useState(false);
@@ -104,16 +106,18 @@ function DrawerContent(props) {
                         <Icon name="exit-to-app" color={color} size={size} />
                     )}
                     label="Đăng xuất"
-                    onPress={() => {
-                        props.navigation.navigate("Login");
-                    }}
+                    onPress={props.logout}
                 />
             </Drawer.Section>
         </View>
     );
 }
 
-export default DrawerContent;
+const mapDispatchToProps = dispatch => ({
+    logout: () => dispatch(logout())
+});
+
+export default connect(null, mapDispatchToProps)(DrawerContent);
 
 const styles = StyleSheet.create({
     drawerContent: {

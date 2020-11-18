@@ -4,7 +4,9 @@ import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 
 import { selectCurrentUser, selectToken } from "../../redux/user/user.selectors";
-import { registerAmbulance } from "../../redux/ambulance/ambulance.actions";
+import { registerAmbulance, updateAmbulance } from "../../redux/ambulance/ambulance.actions";
+import { selectCurrentAmbulance } from "../../redux/ambulance/ambulance.selectors";
+import { uploadImage } from "../../apis/core.apis";
 
 import BackgroundImage from "../../components/background-screen.component";
 import ButtonText from "../../components/button-text.component";
@@ -12,41 +14,92 @@ import KeyboardAvoiding from "../../components/keyboard-avoding.component";
 import Header from "../../components/header.component";
 import CustomInputLabel from "../../components/custom-input-label.component";
 import ImageCapture from "../../components/image-capture.component";
-import { uploadImage } from "../../apis/core.apis";
+import MessageModal from "../../components/message-modal.component";
 
-const RegisterAmbulanceScreen = ({ navigation, currentUser, token, registerAmbulance }) => {
+const RegisterAmbulanceScreen = ({
+    navigation,
+    currentUser,
+    currentAmbulance,
+    token,
+    registerAmbulance,
+    updateAmbulance
+}) => {
     const [displayName, setDisplayName] = useState(currentUser.displayName || "");
+    const [messageModal, setMessageModal] = useState(false);
     const [phone, setPhone] = useState(currentUser.phone || "");
-    const [licensePlate, setLicensePlate] = useState("71 - B3 253.56");
-    const [link, setLink] = useState(null);
-    const [identityCard, setIdentityCard] = useState(null);
-    const [driverLicense, setDriverLicense] = useState("https://i.ibb.co/mv2t1Gz/giayphep.jpg");
-    const [registerLicense, setRegisterLicense] = useState(
-        "https://i.ibb.co/L59LBBJ/giaydangkyxe.jpg"
+    const [licensePlate, setLicensePlate] = useState(
+        currentAmbulance && currentAmbulance.licensePlate
     );
-    const [registryCertificate, setRegistryCertificate] = useState(
-        "https://i.ibb.co/Yb8CyJJ/giaydangkiem.jpg"
-    );
+    const [identityCard, setIdentityCard] = useState({
+        uri:
+            (currentAmbulance && currentAmbulance.identityCard) ||
+            "https://i.ibb.co/ypNxXzD/cap-picture.png"
+    });
+    const [driverLicense, setDriverLicense] = useState({
+        uri:
+            (currentAmbulance && currentAmbulance.driverLicense) ||
+            "https://i.ibb.co/mv2t1Gz/giayphep.jpg"
+    });
+    const [registerLicense, setRegisterLicense] = useState({
+        uri:
+            (currentAmbulance && currentAmbulance.registerLicense) ||
+            "https://i.ibb.co/L59LBBJ/giaydangkyxe.jpg"
+    });
+    const [registryCertificate, setRegistryCertificate] = useState({
+        uri:
+            (currentAmbulance && currentAmbulance.registryCertificate) ||
+            "https://i.ibb.co/Yb8CyJJ/giaydangkiem.jpg"
+    });
 
     const handleRegister = async () => {
-        await uploadImage(identityCard.image).then(response =>
-            setLink(response.data.data.display_url)
+        await uploadImage(identityCard.base64).then(response =>
+            setIdentityCard({ uri: response.data.data.display_url })
         );
         const ambulance = {
             displayName,
             phone,
             licensePlate,
-            identityCard: link,
-            driverLicense,
-            registerLicense,
-            registryCertificate
+            identityCard: identityCard.uri,
+            driverLicense: driverLicense.uri,
+            registerLicense: registerLicense.uri,
+            registryCertificate: registryCertificate.uri
         };
 
         registerAmbulance(token, currentUser.userId, ambulance);
+        setMessageModal(true);
+    };
+
+    const handleUpdate = async () => {
+        identityCard.base64 &&
+            (await uploadImage(identityCard.base64).then(response =>
+                setIdentityCard({ uri: response.data.data.display_url })
+            ));
+        const ambulance = {
+            ambulanceId: currentAmbulance.ambulanceId,
+            displayName,
+            phone,
+            licensePlate,
+            identityCard: identityCard.uri,
+            driverLicense: driverLicense.uri,
+            registerLicense: registerLicense.uri,
+            registryCertificate: registryCertificate.uri
+        };
+
+        updateAmbulance(token, currentUser.userId, ambulance);
+        setMessageModal(true);
     };
 
     return (
         <BackgroundImage>
+            <MessageModal
+                message={{
+                    title: `${currentAmbulance ? "Cập nhật" : "Đăng kí"} thành công`,
+                    message:
+                        "Các thay đổi về thông tin tài khoản sẽ được đồng bộ trong lần đăng nhập tiếp theo."
+                }}
+                action={() => setMessageModal(false)}
+                isVisible={messageModal}
+            />
             <Header title="Đăng kí xe" gotoScreen={() => navigation.goBack(null)} />
             <Text style={styles.header}>
                 Cung cấp thông tin và hình ảnh để xác thực danh tính và phương tiện cứu thương
@@ -69,51 +122,63 @@ const RegisterAmbulanceScreen = ({ navigation, currentUser, token, registerAmbul
                     <CustomInputLabel
                         label="Biển số xe"
                         isRequire
-                        defaultValue={licensePlate}
+                        defaultValue={currentAmbulance && currentAmbulance.licensePlate}
                         onChangeText={value => setLicensePlate(value)}
                     />
                 </View>
                 <View style={styles.imagePicker}>
                     <ImageCapture
-                        source={(identityCard && identityCard.uri) || ""}
+                        source={identityCard.uri}
                         label="Chứng minh nhân dân"
                         action={setIdentityCard}
                     />
                     <ImageCapture
-                        source={driverLicense}
+                        source={driverLicense.uri}
                         label="Giấy đăng ký xe"
                         action={setDriverLicense}
                     />
                     <ImageCapture
-                        source={registerLicense}
+                        source={registerLicense.uri}
                         label="Giấy phép lái xe"
                         action={setRegisterLicense}
                     />
                     <ImageCapture
-                        source={registryCertificate}
+                        source={registryCertificate.uri}
                         label="Giấy đăng kiểm"
                         action={setRegistryCertificate}
                     />
                 </View>
             </KeyboardAvoiding>
-            <ButtonText
-                textContent="Đăng ký"
-                styleText={styles.text}
-                styleButton={styles.button}
-                gotoScreen={handleRegister}
-            />
+            {currentAmbulance ? (
+                <ButtonText
+                    textContent="Cập nhật"
+                    styleText={styles.text}
+                    styleButton={styles.button}
+                    gotoScreen={handleUpdate}
+                />
+            ) : (
+                <ButtonText
+                    textContent="Đăng ký"
+                    styleText={styles.text}
+                    styleButton={styles.button}
+                    gotoScreen={handleRegister}
+                />
+            )}
         </BackgroundImage>
     );
 };
 
 const mapStateToProps = createStructuredSelector({
     currentUser: selectCurrentUser,
+    currentAmbulance: selectCurrentAmbulance,
     token: selectToken
 });
 
 const mapDispatchToProps = dispatch => ({
     registerAmbulance: (token, userId, ambulance) =>
-        dispatch(registerAmbulance(token, userId, ambulance))
+        dispatch(registerAmbulance(token, userId, ambulance)),
+    updateAmbulance: (token, userId, ambulance) =>
+        dispatch(updateAmbulance(token, userId, ambulance))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RegisterAmbulanceScreen);

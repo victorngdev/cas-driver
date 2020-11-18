@@ -1,5 +1,20 @@
 import AmbulanceActionTypes from "./ambulance.types";
 
+export const fetchAmbulance = (token, userId) => ({
+    type: AmbulanceActionTypes.FETCH_AMBULANCE_START,
+    payload: { token, userId }
+});
+
+export const fetchAmbulanceSuccess = ambulance => ({
+    type: AmbulanceActionTypes.FETCH_AMBULANCE_SUCCESS,
+    payload: ambulance
+});
+
+export const fetchAmbulanceFail = error => ({
+    type: AmbulanceActionTypes.FETCH_AMBULANCE_FAIL,
+    payload: error
+});
+
 export const registerAmbulance = (token, userId, ambulance) => ({
     type: AmbulanceActionTypes.REGISTER_AMBULANCE_START,
     payload: { token, userId, ambulance }
