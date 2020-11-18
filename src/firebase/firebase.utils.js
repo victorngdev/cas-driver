@@ -20,8 +20,8 @@ const geocollection = GeoFirestore.collection("drivers");
 
 export const updateRequest = async (driverId, poolId, requestId, status) => {
     console.log(requestId, poolId);
-    const documentRef = firestore.collection("requests").doc(`${requestId}`);
-    await documentRef.update({
+    const requestRef = firestore.collection("requests").doc(`${requestId}`);
+    await requestRef.update({
         status,
         driverId,
         poolId
@@ -29,17 +29,24 @@ export const updateRequest = async (driverId, poolId, requestId, status) => {
 };
 
 export const finishRequestFirestore = async requestId => {
-    const documentRef = firestore.collection("requests").doc(`${requestId}`);
-    await documentRef.update({
+    const requestRef = firestore.collection("requests").doc(`${requestId}`);
+    await requestRef.update({
         status: "finished"
+    });
+};
+
+export const clearConfirmationRequest = async poolId => {
+    const confirmationRef = firestore.collection("confirmations").doc(`${poolId}`);
+    await confirmationRef.update({
+        requestId: 0
     });
 };
 
 export const syncLocationToRequest = async (poolId, latitude, longitude) => {
     if (latitude && longitude) {
-        const documentRef = firestore.collection("drivers").doc(`${poolId}`);
+        const driverRef = firestore.collection("drivers").doc(`${poolId}`);
 
-        await documentRef.set({
+        await driverRef.set({
             latitude,
             longitude
         });
@@ -49,6 +56,14 @@ export const syncLocationToRequest = async (poolId, latitude, longitude) => {
 export const initLocation = async (userId, latitude, longitude) => {
     geocollection.doc(`${userId}`).set({
         coordinates: new firebase.firestore.GeoPoint(latitude, longitude)
+    });
+};
+
+export const rejectRequest = async requestId => {
+    const requestRef = firestore.collection("requests").doc(`${requestId}`);
+
+    await requestRef.update({
+        status: "rejected"
     });
 };
 

@@ -17,6 +17,11 @@ const userReducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 error: action.payload
             };
+        case UserActionTypes.UPDATE_CONFIRMING_STATUS:
+            return {
+                ...state,
+                currentUser: { ...state.currentUser, confirming: action.payload }
+            };
         case UserActionTypes.LOGOUT:
             return {
                 ...state,

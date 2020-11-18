@@ -4,6 +4,7 @@ import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
+import Geocoder from "react-native-geocoding";
 
 import { firestore, syncLocationToRequest, initLocation } from "../firebase/firebase.utils";
 import {
@@ -14,6 +15,8 @@ import {
 import { selectCurrentUser } from "../redux/user/user.selectors";
 
 import MapDirection from "./map-direction.component";
+
+Geocoder.init("AIzaSyA3wjgHRZGPb4I96XDM-Eev7f1QQM_Mpp8", { language: "vi" });
 
 const Map = ({ source, setLocation, requestId, currentUser, isArrived, isAccepted }) => {
     const mapRef = useRef(null);
@@ -43,7 +46,7 @@ const Map = ({ source, setLocation, requestId, currentUser, isArrived, isAccepte
                 longitude: request.destinationLongitude
             });
         }
-    }, [request]);
+    }, [request, isArrived]);
 
     useEffect(() => {
         !requestId && setDestination(null);
@@ -54,8 +57,14 @@ const Map = ({ source, setLocation, requestId, currentUser, isArrived, isAccepte
     };
 
     const handleLocationChange = (latitude, longitude) => {
+        Geocoder.from(latitude, longitude).then(json =>
+            setLocation({
+                address: json.results[0].formatted_address,
+                latitude,
+                longitude
+            })
+        );
         if (requestId) {
-            setLocation({ latitude, longitude });
             isAccepted && syncLocationToRequest(currentUser.username, latitude, longitude);
         } else {
             initLocation(currentUser.username, latitude, longitude);
