@@ -115,7 +115,7 @@ const HomeScreen = ({
     }, [requestStatus]);
 
     const toggleAction = () => {
-        if (currentUser.registerd) {
+        if (currentUser.registered) {
             setIsReady(!isReady);
             setTitle(!isReady ? "Đang sẵn sàng" : "Chưa sẵn sàng");
         } else {
