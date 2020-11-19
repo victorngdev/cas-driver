@@ -16,7 +16,7 @@ const RequestModal = ({ isVisible, currentRequest, clearRequest, handleAccept })
         <CustomModal visible={isVisible}>
             <View style={styles.groupTitle}>
                 <Text style={styles.modalTitle}>Yêu cầu mới</Text>
-                <Text style={styles.requestType}>Đặt giúp</Text>
+                {currentRequest.patientName && <Text style={styles.requestType}>Đặt giúp</Text>}
             </View>
             <ScrollView
                 showsVerticalScrollIndicator={false}
@@ -35,7 +35,7 @@ const RequestModal = ({ isVisible, currentRequest, clearRequest, handleAccept })
                     distance={`Cách điểm đón ${20}`}
                     icon="https://i.ibb.co/gWdQ69d/radar.png"
                 />
-                {currentRequest.patientName && (
+                {currentRequest.isOthers && (
                     <RequestInfo
                         title="Thông tin người gọi"
                         items={[
@@ -57,11 +57,15 @@ const RequestModal = ({ isVisible, currentRequest, clearRequest, handleAccept })
                     items={[
                         {
                             label: "Tên",
-                            content: currentRequest.patientName || currentRequest.requesterName
+                            content: currentRequest.isOthers
+                                ? currentRequest.patientName
+                                : currentRequest.requesterName
                         },
                         {
                             label: "Số điện thoại",
-                            content: currentRequest.patientPhone || currentRequest.requesterPhone
+                            content: currentRequest.isOthers
+                                ? currentRequest.patientPhone
+                                : currentRequest.requesterPhone
                         },
                         {
                             label: "Tình trạng cấp cứu",
@@ -73,9 +77,7 @@ const RequestModal = ({ isVisible, currentRequest, clearRequest, handleAccept })
                         }
                     ]}
                 />
-                {currentRequest.note && (
-                    <RequestInfo title="Ghi chú" items={[{ content: currentRequest.note }]} />
-                )}
+                <RequestInfo title="Ghi chú" items={[{ content: currentRequest.morbidityNote }]} />
             </ScrollView>
             <GroupButton
                 items={[
