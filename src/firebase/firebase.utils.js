@@ -19,7 +19,6 @@ const GeoFirestore = geofirestore.initializeApp(firestore);
 const geocollection = GeoFirestore.collection("drivers");
 
 export const updateRequest = async (driverId, poolId, requestId, status) => {
-    console.log(requestId, poolId);
     const requestRef = firestore.collection("requests").doc(`${requestId}`);
     await requestRef.update({
         status,

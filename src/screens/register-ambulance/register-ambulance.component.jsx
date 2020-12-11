@@ -52,41 +52,40 @@ const RegisterAmbulanceScreen = ({
     });
 
     const handleRegister = async () => {
-        await uploadImage(identityCard.base64).then(response =>
-            setIdentityCard({ uri: response.data.data.display_url })
-        );
-        const ambulance = {
-            displayName,
-            phone,
-            licensePlate,
-            identityCard: identityCard.uri,
-            driverLicense: driverLicense.uri,
-            registerLicense: registerLicense.uri,
-            registryCertificate: registryCertificate.uri
-        };
+        await uploadImage(identityCard.base64).then(response => {
+            console.log(response.data.data.display_url);
+            const ambulance = {
+                displayName,
+                phone,
+                licensePlate,
+                identityCard: response.data.data.display_url,
+                driverLicense: driverLicense.uri,
+                registerLicense: registerLicense.uri,
+                registryCertificate: registryCertificate.uri
+            };
 
-        registerAmbulance(token, currentUser.userId, ambulance);
-        setMessageModal(true);
+            registerAmbulance(token, currentUser.userId, ambulance);
+            setMessageModal(true);
+        });
     };
 
     const handleUpdate = async () => {
         identityCard.base64 &&
-            (await uploadImage(identityCard.base64).then(response =>
-                setIdentityCard({ uri: response.data.data.display_url })
-            ));
-        const ambulance = {
-            ambulanceId: currentAmbulance.ambulanceId,
-            displayName,
-            phone,
-            licensePlate,
-            identityCard: identityCard.uri,
-            driverLicense: driverLicense.uri,
-            registerLicense: registerLicense.uri,
-            registryCertificate: registryCertificate.uri
-        };
+            (await uploadImage(identityCard.base64).then(response => {
+                const ambulance = {
+                    ambulanceId: currentAmbulance.ambulanceId,
+                    displayName,
+                    phone,
+                    licensePlate,
+                    identityCard: response.data.data.display_url,
+                    driverLicense: driverLicense.uri,
+                    registerLicense: registerLicense.uri,
+                    registryCertificate: registryCertificate.uri
+                };
 
-        updateAmbulance(token, currentUser.userId, ambulance);
-        setMessageModal(true);
+                updateAmbulance(token, currentUser.userId, ambulance);
+                setMessageModal(true);
+            }));
     };
 
     return (

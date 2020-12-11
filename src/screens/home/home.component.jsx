@@ -102,12 +102,14 @@ const HomeScreen = ({
             requestStatus.driverId !== currentUser.userId
         ) {
             setIsToggle(false);
+            clearConfirmationRequest(currentUser.username);
             initLocation(currentUser.username, location.latitude, location.longitude);
             clearRequest();
             setIsAccepted(true);
         }
         if (currentRequest && requestStatus.status === "cancelled") {
             setIsToggle(false);
+            clearConfirmationRequest(currentUser.username);
             initLocation(currentUser.username, location.latitude, location.longitude);
             clearRequest();
             setIsCancelled(true);
