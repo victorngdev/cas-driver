@@ -7,6 +7,7 @@ import { selectCurrentUser, selectToken } from "../../redux/user/user.selectors"
 import { registerAmbulance, updateAmbulance } from "../../redux/ambulance/ambulance.actions";
 import { selectCurrentAmbulance } from "../../redux/ambulance/ambulance.selectors";
 import { uploadImage } from "../../apis/core.apis";
+import messages from "../../uitls/message.data";
 
 import BackgroundImage from "../../components/background-screen.component";
 import ButtonText from "../../components/button-text.component";
@@ -26,6 +27,7 @@ const RegisterAmbulanceScreen = ({
 }) => {
     const [displayName, setDisplayName] = useState(currentUser.displayName || "");
     const [messageModal, setMessageModal] = useState(false);
+    const [cancel, setCancel] = useState(false);
     const [phone, setPhone] = useState(currentUser.phone || "");
     const [licensePlate, setLicensePlate] = useState(
         currentAmbulance && currentAmbulance.licensePlate
@@ -88,82 +90,103 @@ const RegisterAmbulanceScreen = ({
             }));
     };
 
+    const handleCancel = () => {
+        setCancel(false);
+    };
+
     return (
-        <BackgroundImage>
-            <MessageModal
-                message={{
-                    title: `${currentAmbulance ? "Cập nhật" : "Đăng kí"} thành công`,
-                    message:
-                        "Các thay đổi về thông tin tài khoản sẽ được đồng bộ trong lần đăng nhập tiếp theo."
-                }}
-                action={() => setMessageModal(false)}
-                isVisible={messageModal}
-            />
-            <Header title="Đăng kí xe" gotoScreen={() => navigation.goBack(null)} />
-            <Text style={styles.header}>
-                Cung cấp thông tin và hình ảnh để xác thực danh tính và phương tiện cứu thương
-            </Text>
-            <KeyboardAvoiding style={styles.container}>
-                <View style={styles.basicInfo}>
-                    <CustomInputLabel
-                        label="Họ và tên"
-                        isRequire
-                        defaultValue={displayName}
-                        onChangeText={value => setDisplayName(value)}
+        <View style={styles._container}>
+            <BackgroundImage>
+                {messageModal && (
+                    <MessageModal
+                        message={{
+                            title: `${currentAmbulance ? "Cập nhật" : "Đăng kí"} thành công`,
+                            message: messages["registered"]
+                        }}
+                        action={() => setMessageModal(false)}
                     />
-                    <CustomInputLabel
-                        label="Số điện thoại"
-                        onChangeText={value => setPhone(value)}
-                        isRequire
-                        defaultValue={phone}
-                        keyboardType="numeric"
+                )}
+                {cancel && (
+                    <MessageModal
+                        message={messages.cancel}
+                        action={handleCancel}
+                        onClose={() => setCancel(false)}
                     />
-                    <CustomInputLabel
-                        label="Biển số xe"
-                        isRequire
-                        defaultValue={currentAmbulance && currentAmbulance.licensePlate}
-                        onChangeText={value => setLicensePlate(value)}
+                )}
+                <Header title="Đăng kí xe" gotoScreen={() => navigation.goBack(null)} />
+                <Text style={styles.header}>
+                    Cung cấp thông tin và hình ảnh để xác thực danh tính và phương tiện cứu thương
+                </Text>
+                <KeyboardAvoiding style={styles.container}>
+                    <View style={styles.basicInfo}>
+                        <CustomInputLabel
+                            label="Họ và tên"
+                            isRequire
+                            defaultValue={displayName}
+                            onChangeText={value => setDisplayName(value)}
+                        />
+                        <CustomInputLabel
+                            label="Số điện thoại"
+                            onChangeText={value => setPhone(value)}
+                            isRequire
+                            defaultValue={phone}
+                            keyboardType="numeric"
+                        />
+                        <CustomInputLabel
+                            label="Biển số xe"
+                            isRequire
+                            defaultValue={currentAmbulance && currentAmbulance.licensePlate}
+                            onChangeText={value => setLicensePlate(value)}
+                        />
+                    </View>
+                    <View style={styles.imagePicker}>
+                        <ImageCapture
+                            source={identityCard.uri}
+                            label="Chứng minh nhân dân"
+                            action={setIdentityCard}
+                        />
+                        <ImageCapture
+                            source={driverLicense.uri}
+                            label="Giấy đăng ký xe"
+                            action={setDriverLicense}
+                        />
+                        <ImageCapture
+                            source={registerLicense.uri}
+                            label="Giấy phép lái xe"
+                            action={setRegisterLicense}
+                        />
+                        <ImageCapture
+                            source={registryCertificate.uri}
+                            label="Giấy đăng kiểm"
+                            action={setRegistryCertificate}
+                        />
+                    </View>
+                </KeyboardAvoiding>
+                {currentAmbulance ? (
+                    <View style={styles.groupAction}>
+                        <ButtonText
+                            textContent="Hủy đăng ký"
+                            styleText={styles.text}
+                            styleButton={styles.cancel}
+                            gotoScreen={() => setCancel(true)}
+                        />
+                        <ButtonText
+                            textContent="Cập nhật"
+                            styleText={styles.text}
+                            styleButton={styles.button}
+                            gotoScreen={handleUpdate}
+                        />
+                    </View>
+                ) : (
+                    <ButtonText
+                        textContent="Đăng ký"
+                        styleText={styles.text}
+                        styleButton={styles.button}
+                        gotoScreen={handleRegister}
                     />
-                </View>
-                <View style={styles.imagePicker}>
-                    <ImageCapture
-                        source={identityCard.uri}
-                        label="Chứng minh nhân dân"
-                        action={setIdentityCard}
-                    />
-                    <ImageCapture
-                        source={driverLicense.uri}
-                        label="Giấy đăng ký xe"
-                        action={setDriverLicense}
-                    />
-                    <ImageCapture
-                        source={registerLicense.uri}
-                        label="Giấy phép lái xe"
-                        action={setRegisterLicense}
-                    />
-                    <ImageCapture
-                        source={registryCertificate.uri}
-                        label="Giấy đăng kiểm"
-                        action={setRegistryCertificate}
-                    />
-                </View>
-            </KeyboardAvoiding>
-            {currentAmbulance ? (
-                <ButtonText
-                    textContent="Cập nhật"
-                    styleText={styles.text}
-                    styleButton={styles.button}
-                    gotoScreen={handleUpdate}
-                />
-            ) : (
-                <ButtonText
-                    textContent="Đăng ký"
-                    styleText={styles.text}
-                    styleButton={styles.button}
-                    gotoScreen={handleRegister}
-                />
-            )}
-        </BackgroundImage>
+                )}
+            </BackgroundImage>
+        </View>
     );
 };
 
@@ -183,15 +206,21 @@ const mapDispatchToProps = dispatch => ({
 export default connect(mapStateToProps, mapDispatchToProps)(RegisterAmbulanceScreen);
 
 const styles = StyleSheet.create({
+    _container: {
+        flex: 1,
+        flexDirection: "column",
+        backgroundColor: "#fff",
+        position: "relative"
+    },
     container: {
         width: "90%",
-        height: "75%",
+        height: "78%",
         flexDirection: "column"
     },
     header: {
         marginTop: 10,
         marginHorizontal: 8,
-        fontSize: 12,
+        fontSize: 11,
         textAlign: "center",
         fontFamily: "Texgyreadventor-regular",
         color: "#777"
@@ -226,7 +255,7 @@ const styles = StyleSheet.create({
         color: "#4F5C77"
     },
     button: {
-        marginVertical: 10,
+        marginBottom: 10,
         backgroundColor: "#FFAB2E",
         borderRadius: 25
     },
@@ -234,8 +263,20 @@ const styles = StyleSheet.create({
         textAlign: "center",
         marginVertical: 3,
         color: "#FFF",
-        fontSize: 16,
+        fontSize: 14,
         fontFamily: "Texgyreadventor-regular",
+        justifyContent: "center"
+    },
+    cancel: {
+        marginBottom: 10,
+        marginRight: 10,
+        backgroundColor: "#000",
+        borderRadius: 25
+    },
+    groupAction: {
+        width: "100%",
+        display: "flex",
+        flexDirection: "row",
         justifyContent: "center"
     }
 });

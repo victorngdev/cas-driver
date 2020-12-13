@@ -36,8 +36,9 @@ export const finishRequestFirestore = async requestId => {
 
 export const clearConfirmationRequest = async poolId => {
     const confirmationRef = firestore.collection("confirmations").doc(`${poolId}`);
-    await confirmationRef.update({
-        requestId: 0
+    await confirmationRef.set({
+        requestId: 0,
+        confirmationStatus: ""
     });
 };
 

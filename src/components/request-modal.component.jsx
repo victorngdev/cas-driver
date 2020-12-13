@@ -2,8 +2,10 @@ import React from "react";
 import { View, Text, ScrollView, StyleSheet } from "react-native";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
+import { getDistance } from "geolib";
+import { useDocumentData } from "react-firebase-hooks/firestore";
 
-import { clearRequest } from "../redux/request/request.actions";
+import { firestore } from "../firebase/firebase.utils";
 import { selectCurrentRequest } from "../redux/request/request.selectors";
 
 import CustomModal from "./custom-modal.componet";
@@ -11,9 +13,12 @@ import GroupButton from "./group-button.component";
 import Place from "./place.component";
 import RequestInfo from "./request-info.component";
 
-const RequestModal = ({ isVisible, currentRequest, clearRequest, handleAccept }) => {
+const RequestModal = ({ id, currentRequest, handleUnaccept, handleAccept, currentLocation }) => {
+    const requestRef = firestore.collection("requests").doc(`${id}`);
+    const [request] = useDocumentData(requestRef);
+
     return (
-        <CustomModal visible={isVisible}>
+        <CustomModal>
             <View style={styles.groupTitle}>
                 <Text style={styles.modalTitle}>Yêu cầu mới</Text>
                 {currentRequest.patientName && <Text style={styles.requestType}>Đặt giúp</Text>}
@@ -26,13 +31,31 @@ const RequestModal = ({ isVisible, currentRequest, clearRequest, handleAccept })
                 <Place
                     title="Điểm đón"
                     place={currentRequest.pickUp}
-                    distance={`Cách bạn ${5}`}
+                    distance={`Cách bạn ${
+                        request
+                            ? (
+                                  getDistance(currentLocation, {
+                                      latitude: request.sourceLatitude,
+                                      longitude: request.sourceLongitude
+                                  }) / 1000
+                              ).toFixed(2)
+                            : 0
+                    }`}
                     icon="https://i.ibb.co/D8HPk12/placeholder.png"
                 />
                 <Place
                     title="Điểm đến"
                     place={currentRequest.destination}
-                    distance={`Cách điểm đón ${20}`}
+                    distance={`Cách bạn ${
+                        request
+                            ? (
+                                  getDistance(currentLocation, {
+                                      latitude: request.destinationLatitude,
+                                      longitude: request.destinationLongitude
+                                  }) / 1000
+                              ).toFixed(2)
+                            : 0
+                    }`}
                     icon="https://i.ibb.co/gWdQ69d/radar.png"
                 />
                 {currentRequest.isOthers && (
@@ -77,7 +100,12 @@ const RequestModal = ({ isVisible, currentRequest, clearRequest, handleAccept })
                         }
                     ]}
                 />
-                <RequestInfo title="Ghi chú" items={[{ content: currentRequest.morbidityNote }]} />
+                {currentRequest.morbidityNote && (
+                    <RequestInfo
+                        title="Ghi chú"
+                        items={[{ content: currentRequest.morbidityNote }]}
+                    />
+                )}
             </ScrollView>
             <GroupButton
                 items={[
@@ -85,13 +113,14 @@ const RequestModal = ({ isVisible, currentRequest, clearRequest, handleAccept })
                         itemId: 1,
                         label: "Từ chối",
                         type: "reject",
-                        action: () => clearRequest()
+                        action: handleUnaccept
                     },
                     {
                         itemId: 2,
                         label: "Chấp nhận ",
                         action: handleAccept,
-                        counter: "4:56"
+                        counter: 2,
+                        onTimeout: handleUnaccept
                     }
                 ]}
             />
@@ -103,11 +132,7 @@ const mapStateToProps = createStructuredSelector({
     currentRequest: selectCurrentRequest
 });
 
-const mapDispatchToProps = dispatch => ({
-    clearRequest: () => dispatch(clearRequest())
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(RequestModal);
+export default connect(mapStateToProps)(RequestModal);
 
 const styles = StyleSheet.create({
     groupTitle: {
@@ -147,6 +172,6 @@ const styles = StyleSheet.create({
     requestDetails: {
         width: "100%",
         marginVertical: 5,
-        marginHorizontal: 10
+        paddingHorizontal: 5
     }
 });
