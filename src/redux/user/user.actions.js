@@ -28,3 +28,7 @@ export const updateConfirmingStatus = status => ({
     type: UserActionTypes.UPDATE_CONFIRMING_STATUS,
     payload: status
 });
+
+export const handleApprovedRegisterAmbulance = () => ({
+    type: UserActionTypes.HANDLE_APPROVED_REGISTER_AMBULANCE
+});

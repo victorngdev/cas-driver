@@ -22,6 +22,11 @@ const userReducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 currentUser: { ...state.currentUser, confirming: action.payload }
             };
+        case UserActionTypes.HANDLE_APPROVED_REGISTER_AMBULANCE:
+            return {
+                ...state,
+                currentUser: { ...state.currentUser, confirming: false, registered: true }
+            };
         case UserActionTypes.LOGOUT:
             return {
                 ...state,

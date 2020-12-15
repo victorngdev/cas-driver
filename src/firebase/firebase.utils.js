@@ -19,7 +19,6 @@ const GeoFirestore = geofirestore.initializeApp(firestore);
 const geocollection = GeoFirestore.collection("drivers");
 
 export const updateRequest = async (driverId, poolId, requestId, status) => {
-    console.log(requestId, poolId);
     const requestRef = firestore.collection("requests").doc(`${requestId}`);
     await requestRef.update({
         status,
@@ -37,8 +36,9 @@ export const finishRequestFirestore = async requestId => {
 
 export const clearConfirmationRequest = async poolId => {
     const confirmationRef = firestore.collection("confirmations").doc(`${poolId}`);
-    await confirmationRef.update({
-        requestId: 0
+    await confirmationRef.set({
+        requestId: 0,
+        confirmationStatus: ""
     });
 };
 

@@ -28,7 +28,8 @@ import {
     finishRequest,
     pickedPatient
 } from "../../redux/request/request.actions";
-import messages from "./message.data";
+import { handleApprovedRegisterAmbulance } from "../../redux/user/user.actions";
+import messages from "../../uitls/message.data";
 
 import BackgroundImage from "../../components/background-screen.component";
 import HomeHeader from "../../components/home-header.component";
@@ -56,16 +57,18 @@ const HomeScreen = ({
     cancelRequest,
     pickedPatient,
     finishRequest,
-    clearRequest
+    clearRequest,
+    handleApprovedRegisterAmbulance
 }) => {
     const [isReady, setIsReady] = useState(false);
     const [isValid, setIsValid] = useState(false);
-    const [isToggle, setIsToggle] = useState(false);
     const [isReject, setIsReject] = useState(false);
     const [isFinish, setIsFinish] = useState(false);
     const [isProblem, setIsProblem] = useState(false);
     const [isCancelled, setIsCancelled] = useState(false);
+    const [isToggle, setIsToggle] = useState(false);
     const [_isAccepted, setIsAccepted] = useState(false);
+    const [confirmationStatus, setConfirmationStatus] = useState(null);
     const [title, setTitle] = useState("Chưa sẵn sàng");
     const [rejectOption, setRejectOption] = useState("Bấm nhầm chấp nhận yêu cầu");
     const [problem, setProblem] = useState("first");
@@ -92,6 +95,9 @@ const HomeScreen = ({
             syncLocationToRequest(currentUser.username, location.latitude, location.longitude);
             setIsToggle(true);
         }
+        if (confirmation && confirmation.confirmationStatus) {
+            setConfirmationStatus(confirmation.confirmationStatus);
+        }
     }, [isReady, confirmation]);
 
     useEffect(() => {
@@ -101,13 +107,13 @@ const HomeScreen = ({
             requestStatus.status === "accepted" &&
             requestStatus.driverId !== currentUser.userId
         ) {
-            setIsToggle(false);
+            clearConfirmationRequest(currentUser.username);
             initLocation(currentUser.username, location.latitude, location.longitude);
             clearRequest();
             setIsAccepted(true);
         }
         if (currentRequest && requestStatus.status === "cancelled") {
-            setIsToggle(false);
+            clearConfirmationRequest(currentUser.username);
             initLocation(currentUser.username, location.latitude, location.longitude);
             clearRequest();
             setIsCancelled(true);
@@ -123,6 +129,12 @@ const HomeScreen = ({
         }
     };
 
+    const handleApproved = () => {
+        setConfirmationStatus(null);
+        handleApprovedRegisterAmbulance();
+        clearConfirmationRequest(currentUser.username);
+    };
+
     const handleAccept = () => {
         setIsToggle(false);
         syncLocationToRequest(currentUser.username, location.latitude, location.longitude);
@@ -134,6 +146,11 @@ const HomeScreen = ({
         );
         acceptRequest(token, currentUser.userId, currentRequest.requestId);
         setTitle("Đang đón bệnh nhân");
+    };
+
+    const handleUnaccept = () => {
+        clearRequest();
+        clearConfirmationRequest(currentUser.username);
     };
 
     const handelReject = () => {
@@ -177,44 +194,53 @@ const HomeScreen = ({
                             navigation={navigation}
                         />
                     </View>
-                    <RejectModal
-                        rejectOption={rejectOption}
-                        setRejectOption={setRejectOption}
-                        isReject={isReady}
-                        isVisible={isReject}
-                        setIsReject={setIsReject}
-                        handleReject={() => handelReject()}
-                    />
-                    {currentRequest && (
-                        <RequestModal handleAccept={handleAccept} isVisible={isToggle} />
+                    {isReject && (
+                        <RejectModal
+                            rejectOption={rejectOption}
+                            setRejectOption={setRejectOption}
+                            isReject={isReady}
+                            setIsReject={setIsReject}
+                            handleReject={() => handelReject()}
+                        />
                     )}
-                    <MessageModal
-                        action={handleFinish}
-                        message={messages.finish}
-                        isVisible={isFinish}
-                    />
-                    <MessageModal
-                        action={() => setIsCancelled(false)}
-                        message={messages.cancelled}
-                        isVisible={isCancelled}
-                    />
-                    <MessageModal
-                        action={() => setIsAccepted(false)}
-                        message={messages.acceptedRequest}
-                        isVisible={_isAccepted}
-                    />
-                    <MessageModal
-                        action={() => setIsValid(false)}
-                        message={messages.ready}
-                        isVisible={isValid}
-                    />
-                    <ProblemModal
-                        isVisible={isProblem}
-                        setIsProblem={setIsProblem}
-                        handleReport={handleReport}
-                        problemOption={problem}
-                        setProblemOption={setProblem}
-                    />
+                    {currentRequest && isToggle && (
+                        <RequestModal
+                            id={currentRequest.requestId}
+                            currentLocation={location}
+                            handleUnaccept={handleUnaccept}
+                            handleAccept={handleAccept}
+                        />
+                    )}
+                    {confirmationStatus && (
+                        <MessageModal
+                            action={handleApproved}
+                            message={messages[confirmationStatus]}
+                        />
+                    )}
+                    {isFinish && <MessageModal action={handleFinish} message={messages.finish} />}
+                    {isCancelled && (
+                        <MessageModal
+                            action={() => setIsCancelled(false)}
+                            message={messages.cancelled}
+                        />
+                    )}
+                    {_isAccepted && (
+                        <MessageModal
+                            action={() => setIsAccepted(false)}
+                            message={messages.acceptedRequest}
+                        />
+                    )}
+                    {isValid && (
+                        <MessageModal action={() => setIsValid(false)} message={messages.ready} />
+                    )}
+                    {isProblem && (
+                        <ProblemModal
+                            setIsProblem={setIsProblem}
+                            handleReport={handleReport}
+                            problemOption={problem}
+                            setProblemOption={setProblem}
+                        />
+                    )}
                     <View
                         style={isAccepted ? (isArrived ? { flex: 6 } : { flex: 5 }) : { flex: 7 }}
                     >
@@ -259,7 +285,8 @@ const mapDispatchToProps = dispatch => ({
     clearRequest: () => dispatch(clearRequest()),
     cancelRequest: (token, requestId, reason) => dispatch(cancelRequest(token, requestId, reason)),
     pickedPatient: (token, requestId) => dispatch(pickedPatient(token, requestId)),
-    finishRequest: (token, requestId) => dispatch(finishRequest(token, requestId))
+    finishRequest: (token, requestId) => dispatch(finishRequest(token, requestId)),
+    handleApprovedRegisterAmbulance: () => dispatch(handleApprovedRegisterAmbulance())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);

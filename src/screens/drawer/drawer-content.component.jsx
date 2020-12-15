@@ -6,11 +6,16 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { connect } from "react-redux";
 import { logout } from "../../redux/user/user.actions";
 
-function DrawerContent(props) {
+const DrawerContent = props => {
     const [isAction, setIsAction] = React.useState(false);
 
     const toggleAction = () => {
         setIsAction(!isAction);
+    };
+
+    const handleLogout = () => {
+        props.navigation.navigate("Login");
+        props.logout();
     };
 
     return (
@@ -106,12 +111,12 @@ function DrawerContent(props) {
                         <Icon name="exit-to-app" color={color} size={size} />
                     )}
                     label="Đăng xuất"
-                    onPress={props.logout}
+                    onPress={handleLogout}
                 />
             </Drawer.Section>
         </View>
     );
-}
+};
 
 const mapDispatchToProps = dispatch => ({
     logout: () => dispatch(logout())
