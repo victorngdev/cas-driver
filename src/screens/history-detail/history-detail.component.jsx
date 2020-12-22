@@ -1,9 +1,17 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
+import { withNavigation } from "react-navigation";
+
+import { selectToken } from "../../redux/user/user.selectors";
 
 import Place from "../../components/place.component";
 import FeedbackShow from "../../components/feedback-show.component";
+import { fetchHistoryDetails } from "../../apis/core.apis";
+import { selectHistory } from "../../redux/request/request.selectors";
+import Header from "../../components/header.component";
 
 const pickUp = {
     name: "Vị trí bệnh nhân",
@@ -19,48 +27,70 @@ const destination = {
     time: "12:20"
 };
 
-const HistoryDetailScreen = ({ navigation, isFeedback = true }) => (
-    <View style={styles.container}>
-        <View style={styles.driverInfo}>
-            <Image style={styles.background} source={require("../../../assets/images/request-details-bg.png")} />
-            <View style={styles.content}>
-                <Image style={styles.image} source={require("../../../assets/images/person-3.jpg")} />
-                <Text style={styles.name}>Victor Nguyen</Text>
-                <Text style={styles.licensePlate}>71 - C1 852.23</Text>
-                <Text style={styles.phone}>0931738872</Text>
-            </View>
-            <Text style={styles.status}>Thành công</Text>
-        </View>
-        <View style={[styles.details, isFeedback ? { height: "53%" } : null]}>
-            <ScrollView showsVerticalScrollIndicator={false}>
-                <Place title="Điếm đón" place={pickUp} icon="https://i.ibb.co/D8HPk12/placeholder.png" />
-                <Place title="Điếm nhận" place={destination} icon="https://i.ibb.co/gWdQ69d/radar.png" />
-                {isFeedback ? (
-                    <>
-                        <FeedbackShow
-                            title="Góp ý về bạn"
-                            content="Bác chạy rất có tâm, hỗ trợ sơ cứu dọc đường nữa"
-                            level={5}
-                            size={12}
-                        />
-                    </>
-                ) : null}
-                <FeedbackShow
-                    title="Tình trạng bệnh"
-                    content="Chân bị phù nặng do nhiễm trùng máu, hôn mê sâu, khá nguy kịch"
-                />
-                <FeedbackShow title="Ghi chú" content="Bệnh nhân không có giấy tờ tùy thân" />
-            </ScrollView>
-        </View>
-        {!isFeedback ? (
-            <Text onPress={() => navigation.navigate("Feedback")} style={styles.action}>
-                Đánh giá dịch vụ
-            </Text>
-        ) : null}
-    </View>
-);
+const HistoryDetailScreen = ({ navigation, token, history }) => {
+    const [request, setRequest] = useState(null);
 
-export default HistoryDetailScreen;
+    useEffect(() => {
+        fetchHistoryDetails(token, history).then(response => setRequest(response.data));
+    }, [token, history]);
+
+    return (
+        <View style={styles.container}>
+            <Header title="Chi tiết" gotoScreen={() => navigation.goBack()} />
+            {request && (
+                <View style={styles.driverInfo}>
+                    <Image
+                        style={styles.background}
+                        source={require("../../../assets/images/request-details-bg.png")}
+                    />
+                    <View style={styles.content}>
+                        <Image style={styles.image} source={{ uri: request.user.imageUrl }} />
+                        <Text style={styles.name}>{request.user.displayName}</Text>
+                        <Text style={styles.phone}>{request.user.phone}</Text>
+                    </View>
+                    <Text style={styles.status}>Thành công</Text>
+                </View>
+            )}
+            {request && (
+                <View style={styles.details}>
+                    <ScrollView showsVerticalScrollIndicator={false}>
+                        <Place
+                            title="Điếm đón"
+                            place={request.pickUp}
+                            icon="https://i.ibb.co/D8HPk12/placeholder.png"
+                        />
+                        <Place
+                            title="Điếm nhận"
+                            place={request.destination}
+                            icon="https://i.ibb.co/gWdQ69d/radar.png"
+                        />
+                        {request.feedbackDriver && (
+                            <FeedbackShow
+                                title="Góp ý về bạn"
+                                content={request.feedbackDriver}
+                                level={Number.parseInt(request.ratingDriver)}
+                                size={12}
+                            />
+                        )}
+                        {request.morbidity && (
+                            <FeedbackShow title="Tình trạng bệnh" content={request.morbidity} />
+                        )}
+                        {request.morbidityNote && (
+                            <FeedbackShow title="Ghi chú" content={request.morbidityNote} />
+                        )}
+                    </ScrollView>
+                </View>
+            )}
+        </View>
+    );
+};
+
+const mapStateToProps = createStructuredSelector({
+    token: selectToken,
+    history: selectHistory
+});
+
+export default withNavigation(connect(mapStateToProps)(HistoryDetailScreen));
 
 const styles = StyleSheet.create({
     container: {

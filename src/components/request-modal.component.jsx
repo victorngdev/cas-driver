@@ -49,10 +49,16 @@ const RequestModal = ({ id, currentRequest, handleUnaccept, handleAccept, curren
                     distance={`Cách bạn ${
                         request
                             ? (
-                                  getDistance(currentLocation, {
-                                      latitude: request.destinationLatitude,
-                                      longitude: request.destinationLongitude
-                                  }) / 1000
+                                  getDistance(
+                                      {
+                                          latitude: request.sourceLatitude,
+                                          longitude: request.sourceLongitude
+                                      },
+                                      {
+                                          latitude: request.destinationLatitude,
+                                          longitude: request.destinationLongitude
+                                      }
+                                  ) / 1000
                               ).toFixed(2)
                             : 0
                     }`}

@@ -1,10 +1,17 @@
 import { takeLatest, all, call, put, take } from "redux-saga/effects";
 
-import { fetchAmbulance, registerAmbulance, updateAmbulance } from "../../apis/ambulance.apis";
+import {
+    fetchAmbulance,
+    getAmbulanceNote,
+    registerAmbulance,
+    updateAmbulance
+} from "../../apis/ambulance.apis";
 import { updateConfirmingStatus } from "../user/user.actions";
 import {
     fetchAmbulanceFail,
     fetchAmbulanceSuccess,
+    getAmbulanceNoteFail,
+    getAmbulanceNoteSuccess,
     registerAmbulanceFail,
     registerAmbulanceSuccess,
     updateAmbulanceFail,
@@ -44,6 +51,16 @@ function* updateAmbulanceStart({ payload: { token, userId, ambulance } }) {
     }
 }
 
+function* getAmbulanceNoteStart({ payload: { token, ambulanceId } }) {
+    try {
+        const response = yield call(getAmbulanceNote, token, ambulanceId);
+
+        yield put(getAmbulanceNoteSuccess(response.data));
+    } catch (error) {
+        yield put(getAmbulanceNoteFail(error));
+    }
+}
+
 export function* onRegisterAmbulance() {
     yield takeLatest(AmbulanceActionTypes.REGISTER_AMBULANCE_START, registerAmbulanceStart);
 }
@@ -56,6 +73,15 @@ export function* onFetchAmbulance() {
     yield takeLatest(AmbulanceActionTypes.FETCH_AMBULANCE_START, fetchAmbulanceStart);
 }
 
+export function* onGetAmbulanceNote() {
+    yield takeLatest(AmbulanceActionTypes.GET_AMBULANCE_NOTE_START, getAmbulanceNoteStart);
+}
+
 export default function* ambulanceSagas() {
-    yield all([call(onRegisterAmbulance), call(onUpdateAmbulance), call(onFetchAmbulance)]);
+    yield all([
+        call(onRegisterAmbulance),
+        call(onUpdateAmbulance),
+        call(onFetchAmbulance),
+        call(onGetAmbulanceNote)
+    ]);
 }

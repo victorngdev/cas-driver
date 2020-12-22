@@ -15,3 +15,5 @@ export const selectRequestId = createSelector(
 export const selectIsAccepted = createSelector([selectRequest], request => request.isAccepted);
 
 export const selectIsArrived = createSelector([selectRequest], request => request.isArrived);
+
+export const selectHistory = createSelector([selectRequest], request => request.history);

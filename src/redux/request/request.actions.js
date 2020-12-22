@@ -77,3 +77,8 @@ export const finishRequestFail = error => ({
     type: RequestActionTypes.FINISH_REQUEST_FAIL,
     payload: error
 });
+
+export const viewHistory = history => ({
+    type: RequestActionTypes.VIEW_HISTORY,
+    payload: history
+});

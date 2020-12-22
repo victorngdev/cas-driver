@@ -3,7 +3,7 @@ import { View, Image, StyleSheet, TextInput } from "react-native";
 
 import rem from "./constant.unit";
 
-const TextInputIcon = ({ placeholder, imgSrc, ...otherProps }) => {
+const TextInputIcon = ({ imgSrc, ...otherProps }) => {
     return (
         <View style={styles.container}>
             <View style={styles.bgr_image}>

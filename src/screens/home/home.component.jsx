@@ -3,6 +3,8 @@ import { View } from "react-native";
 import { connect } from "react-redux";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import Geocoder from "react-native-geocoding";
+import * as Location from "expo-location";
+import * as BackgroundFetch from "expo-background-fetch";
 
 import {
     finishRequestFirestore,
@@ -11,7 +13,9 @@ import {
     rejectRequest,
     syncLocationToRequest,
     updateRequest,
-    clearConfirmationRequest
+    clearConfirmationRequest,
+    addToBlacklist,
+    pickUpPatient
 } from "../../firebase/firebase.utils";
 import { createStructuredSelector } from "reselect";
 import { selectCurrentUser, selectToken } from "../../redux/user/user.selectors";
@@ -29,7 +33,9 @@ import {
     pickedPatient
 } from "../../redux/request/request.actions";
 import { handleApprovedRegisterAmbulance } from "../../redux/user/user.actions";
+import { getAmbulanceNote } from "../../redux/ambulance/ambulance.actions";
 import messages from "../../uitls/message.data";
+import { configureTask } from "../../uitls/background-task.services";
 
 import BackgroundImage from "../../components/background-screen.component";
 import HomeHeader from "../../components/home-header.component";
@@ -42,6 +48,7 @@ import ProblemModal from "../../components/problem-modal.component";
 import Map from "../../components/map.component";
 
 import styles from "./home.style";
+import { selectCurrentAmbulance } from "../../redux/ambulance/ambulance.selectors";
 
 Geocoder.init("AIzaSyA3wjgHRZGPb4I96XDM-Eev7f1QQM_Mpp8", { language: "vi" });
 
@@ -53,12 +60,14 @@ const HomeScreen = ({
     isArrived,
     fetchRequest,
     currentRequest,
+    currentAmbulance,
     acceptRequest,
     cancelRequest,
     pickedPatient,
     finishRequest,
     clearRequest,
-    handleApprovedRegisterAmbulance
+    handleApprovedRegisterAmbulance,
+    getAmbulanceNote
 }) => {
     const [isReady, setIsReady] = useState(false);
     const [isValid, setIsValid] = useState(false);
@@ -87,13 +96,28 @@ const HomeScreen = ({
             let { latitude, longitude } = position.coords;
             setLocation(latitude, longitude);
         });
+        initBackgroundTask(false);
     }, []);
 
     useEffect(() => {
         if (isReady && confirmation && confirmation.requestId) {
-            fetchRequest(token, confirmation.requestId);
-            syncLocationToRequest(currentUser.username, location.latitude, location.longitude);
-            setIsToggle(true);
+            firestore
+                .collection("requests")
+                .doc(`${confirmation.requestId}`)
+                .get()
+                .then(result => {
+                    const { status } = result.data();
+                    if (!status) {
+                        fetchRequest(token, confirmation.requestId);
+                        syncLocationToRequest(
+                            currentUser.username,
+                            location.latitude,
+                            location.longitude
+                        );
+                        setIsToggle(true);
+                        initBackgroundTask(true);
+                    }
+                });
         }
         if (confirmation && confirmation.confirmationStatus) {
             setConfirmationStatus(confirmation.confirmationStatus);
@@ -120,19 +144,45 @@ const HomeScreen = ({
         }
     }, [requestStatus]);
 
-    const toggleAction = () => {
+    useEffect(() => {
         if (currentUser.registered) {
-            setIsReady(!isReady);
-            setTitle(!isReady ? "Đang sẵn sàng" : "Chưa sẵn sàng");
+            setTitle(isReady ? "Đang sẵn sàng" : "Chưa sẵn sàng");
+            if (isReady) {
+                Location.startLocationUpdatesAsync("syncLocation", {
+                    accuracy: Location.Accuracy.Balanced,
+                    distanceInterval: 1,
+                    timeInterval: 5
+                });
+                configureTask({ currentUser, isReady });
+            } else {
+                Location.stopLocationUpdatesAsync("syncLocation");
+                syncLocationToRequest(currentUser.username, 1, 1);
+            }
         } else {
             setIsValid(true);
+            setIsReady(false);
         }
+    }, [isReady]);
+
+    const initBackgroundTask = async inRequest => {
+        configureTask({ currentUser, isReady, inRequest });
+        await Location.startLocationUpdatesAsync("syncLocation", {
+            accuracy: Location.Accuracy.Balanced,
+            distanceInterval: 1,
+            timeInterval: 5
+        });
     };
 
     const handleApproved = () => {
         setConfirmationStatus(null);
         handleApprovedRegisterAmbulance();
         clearConfirmationRequest(currentUser.username);
+    };
+
+    const handleRejected = () => {
+        setConfirmationStatus(null);
+        clearConfirmationRequest(currentUser.username);
+        getAmbulanceNote(token, currentAmbulance.ambulanceId);
     };
 
     const handleAccept = () => {
@@ -149,11 +199,12 @@ const HomeScreen = ({
     };
 
     const handleUnaccept = () => {
+        addToBlacklist(currentUser.username, currentRequest.requestId);
         clearRequest();
         clearConfirmationRequest(currentUser.username);
     };
 
-    const handelReject = () => {
+    const handleReject = () => {
         cancelRequest(token, currentRequest.requestId, rejectOption);
         initLocation(currentUser.username, location.latitude, location.longitude);
         clearConfirmationRequest(currentUser.username);
@@ -162,6 +213,7 @@ const HomeScreen = ({
     };
 
     const handleArrived = () => {
+        pickUpPatient(currentRequest.requestId);
         pickedPatient(token, currentRequest.requestId);
         setTitle("Đang chở bệnh nhân");
     };
@@ -190,7 +242,7 @@ const HomeScreen = ({
                         <HomeHeader
                             title={title}
                             isReady={isReady}
-                            toggleAction={toggleAction}
+                            toggleAction={() => setIsReady(!isReady)}
                             navigation={navigation}
                         />
                     </View>
@@ -200,7 +252,7 @@ const HomeScreen = ({
                             setRejectOption={setRejectOption}
                             isReject={isReady}
                             setIsReject={setIsReject}
-                            handleReject={() => handelReject()}
+                            handleReject={handleReject}
                         />
                     )}
                     {currentRequest && isToggle && (
@@ -213,25 +265,27 @@ const HomeScreen = ({
                     )}
                     {confirmationStatus && (
                         <MessageModal
-                            action={handleApproved}
-                            message={messages[confirmationStatus]}
+                            action={
+                                confirmationStatus === "approved" ? handleApproved : handleRejected
+                            }
+                            content={messages[confirmationStatus]}
                         />
                     )}
-                    {isFinish && <MessageModal action={handleFinish} message={messages.finish} />}
+                    {isFinish && <MessageModal action={handleFinish} content={messages.finish} />}
                     {isCancelled && (
                         <MessageModal
                             action={() => setIsCancelled(false)}
-                            message={messages.cancelled}
+                            content={messages.cancelled}
                         />
                     )}
                     {_isAccepted && (
                         <MessageModal
                             action={() => setIsAccepted(false)}
-                            message={messages.acceptedRequest}
+                            content={messages.acceptedRequest}
                         />
                     )}
                     {isValid && (
-                        <MessageModal action={() => setIsValid(false)} message={messages.ready} />
+                        <MessageModal action={() => setIsValid(false)} content={messages.ready} />
                     )}
                     {isProblem && (
                         <ProblemModal
@@ -242,12 +296,12 @@ const HomeScreen = ({
                         />
                     )}
                     <View
-                        style={isAccepted ? (isArrived ? { flex: 6 } : { flex: 5 }) : { flex: 7 }}
+                        style={isAccepted ? (isArrived ? { flex: 6 } : { flex: 10 }) : { flex: 13 }}
                     >
                         <Map source={location} setLocation={setLocation} />
                     </View>
                     {!isAccepted ? (
-                        <View style={{ flex: 2 }}>
+                        <View style={{ flex: 3 }}>
                             <HomeDriverInfo
                                 ratingLevel={5}
                                 addressName="Vị trí của bạn"
@@ -275,7 +329,8 @@ const mapStateToProps = createStructuredSelector({
     currentRequest: selectCurrentRequest,
     currentUser: selectCurrentUser,
     isAccepted: selectIsAccepted,
-    isArrived: selectIsArrived
+    isArrived: selectIsArrived,
+    currentAmbulance: selectCurrentAmbulance
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -286,7 +341,8 @@ const mapDispatchToProps = dispatch => ({
     cancelRequest: (token, requestId, reason) => dispatch(cancelRequest(token, requestId, reason)),
     pickedPatient: (token, requestId) => dispatch(pickedPatient(token, requestId)),
     finishRequest: (token, requestId) => dispatch(finishRequest(token, requestId)),
-    handleApprovedRegisterAmbulance: () => dispatch(handleApprovedRegisterAmbulance())
+    handleApprovedRegisterAmbulance: () => dispatch(handleApprovedRegisterAmbulance()),
+    getAmbulanceNote: (token, ambulanceId) => dispatch(getAmbulanceNote(token, ambulanceId))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);

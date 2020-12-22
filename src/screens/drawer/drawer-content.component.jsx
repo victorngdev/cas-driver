@@ -1,9 +1,13 @@
 import React from "react";
 import { DrawerContentScrollView, DrawerItem } from "@react-navigation/drawer";
 import { View, StyleSheet } from "react-native";
-import { Avatar, Title, Caption, Drawer, Text, TouchableRipple, Switch } from "react-native-paper";
+import { Avatar, Title, Caption, Drawer } from "react-native-paper";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
+
+import { selectCurrentUser } from "../../redux/user/user.selectors";
+
 import { logout } from "../../redux/user/user.actions";
 
 const DrawerContent = props => {
@@ -15,7 +19,6 @@ const DrawerContent = props => {
 
     const handleLogout = () => {
         props.navigation.navigate("Login");
-        props.logout();
     };
 
     return (
@@ -23,26 +26,29 @@ const DrawerContent = props => {
             <DrawerContentScrollView {...props}>
                 <View style={styles.drawerContent}>
                     <View style={styles.userInfoSection}>
-                        <View style={{ flexDirection: "row", marginTop: 15 }}>
-                            <Avatar.Image
-                                source={{
-                                    uri:
-                                        "https://scontent.fdad3-1.fna.fbcdn.net/v/t1.0-9/83012519_1497814183728497_1901903877645533184_o.jpg?_nc_cat=102&_nc_sid=09cbfe&_nc_ohc=l92aofIVAloAX99oBIy&_nc_ht=scontent.fdad3-1.fna&oh=ac2b60cb37775a47a9c2ccc98f38fd2d&oe=5FA585D7"
-                                }}
-                                size={60}
-                            />
-                            <View
-                                style={{
-                                    flexDirection: "column",
-                                    marginLeft: 15
-                                }}
-                            >
-                                <Title style={styles.title}>Lê Quang Huy</Title>
-                                <Caption style={{ fontFamily: "Texgyreadventor-regular" }}>
-                                    0931738872
-                                </Caption>
+                        {props.currentUser && (
+                            <View style={{ flexDirection: "row", marginTop: 15 }}>
+                                <Avatar.Image
+                                    source={{
+                                        uri: props.currentUser.imageUrl
+                                    }}
+                                    size={60}
+                                />
+                                <View
+                                    style={{
+                                        flexDirection: "column",
+                                        marginLeft: 15
+                                    }}
+                                >
+                                    <Title style={styles.title}>
+                                        {props.currentUser.displayName}
+                                    </Title>
+                                    <Caption style={{ fontFamily: "Texgyreadventor-regular" }}>
+                                        {props.currentUser.phone}
+                                    </Caption>
+                                </View>
                             </View>
-                        </View>
+                        )}
                     </View>
                     <Drawer.Section style={styles.drawerSection}>
                         <DrawerItem
@@ -87,20 +93,6 @@ const DrawerContent = props => {
                             }}
                         />
                     </Drawer.Section>
-                    <Drawer.Section>
-                        <TouchableRipple
-                            onPress={() => {
-                                toggleAction();
-                            }}
-                        >
-                            <View style={styles.preference}>
-                                <Text style={styles.caption}>Đang hoạt động</Text>
-                                <View pointerEvents="none">
-                                    <Switch value={isAction} />
-                                </View>
-                            </View>
-                        </TouchableRipple>
-                    </Drawer.Section>
                 </View>
             </DrawerContentScrollView>
 
@@ -118,11 +110,15 @@ const DrawerContent = props => {
     );
 };
 
+const mapStateToProps = createStructuredSelector({
+    currentUser: selectCurrentUser
+});
+
 const mapDispatchToProps = dispatch => ({
     logout: () => dispatch(logout())
 });
 
-export default connect(null, mapDispatchToProps)(DrawerContent);
+export default connect(mapStateToProps, mapDispatchToProps)(DrawerContent);
 
 const styles = StyleSheet.create({
     drawerContent: {

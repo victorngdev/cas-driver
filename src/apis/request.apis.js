@@ -2,7 +2,6 @@ import axios from "axios";
 
 export const api = axios.create({
     baseURL: "http://caselastic-env-1.eba-rh86ed2y.ap-southeast-1.elasticbeanstalk.com/api/driver"
-    // baseURL: "http://192.168.0.151:5000/api/driver"
 });
 
 export const fetchRequest = (token, requestId) => {

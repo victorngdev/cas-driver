@@ -44,3 +44,18 @@ export const updateAmbulanceFail = error => ({
     type: AmbulanceActionTypes.UPDATE_AMBULANCE_FAIL,
     payload: error
 });
+
+export const getAmbulanceNote = (token, ambulanceId) => ({
+    type: AmbulanceActionTypes.GET_AMBULANCE_NOTE_START,
+    payload: { token, ambulanceId }
+});
+
+export const getAmbulanceNoteSuccess = note => ({
+    type: AmbulanceActionTypes.GET_AMBULANCE_NOTE_SUCCESS,
+    payload: note
+});
+
+export const getAmbulanceNoteFail = error => ({
+    type: AmbulanceActionTypes.GET_AMBULANCE_NOTE_FAIL,
+    payload: error
+});
