@@ -23,18 +23,33 @@ const messages = {
         message:
             "Yêu cầu đăng ký xe của bạn đã được chấp nhận, hệ thống sẽ tiến hành đồng bộ dữ liệu sau khi bạn nhấn Xác nhận."
     },
+    rejected: {
+        message:
+            "Yêu cầu đăng ký xe của bạn không hợp lệ. Bạn có thể xem lại các mục không hợp lệ trong phần đăng ký."
+    },
     denied: {
         message:
             "Yêu cầu đăng ký xe của bạn không được duyệt, bạn có thể xem chi tiết trong phần đăng ký xe."
     },
-    register: {
+    registered: {
         message:
-            "Các thay đổi về thông tin tài khoản sẽ được đồng bộ trong lần đăng nhập tiếp theo."
+            "Bạn cần đảm bảo tính chính xác của thông tin đăng ký và các hình ảnh đủ rõ để quản trị viên có thể duyệt nhanh hơn. Hệ thống sẽ tiến hành các hoạt động đồng bộ dữ liệu, bạn có thể sẽ không ở màn hình đăng ký sau khi yêu cầu đã được xử lí."
+    },
+    update: {
+        message:
+            "Sau khi cập nhật, bạn cần được quản trị viên phê duyệt để có thể nhận được yêu cầu mới. Hãy đảm bảo các thay đổi là cần thiết và chính xác!"
     },
     cancel: {
         message:
             "Các thông tin đã đăng ký sẽ không được truy cập lại sau bạn hủy đăng ký. Nếu các thông tin bạn đăng ký trước đó không còn giá trị hiệu lực, bạn có thể cập nhật và chờ xét duyệt từ quản trị viên."
-    }
+    },
+    phoneExisted: "* Số điện thoại đã được đăng ký",
+    phoneUnexisted: "* Số điện thoại chưa được đăng ký",
+    invalidPhone: "* Số điện thoại không hợp lệ",
+    invalidPassword: "* Mật khẩu cần ít nhất 6 kí tự",
+    invalidConfirmPassword: "* Xác nhận mật khẩu không khớp",
+    invalidName: "* Tên không hợp lệ",
+    401: "Tên tài khoản và mật khẩu bạn cung cấp không đúng, vui lòng kiểm tra lại!"
 };
 
 export default messages;

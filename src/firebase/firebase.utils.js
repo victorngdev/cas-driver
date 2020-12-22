@@ -67,4 +67,16 @@ export const rejectRequest = async requestId => {
     });
 };
 
+export const addToBlacklist = async (username, requestId) => {
+    const requestRef = firestore.collection("requests").doc(`${requestId}`);
+
+    await requestRef.update({ blacklist: firebase.firestore.FieldValue.arrayUnion(username) });
+};
+
+export const pickUpPatient = async requestId => {
+    const requestRef = firestore.collection("requests").doc(`${requestId}`);
+
+    await requestRef.update({ status: "picked" });
+};
+
 export default firebase;

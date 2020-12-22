@@ -1,12 +1,12 @@
 import React, { useRef, useState, useEffect } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, PermissionsAndroid } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import Geocoder from "react-native-geocoding";
 
-import { firestore, syncLocationToRequest, initLocation } from "../firebase/firebase.utils";
+import { firestore } from "../firebase/firebase.utils";
 import {
     selectIsAccepted,
     selectIsArrived,
@@ -29,7 +29,7 @@ const Map = ({ source, setLocation, requestId, currentUser, isArrived, isAccepte
     useEffect(() => {
         navigator.geolocation.getCurrentPosition(async position => {
             let { latitude, longitude } = position.coords;
-            setRegion({ latitude, longitude, latitudeDelta: 0.0343, longitudeDelta: 0.0134 });
+            setRegion({ latitude, longitude, latitudeDelta: 0.0043, longitudeDelta: 0.0024 });
         });
     }, []);
 
@@ -64,11 +64,6 @@ const Map = ({ source, setLocation, requestId, currentUser, isArrived, isAccepte
                 longitude
             })
         );
-        if (requestId) {
-            isAccepted && syncLocationToRequest(currentUser.username, latitude, longitude);
-        } else {
-            initLocation(currentUser.username, latitude, longitude);
-        }
     };
 
     return (
@@ -88,6 +83,9 @@ const Map = ({ source, setLocation, requestId, currentUser, isArrived, isAccepte
                         coordinate.nativeEvent.coordinate.latitude,
                         coordinate.nativeEvent.coordinate.longitude
                     )
+                }
+                onMapReady={() =>
+                    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
                 }
             >
                 {destination && (

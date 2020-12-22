@@ -1,67 +1,81 @@
-import React from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, Dimensions } from "react-native";
+import React, { useState, useEffect } from "react";
+import { StyleSheet, View, ScrollView, Dimensions } from "react-native";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
+
+import { selectCurrentUser, selectToken } from "../../redux/user/user.selectors";
+import { viewHistory } from "../../redux/request/request.actions";
+import { fetchHistory } from "../../apis/core.apis";
+
 import Header from "../../components/header.component";
 import BackgroundImage from "../../components/background-screen.component";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import HistoryComponent from "../../components/history-row.component";
 
 const screen = Dimensions.get("screen");
 const widthDevice = screen.width;
 const heightDevice = screen.height;
 
-function HistoryScreen(props) {
+const HistoryScreen = ({ currentUser, token, navigation, viewHistory }) => {
+    const [history, setHistory] = useState([]);
+
+    useEffect(() => {
+        fetchHistory(token, currentUser.userId).then(response => setHistory(response.data));
+    }, [token]);
+
     return (
         <BackgroundImage>
             <View style={styles.container}>
-                <View style={{ flex: 1 }}>
-                    <Header
-                        title="Lịch Sử"
-                        passedIcon={() => (
-                            <Icon
-                                name="menu"
-                                size={30}
-                                color="#a2a2db"
-                                style={{ width: 20 }}
-                                onPress={() => props.navigation.openDrawer()}
-                            />
-                        )}
-                    />
-                </View>
-                <View style={{ flex: 9, flexDirection: "column", justifyContent: "flex-start" }}>
+                <Header title="Lịch sử" gotoScreen={() => navigation.goBack()} />
+                <View
+                    style={{
+                        height: "auto",
+                        flexDirection: "column",
+                        justifyContent: "flex-start"
+                    }}
+                >
                     <ScrollView
+                        showsVerticalScrollIndicator={false}
+                        directionalLockEnabled={true}
                         contentContainerStyle={{
                             flexGrow: 1
                         }}
                     >
-                        <HistoryComponent
-                            image_url="https://scontent.fdad3-1.fna.fbcdn.net/v/t1.0-9/83012519_1497814183728497_1901903877645533184_o.jpg?_nc_cat=102&_nc_sid=09cbfe&_nc_ohc=l92aofIVAloAX99oBIy&_nc_ht=scontent.fdad3-1.fna&oh=ac2b60cb37775a47a9c2ccc98f38fd2d&oe=5FA585D7"
-                            title="Bệnh Viện A"
-                            address="321 Lê Văn Việt, Quận 9"
-                            goToDetails={() => props.navigation.navigate("HistoryDetail")}
-                        />
-                        <HistoryComponent
-                            image_url="https://scontent.fdad3-1.fna.fbcdn.net/v/t1.0-9/83012519_1497814183728497_1901903877645533184_o.jpg?_nc_cat=102&_nc_sid=09cbfe&_nc_ohc=l92aofIVAloAX99oBIy&_nc_ht=scontent.fdad3-1.fna&oh=ac2b60cb37775a47a9c2ccc98f38fd2d&oe=5FA585D7"
-                            title="Bệnh Viện Quân Y"
-                            address="321 Lê Văn Việt, Quận 9"
-                            goToDetails={() => props.navigation.navigate("HistoryDetail")}
-                        />
-                        <HistoryComponent
-                            image_url="https://scontent.fdad3-1.fna.fbcdn.net/v/t1.0-9/83012519_1497814183728497_1901903877645533184_o.jpg?_nc_cat=102&_nc_sid=09cbfe&_nc_ohc=l92aofIVAloAX99oBIy&_nc_ht=scontent.fdad3-1.fna&oh=ac2b60cb37775a47a9c2ccc98f38fd2d&oe=5FA585D7"
-                            title="Bệnh Viện Chợ Rẫy"
-                            address="321 Lê Văn Việt, Quận 9"
-                            goToDetails={() => props.navigation.navigate("HistoryDetail")}
-                        />
+                        {history.length
+                            ? history.map(({ requestId, ...otherProps }) => (
+                                  <HistoryComponent
+                                      key={requestId}
+                                      requestId={requestId}
+                                      {...otherProps}
+                                      onPress={() => {
+                                          viewHistory(requestId);
+                                          navigation.navigate("HistoryDetail");
+                                      }}
+                                  />
+                              ))
+                            : null}
                     </ScrollView>
                 </View>
             </View>
         </BackgroundImage>
     );
-}
+};
+
+const mapStateToProps = createStructuredSelector({
+    currentUser: selectCurrentUser,
+    token: selectToken
+});
+
+const mapDispatchToProps = dispatch => ({
+    viewHistory: history => dispatch(viewHistory(history))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(HistoryScreen);
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: "column"
+        flexDirection: "column",
+        alignItems: "center"
     },
     listHistory: {
         marginTop: 10
@@ -125,5 +139,3 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1
     }
 });
-
-export default HistoryScreen;

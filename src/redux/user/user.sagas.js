@@ -2,6 +2,7 @@ import { put, all, call, takeLatest } from "redux-saga/effects";
 
 import { login } from "../../apis/user.apis";
 import { fetchAmbulance } from "../ambulance/ambulance.actions";
+import { updateStatusCode } from "../message/message.action";
 import { signInFail, signInSuccess } from "./user.actions";
 
 import UserActionTypes from "./user.types";
@@ -15,6 +16,7 @@ export function* signInStart({ payload: { username, password } }) {
         yield put(fetchAmbulance(`${user.type} ${user.token}`, user.userId));
     } catch (error) {
         yield put(signInFail(error));
+        yield put(updateStatusCode(401));
     }
 }
 

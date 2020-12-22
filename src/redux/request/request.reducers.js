@@ -4,7 +4,8 @@ const INITIAL_STATE = {
     currentRequest: null,
     error: null,
     isAccepted: false,
-    isArrived: false
+    isArrived: false,
+    history: null
 };
 
 const requestReducer = (state = INITIAL_STATE, action) => {
@@ -13,6 +14,11 @@ const requestReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 currentRequest: action.payload
+            };
+        case RequestActionTypes.VIEW_HISTORY:
+            return {
+                ...state,
+                history: action.payload
             };
         case RequestActionTypes.FETCH_REQUEST_FAIL:
             return {

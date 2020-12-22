@@ -4,7 +4,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 
 import CustomModal from "./custom-modal.componet";
 
-const MessageModal = ({ action, message: { message }, onClose }) => (
+const MessageModal = ({ action, content: { message }, onClose }) => (
     <CustomModal>
         <Text style={styles.message}>{message}</Text>
         <View style={styles.action}>

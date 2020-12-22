@@ -1,7 +1,8 @@
 import axios from "axios";
 
-export default axios.create({
-    baseURL: "http://caselastic-env-1.eba-rh86ed2y.ap-southeast-1.elasticbeanstalk.com/api/users"
+const api = axios.create({
+    // baseURL: "http://localhost:5000/api/users"
+    baseURL: "http://caselastic-env-1.eba-rh86ed2y.ap-southeast-1.elasticbeanstalk.com/api"
 });
 
 export const uploadImage = base64str => {
@@ -13,4 +14,36 @@ export const uploadImage = base64str => {
         data: body,
         headers: { "Content-Type": "multipart/form-data" }
     });
+};
+
+export const fetchHistory = (token, userId) => {
+    return api.get(`/driver/${userId}/requests/history`, {
+        headers: {
+            Authorization: token
+        }
+    });
+};
+
+export const fetchHistoryDetails = (token, requestId) => {
+    return api.get(`driver/history/details/${requestId}`, {
+        headers: {
+            Authorization: token
+        }
+    });
+};
+
+export const checkExistedPhoneNumber = phone => {
+    return api.get(`/users/exist?username=${phone}`);
+};
+
+export const checkIsRegister = phone => {
+    return api.get(`/users/drivers/check_exist?username=${phone}`);
+};
+
+export const registerAccount = user => {
+    return api.post("/users/signup_driver", user);
+};
+
+export const resetPassword = user => {
+    return api.put("/users/drivers/forget_password", user);
 };

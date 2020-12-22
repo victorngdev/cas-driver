@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
@@ -16,6 +16,8 @@ import Header from "../../components/header.component";
 import CustomInputLabel from "../../components/custom-input-label.component";
 import ImageCapture from "../../components/image-capture.component";
 import MessageModal from "../../components/message-modal.component";
+import Spinner from "../../components/spinner.component";
+import ReasonModal from "../../components/reason-modal.component";
 
 const RegisterAmbulanceScreen = ({
     navigation,
@@ -27,8 +29,10 @@ const RegisterAmbulanceScreen = ({
 }) => {
     const [displayName, setDisplayName] = useState(currentUser.displayName || "");
     const [messageModal, setMessageModal] = useState(false);
+    const [updateModal, setUpdateModal] = useState(false);
     const [cancel, setCancel] = useState(false);
     const [phone, setPhone] = useState(currentUser.phone || "");
+    const [loading, setLoading] = useState(false);
     const [licensePlate, setLicensePlate] = useState(
         currentAmbulance && currentAmbulance.licensePlate
     );
@@ -54,6 +58,8 @@ const RegisterAmbulanceScreen = ({
     });
 
     const handleRegister = async () => {
+        setMessageModal(false);
+        setLoading(true);
         await uploadImage(identityCard.base64).then(response => {
             console.log(response.data.data.display_url);
             const ambulance = {
@@ -65,15 +71,15 @@ const RegisterAmbulanceScreen = ({
                 registerLicense: registerLicense.uri,
                 registryCertificate: registryCertificate.uri
             };
-
             registerAmbulance(token, currentUser.userId, ambulance);
-            setMessageModal(true);
+            setLoading(false);
         });
     };
 
     const handleUpdate = async () => {
-        identityCard.base64 &&
-            (await uploadImage(identityCard.base64).then(response => {
+        if (identityCard.base64) {
+            setLoading(true);
+            await uploadImage(identityCard.base64).then(response => {
                 const ambulance = {
                     ambulanceId: currentAmbulance.ambulanceId,
                     displayName,
@@ -86,8 +92,21 @@ const RegisterAmbulanceScreen = ({
                 };
 
                 updateAmbulance(token, currentUser.userId, ambulance);
-                setMessageModal(true);
-            }));
+                setLoading(false);
+            });
+        } else {
+            updateAmbulance(token, currentUser.userId, {
+                ambulanceId: currentAmbulance.ambulanceId,
+                displayName,
+                phone,
+                licensePlate,
+                identityCard: identityCard.uri,
+                driverLicense: driverLicense.uri,
+                registerLicense: registerLicense.uri,
+                registryCertificate: registryCertificate.uri
+            });
+        }
+        setUpdateModal(false);
     };
 
     const handleCancel = () => {
@@ -99,11 +118,16 @@ const RegisterAmbulanceScreen = ({
             <BackgroundImage>
                 {messageModal && (
                     <MessageModal
-                        message={{
-                            title: `${currentAmbulance ? "Cập nhật" : "Đăng kí"} thành công`,
-                            message: messages["registered"]
-                        }}
-                        action={() => setMessageModal(false)}
+                        onClose={() => setMessageModal(false)}
+                        content={messages.registered}
+                        action={handleRegister}
+                    />
+                )}
+                {updateModal && (
+                    <MessageModal
+                        onClose={() => setUpdateModal(false)}
+                        content={messages.update}
+                        action={handleUpdate}
                     />
                 )}
                 {cancel && (
@@ -113,6 +137,11 @@ const RegisterAmbulanceScreen = ({
                         onClose={() => setCancel(false)}
                     />
                 )}
+                {/* <ReasonModal
+                    visible={currentAmbulance && currentAmbulance.note}
+                    note={currentAmbulance.note}
+                /> */}
+                {loading && <Spinner />}
                 <Header title="Đăng kí xe" gotoScreen={() => navigation.goBack(null)} />
                 <Text style={styles.header}>
                     Cung cấp thông tin và hình ảnh để xác thực danh tính và phương tiện cứu thương
@@ -124,6 +153,7 @@ const RegisterAmbulanceScreen = ({
                             isRequire
                             defaultValue={displayName}
                             onChangeText={value => setDisplayName(value)}
+                            editable={false}
                         />
                         <CustomInputLabel
                             label="Số điện thoại"
@@ -131,6 +161,7 @@ const RegisterAmbulanceScreen = ({
                             isRequire
                             defaultValue={phone}
                             keyboardType="numeric"
+                            editable={false}
                         />
                         <CustomInputLabel
                             label="Biển số xe"
@@ -174,7 +205,7 @@ const RegisterAmbulanceScreen = ({
                             textContent="Cập nhật"
                             styleText={styles.text}
                             styleButton={styles.button}
-                            gotoScreen={handleUpdate}
+                            gotoScreen={() => setUpdateModal(true)}
                         />
                     </View>
                 ) : (
@@ -182,7 +213,7 @@ const RegisterAmbulanceScreen = ({
                         textContent="Đăng ký"
                         styleText={styles.text}
                         styleButton={styles.button}
-                        gotoScreen={handleRegister}
+                        gotoScreen={() => setMessageModal(true)}
                     />
                 )}
             </BackgroundImage>
@@ -257,7 +288,8 @@ const styles = StyleSheet.create({
     button: {
         marginBottom: 10,
         backgroundColor: "#FFAB2E",
-        borderRadius: 25
+        borderRadius: 25,
+        paddingVertical: 3
     },
     text: {
         textAlign: "center",
@@ -271,7 +303,8 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         marginRight: 10,
         backgroundColor: "#000",
-        borderRadius: 25
+        borderRadius: 25,
+        paddingVertical: 3
     },
     groupAction: {
         width: "100%",
