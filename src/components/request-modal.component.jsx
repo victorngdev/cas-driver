@@ -6,14 +6,24 @@ import { getDistance } from "geolib";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 
 import { firestore } from "../firebase/firebase.utils";
-import { selectCurrentRequest } from "../redux/request/request.selectors";
+import {
+    selectConfirmationTimeout,
+    selectCurrentRequest
+} from "../redux/request/request.selectors";
 
 import CustomModal from "./custom-modal.componet";
 import GroupButton from "./group-button.component";
 import Place from "./place.component";
 import RequestInfo from "./request-info.component";
 
-const RequestModal = ({ id, currentRequest, handleUnaccept, handleAccept, currentLocation }) => {
+const RequestModal = ({
+    id,
+    currentRequest,
+    handleUnaccept,
+    handleAccept,
+    currentLocation,
+    confirmationTimeout
+}) => {
     const requestRef = firestore.collection("requests").doc(`${id}`);
     const [request] = useDocumentData(requestRef);
 
@@ -125,7 +135,7 @@ const RequestModal = ({ id, currentRequest, handleUnaccept, handleAccept, curren
                         itemId: 2,
                         label: "Chấp nhận ",
                         action: handleAccept,
-                        counter: 2,
+                        counter: confirmationTimeout,
                         onTimeout: handleUnaccept
                     }
                 ]}
@@ -135,7 +145,8 @@ const RequestModal = ({ id, currentRequest, handleUnaccept, handleAccept, curren
 };
 
 const mapStateToProps = createStructuredSelector({
-    currentRequest: selectCurrentRequest
+    currentRequest: selectCurrentRequest,
+    confirmationTimeout: selectConfirmationTimeout
 });
 
 export default connect(mapStateToProps)(RequestModal);

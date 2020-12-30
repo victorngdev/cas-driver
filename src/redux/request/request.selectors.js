@@ -17,3 +17,8 @@ export const selectIsAccepted = createSelector([selectRequest], request => reque
 export const selectIsArrived = createSelector([selectRequest], request => request.isArrived);
 
 export const selectHistory = createSelector([selectRequest], request => request.history);
+
+export const selectConfirmationTimeout = createSelector(
+    [selectRequest],
+    request => request.config.confirmationTimeout
+);

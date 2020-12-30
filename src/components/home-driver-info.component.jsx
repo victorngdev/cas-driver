@@ -1,13 +1,8 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import Rating from "./rating.component";
 
-const HomeDriverInfo = ({ ratingLevel, addressName, addressValue }) => (
+const HomeDriverInfo = ({ addressName, addressValue }) => (
     <View style={styles.driverInfo}>
-        <View style={styles.rating}>
-            <Text style={styles.ratingTitle}> Đánh giá</Text>
-            <Rating level={ratingLevel} size={13} />
-        </View>
         <View style={styles.currentLocation}>
             <Text style={styles.locationTitle}>{addressName}</Text>
             <Text style={styles.value}>{addressValue}</Text>

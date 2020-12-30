@@ -82,3 +82,18 @@ export const viewHistory = history => ({
     type: RequestActionTypes.VIEW_HISTORY,
     payload: history
 });
+
+export const fetchConfig = token => ({
+    type: RequestActionTypes.FETCH_SYSTEM_CONFIG_START,
+    payload: token
+});
+
+export const fetchConfigSuccess = config => ({
+    type: RequestActionTypes.FETCH_SYSTEM_CONFIG_SUCCESS,
+    payload: config
+});
+
+export const fetchConfigFail = error => ({
+    type: RequestActionTypes.FETCH_SYSTEM_CONFIG_FAIL,
+    payload: error
+});

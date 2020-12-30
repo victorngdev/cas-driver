@@ -5,7 +5,16 @@ const INITIAL_STATE = {
     error: null,
     isAccepted: false,
     isArrived: false,
-    history: null
+    history: null,
+    config: null
+};
+
+const mapKey = {
+    1: "requestTimeout",
+    2: "confirmationTimeout",
+    3: "radius",
+    4: "numOfDrivers",
+    5: "extraRadius"
 };
 
 const requestReducer = (state = INITIAL_STATE, action) => {
@@ -60,6 +69,7 @@ const requestReducer = (state = INITIAL_STATE, action) => {
                 error: null
             };
         case RequestActionTypes.FINISH_REQUEST_FAIL:
+        case RequestActionTypes.FETCH_SYSTEM_CONFIG_FAIL:
             return {
                 ...state,
                 error: action.payload
@@ -70,6 +80,16 @@ const requestReducer = (state = INITIAL_STATE, action) => {
                 currentRequest: null,
                 isAccepted: false,
                 isArrived: false
+            };
+        case RequestActionTypes.FETCH_SYSTEM_CONFIG_SUCCESS:
+            return {
+                ...state,
+                config: action.payload.reduce((acc, cur) => {
+                    return {
+                        ...acc,
+                        [mapKey[cur.itemId]]: cur.value
+                    };
+                }, {})
             };
         default:
             return state;

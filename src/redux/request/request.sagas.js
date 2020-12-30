@@ -6,6 +6,8 @@ import {
     acceptRequestSuccess,
     cancelRequestFail,
     cancelRequestSuccess,
+    fetchConfigFail,
+    fetchConfigSuccess,
     fetchRequestFail,
     fetchRequestSuccess,
     finishRequestFail,
@@ -20,6 +22,7 @@ import {
     pickedPatient,
     finishRequest
 } from "../../apis/request.apis";
+import { fetchConfig } from "../../apis/core.apis";
 
 function* fetchRequestStart({ payload: { token, requestId } }) {
     try {
@@ -67,6 +70,16 @@ function* finishRequestStart({ payload: { token, requestId } }) {
     }
 }
 
+function* fetchConfigStart({ payload: token }) {
+    try {
+        const response = yield call(fetchConfig, token);
+
+        yield put(fetchConfigSuccess(response.data));
+    } catch (error) {
+        yield put(fetchConfigFail(error));
+    }
+}
+
 export function* onFetchRequest() {
     yield takeLatest(RequestActionTypes.FETCH_REQUEST_START, fetchRequestStart);
 }
@@ -87,12 +100,17 @@ export function* onFinishRequest() {
     yield takeLatest(RequestActionTypes.FINISH_REQUEST_START, finishRequestStart);
 }
 
+export function* onFetchConfig() {
+    yield takeLatest(RequestActionTypes.FETCH_SYSTEM_CONFIG_START, fetchConfigStart);
+}
+
 export default function* requestSagas() {
     yield all([
         call(onFetchRequest),
         call(onAcceptRequest),
         call(onCancelRequest),
         call(onPickedPatient),
-        call(onFinishRequest)
+        call(onFinishRequest),
+        call(onFetchConfig)
     ]);
 }

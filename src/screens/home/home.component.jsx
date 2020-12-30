@@ -28,6 +28,7 @@ import {
     acceptRequest,
     cancelRequest,
     clearRequest,
+    fetchConfig,
     fetchRequest,
     finishRequest,
     pickedPatient
@@ -36,6 +37,8 @@ import { handleApprovedRegisterAmbulance } from "../../redux/user/user.actions";
 import { getAmbulanceNote } from "../../redux/ambulance/ambulance.actions";
 import messages from "../../uitls/message.data";
 import { configureTask } from "../../uitls/background-task.services";
+import { selectCurrentAmbulance } from "../../redux/ambulance/ambulance.selectors";
+import { selectStatusCode } from "../../redux/message/message.selectors";
 
 import BackgroundImage from "../../components/background-screen.component";
 import HomeHeader from "../../components/home-header.component";
@@ -46,9 +49,9 @@ import RequestModal from "../../components/request-modal.component";
 import TransportationInfo from "../../components/transportation-info.component";
 import ProblemModal from "../../components/problem-modal.component";
 import Map from "../../components/map.component";
+import Message from "../../components/message.component";
 
 import styles from "./home.style";
-import { selectCurrentAmbulance } from "../../redux/ambulance/ambulance.selectors";
 
 Geocoder.init("AIzaSyA3wjgHRZGPb4I96XDM-Eev7f1QQM_Mpp8", { language: "vi" });
 
@@ -67,7 +70,9 @@ const HomeScreen = ({
     finishRequest,
     clearRequest,
     handleApprovedRegisterAmbulance,
-    getAmbulanceNote
+    getAmbulanceNote,
+    statusCode,
+    fetchConfig
 }) => {
     const [isReady, setIsReady] = useState(false);
     const [isValid, setIsValid] = useState(false);
@@ -101,6 +106,7 @@ const HomeScreen = ({
 
     useEffect(() => {
         if (isReady && confirmation && confirmation.requestId) {
+            fetchConfig(token);
             firestore
                 .collection("requests")
                 .doc(`${confirmation.requestId}`)
@@ -118,6 +124,10 @@ const HomeScreen = ({
                         initBackgroundTask(true);
                     }
                 });
+        }
+        if (confirmation && !confirmation.requestId && currentRequest) {
+            clearRequest();
+            initLocation(currentUser.username, location.latitude, location.longitude);
         }
         if (confirmation && confirmation.confirmationStatus) {
             setConfirmationStatus(confirmation.confirmationStatus);
@@ -145,6 +155,13 @@ const HomeScreen = ({
     }, [requestStatus]);
 
     useEffect(() => {
+        if (!currentUser.registered) {
+            setIsReady(false);
+            setTitle("Chưa sẵn sàng");
+        }
+    }, [currentUser]);
+
+    useEffect(() => {
         if (currentUser.registered) {
             setTitle(isReady ? "Đang sẵn sàng" : "Chưa sẵn sàng");
             if (isReady) {
@@ -159,7 +176,7 @@ const HomeScreen = ({
                 syncLocationToRequest(currentUser.username, 1, 1);
             }
         } else {
-            setIsValid(true);
+            if (isReady) setIsValid(true);
             setIsReady(false);
         }
     }, [isReady]);
@@ -246,6 +263,11 @@ const HomeScreen = ({
                             navigation={navigation}
                         />
                     </View>
+                    <Message
+                        message={messages[statusCode]}
+                        visible={statusCode}
+                        isMessage={statusCode < 400}
+                    />
                     {isReject && (
                         <RejectModal
                             rejectOption={rejectOption}
@@ -303,7 +325,6 @@ const HomeScreen = ({
                     {!isAccepted ? (
                         <View style={{ flex: 3 }}>
                             <HomeDriverInfo
-                                ratingLevel={5}
                                 addressName="Vị trí của bạn"
                                 addressValue={location.address || ""}
                             />
@@ -330,7 +351,8 @@ const mapStateToProps = createStructuredSelector({
     currentUser: selectCurrentUser,
     isAccepted: selectIsAccepted,
     isArrived: selectIsArrived,
-    currentAmbulance: selectCurrentAmbulance
+    currentAmbulance: selectCurrentAmbulance,
+    statusCode: selectStatusCode
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -342,7 +364,8 @@ const mapDispatchToProps = dispatch => ({
     pickedPatient: (token, requestId) => dispatch(pickedPatient(token, requestId)),
     finishRequest: (token, requestId) => dispatch(finishRequest(token, requestId)),
     handleApprovedRegisterAmbulance: () => dispatch(handleApprovedRegisterAmbulance()),
-    getAmbulanceNote: (token, ambulanceId) => dispatch(getAmbulanceNote(token, ambulanceId))
+    getAmbulanceNote: (token, ambulanceId) => dispatch(getAmbulanceNote(token, ambulanceId)),
+    fetchConfig: token => dispatch(fetchConfig(token))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);

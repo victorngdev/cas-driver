@@ -4,9 +4,15 @@ import {
     fetchAmbulance,
     getAmbulanceNote,
     registerAmbulance,
+    unregisterAmbulance,
     updateAmbulance
 } from "../../apis/ambulance.apis";
-import { updateConfirmingStatus } from "../user/user.actions";
+import { updateStatusCode } from "../message/message.action";
+import {
+    handleUnregisterAmbulance,
+    handleUpdateAmbulance,
+    updateConfirmingStatus
+} from "../user/user.actions";
 import {
     fetchAmbulanceFail,
     fetchAmbulanceSuccess,
@@ -14,6 +20,8 @@ import {
     getAmbulanceNoteSuccess,
     registerAmbulanceFail,
     registerAmbulanceSuccess,
+    unregisterAmbulanceFail,
+    unregisterAmbulanceSuccess,
     updateAmbulanceFail,
     updateAmbulanceSuccess
 } from "./ambulance.actions";
@@ -36,8 +44,10 @@ function* registerAmbulanceStart({ payload: { token, userId, ambulance } }) {
 
         yield put(registerAmbulanceSuccess(response.data));
         yield put(updateConfirmingStatus(!!response.data));
+        yield put(updateStatusCode(201));
     } catch (error) {
         yield put(registerAmbulanceFail(error));
+        yield put(updateStatusCode(error.message.includes("401") ? 700 : 402));
     }
 }
 
@@ -46,8 +56,11 @@ function* updateAmbulanceStart({ payload: { token, userId, ambulance } }) {
         const response = yield call(updateAmbulance, token, userId, ambulance);
 
         yield put(updateAmbulanceSuccess(response.data));
+        yield put(handleUpdateAmbulance());
+        yield put(updateStatusCode(203));
     } catch (error) {
         yield put(updateAmbulanceFail(error));
+        yield put(updateStatusCode(error.message.includes("401") ? 700 : 402));
     }
 }
 
@@ -58,6 +71,18 @@ function* getAmbulanceNoteStart({ payload: { token, ambulanceId } }) {
         yield put(getAmbulanceNoteSuccess(response.data));
     } catch (error) {
         yield put(getAmbulanceNoteFail(error));
+    }
+}
+
+function* unregisterAmbulanceStart({ payload: { token, ambulanceId } }) {
+    try {
+        yield call(unregisterAmbulance, token, ambulanceId);
+        yield put(unregisterAmbulanceSuccess());
+        yield put(handleUnregisterAmbulance());
+        yield put(updateStatusCode(202));
+    } catch (error) {
+        yield put(unregisterAmbulanceFail(error));
+        yield put(updateStatusCode(error.message.includes("401") ? 700 : 402));
     }
 }
 
@@ -77,11 +102,16 @@ export function* onGetAmbulanceNote() {
     yield takeLatest(AmbulanceActionTypes.GET_AMBULANCE_NOTE_START, getAmbulanceNoteStart);
 }
 
+export function* onUnregisterAmbulance() {
+    yield takeLatest(AmbulanceActionTypes.UNREGISTER_AMBULANCE_START, unregisterAmbulanceStart);
+}
+
 export default function* ambulanceSagas() {
     yield all([
         call(onRegisterAmbulance),
         call(onUpdateAmbulance),
         call(onFetchAmbulance),
-        call(onGetAmbulanceNote)
+        call(onGetAmbulanceNote),
+        call(onUnregisterAmbulance)
     ]);
 }

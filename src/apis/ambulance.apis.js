@@ -36,3 +36,11 @@ export const getAmbulanceNote = (token, ambulanceId) => {
         }
     });
 };
+
+export const unregisterAmbulance = (token, ambulanceId) => {
+    return api.get(`/ambulances/${ambulanceId}/cancel`, {
+        headers: {
+            Authorization: token
+        }
+    });
+};

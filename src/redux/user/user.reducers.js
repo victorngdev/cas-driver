@@ -32,6 +32,26 @@ const userReducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 currentUser: null
             };
+        case UserActionTypes.HANDLE_UNREGISTER_AMBULANCE:
+            return {
+                ...state,
+                currentUser: { ...state.currentUser, confirming: false, registered: false }
+            };
+        case UserActionTypes.HANDLE_UPDATE_AMBULANCE:
+            return {
+                ...state,
+                currentUser: { ...state.currentUser, confirming: true, registered: false }
+            };
+        case UserActionTypes.UPDATE_USER_SUCCESS:
+            return {
+                ...state,
+                currentUser: {
+                    ...state.currentUser,
+                    imageUrl: action.payload.imageUrl,
+                    displayName: action.payload.displayName,
+                    phone: action.payload.phone
+                }
+            };
         default:
             return state;
     }

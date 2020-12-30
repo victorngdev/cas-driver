@@ -1,23 +1,28 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 
 import { selectCurrentUser, selectToken } from "../../redux/user/user.selectors";
-import { registerAmbulance, updateAmbulance } from "../../redux/ambulance/ambulance.actions";
+import {
+    clearAmbulanceNote,
+    registerAmbulance,
+    unregisterAmbulance,
+    updateAmbulance
+} from "../../redux/ambulance/ambulance.actions";
 import { selectCurrentAmbulance } from "../../redux/ambulance/ambulance.selectors";
-import { uploadImage } from "../../apis/core.apis";
+import { checkIsRegisteredAmbulance, uploadImage } from "../../apis/core.apis";
 import messages from "../../uitls/message.data";
 
 import BackgroundImage from "../../components/background-screen.component";
 import ButtonText from "../../components/button-text.component";
 import KeyboardAvoiding from "../../components/keyboard-avoding.component";
-import Header from "../../components/header.component";
 import CustomInputLabel from "../../components/custom-input-label.component";
 import ImageCapture from "../../components/image-capture.component";
 import MessageModal from "../../components/message-modal.component";
 import Spinner from "../../components/spinner.component";
 import ReasonModal from "../../components/reason-modal.component";
+import Header from "../../components/header.component";
 
 const RegisterAmbulanceScreen = ({
     navigation,
@@ -25,7 +30,8 @@ const RegisterAmbulanceScreen = ({
     currentAmbulance,
     token,
     registerAmbulance,
-    updateAmbulance
+    updateAmbulance,
+    unregisterAmbulance
 }) => {
     const [displayName, setDisplayName] = useState(currentUser.displayName || "");
     const [messageModal, setMessageModal] = useState(false);
@@ -33,6 +39,7 @@ const RegisterAmbulanceScreen = ({
     const [cancel, setCancel] = useState(false);
     const [phone, setPhone] = useState(currentUser.phone || "");
     const [loading, setLoading] = useState(false);
+    const [isRegistered, setIsRegistered] = useState(null);
     const [licensePlate, setLicensePlate] = useState(
         currentAmbulance && currentAmbulance.licensePlate
     );
@@ -58,6 +65,10 @@ const RegisterAmbulanceScreen = ({
     });
 
     const handleRegister = async () => {
+        if (isRegistered) {
+            setMessageModal(false);
+            return;
+        }
         setMessageModal(false);
         setLoading(true);
         await uploadImage(identityCard.base64).then(response => {
@@ -77,6 +88,10 @@ const RegisterAmbulanceScreen = ({
     };
 
     const handleUpdate = async () => {
+        if (isRegistered) {
+            setUpdateModal(false);
+            return;
+        }
         if (identityCard.base64) {
             setLoading(true);
             await uploadImage(identityCard.base64).then(response => {
@@ -109,8 +124,16 @@ const RegisterAmbulanceScreen = ({
         setUpdateModal(false);
     };
 
-    const handleCancel = () => {
+    const handleUnregister = () => {
+        setIdentityCard({ uri: null });
+        unregisterAmbulance(token, currentAmbulance.ambulanceId);
         setCancel(false);
+    };
+
+    const checkIsRegistered = () => {
+        checkIsRegisteredAmbulance(token, licensePlate).then(
+            response => response.data && setIsRegistered("Xe đã được đang ký bởi người khác")
+        );
     };
 
     return (
@@ -132,15 +155,11 @@ const RegisterAmbulanceScreen = ({
                 )}
                 {cancel && (
                     <MessageModal
-                        message={messages.cancel}
-                        action={handleCancel}
+                        content={messages.cancel}
+                        action={handleUnregister}
                         onClose={() => setCancel(false)}
                     />
                 )}
-                {/* <ReasonModal
-                    visible={currentAmbulance && currentAmbulance.note}
-                    note={currentAmbulance.note}
-                /> */}
                 {loading && <Spinner />}
                 <Header title="Đăng kí xe" gotoScreen={() => navigation.goBack(null)} />
                 <Text style={styles.header}>
@@ -163,11 +182,14 @@ const RegisterAmbulanceScreen = ({
                             keyboardType="numeric"
                             editable={false}
                         />
+                        {isRegistered && <Text style={styles.warning}>{isRegistered}</Text>}
                         <CustomInputLabel
                             label="Biển số xe"
                             isRequire
                             defaultValue={currentAmbulance && currentAmbulance.licensePlate}
                             onChangeText={value => setLicensePlate(value)}
+                            onBlur={checkIsRegistered}
+                            onFocus={() => setIsRegistered(null)}
                         />
                     </View>
                     <View style={styles.imagePicker}>
@@ -231,7 +253,9 @@ const mapDispatchToProps = dispatch => ({
     registerAmbulance: (token, userId, ambulance) =>
         dispatch(registerAmbulance(token, userId, ambulance)),
     updateAmbulance: (token, userId, ambulance) =>
-        dispatch(updateAmbulance(token, userId, ambulance))
+        dispatch(updateAmbulance(token, userId, ambulance)),
+    unregisterAmbulance: (token, ambulanceId) => dispatch(unregisterAmbulance(token, ambulanceId)),
+    clearAmbulanceNote: () => dispatch(clearAmbulanceNote())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RegisterAmbulanceScreen);
@@ -311,5 +335,10 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection: "row",
         justifyContent: "center"
+    },
+    warning: {
+        fontFamily: "Texgyreadventor-regular",
+        color: "#ff0000",
+        fontSize: 12
     }
 });

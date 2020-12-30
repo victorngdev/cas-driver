@@ -33,7 +33,7 @@ const messages = {
     },
     registered: {
         message:
-            "Bạn cần đảm bảo tính chính xác của thông tin đăng ký và các hình ảnh đủ rõ để quản trị viên có thể duyệt nhanh hơn. Hệ thống sẽ tiến hành các hoạt động đồng bộ dữ liệu, bạn có thể sẽ không ở màn hình đăng ký sau khi yêu cầu đã được xử lí."
+            "Bạn cần đảm bảo tính chính xác của thông tin đăng ký và các hình ảnh đủ rõ để quản trị viên có thể duyệt nhanh hơn."
     },
     update: {
         message:
@@ -49,7 +49,13 @@ const messages = {
     invalidPassword: "* Mật khẩu cần ít nhất 6 kí tự",
     invalidConfirmPassword: "* Xác nhận mật khẩu không khớp",
     invalidName: "* Tên không hợp lệ",
-    401: "Tên tài khoản và mật khẩu bạn cung cấp không đúng, vui lòng kiểm tra lại!"
+    401: "Tên tài khoản và mật khẩu bạn cung cấp không đúng, vui lòng kiểm tra lại!",
+    402: "Đây có thể là lỗi kỹ thuật mà chúng tôi đang cố gắng khắc phục, hãy thực hiện lại yêu cầu một lần nữa!",
+    700: "Phiên làm việc hết hạn, vui lòng đăng xuất để kiểm tra hoạt động!",
+    201: "Đăng ký xe thành công! Vui lòng chờ xác nhận từ quản trị viên trước khi nhận được yêu cầu.",
+    202: "Hủy đăng ký xe cứu thương thành công!",
+    203: "Cập nhật thông tin xe cứu thương thành công!",
+    204: "Cập nhật thông tin cá nhân thành công!"
 };
 
 export default messages;

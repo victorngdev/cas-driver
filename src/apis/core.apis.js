@@ -1,4 +1,7 @@
 import axios from "axios";
+import { RNS3 } from "react-native-aws3";
+
+import aws from "../config/awskey";
 
 const api = axios.create({
     // baseURL: "http://localhost:5000/api/users"
@@ -14,6 +17,18 @@ export const uploadImage = base64str => {
         data: body,
         headers: { "Content-Type": "multipart/form-data" }
     });
+};
+
+export const uploadImageToS3 = file => {
+    const config = {
+        bucket: aws.bucketName,
+        region: "ap-southeast-1",
+        accessKey: aws.accessKey,
+        secretKey: aws.secretKey,
+        successActionStatus: 201
+    };
+
+    return RNS3.put(file, config);
 };
 
 export const fetchHistory = (token, userId) => {
@@ -46,4 +61,20 @@ export const registerAccount = user => {
 
 export const resetPassword = user => {
     return api.put("/users/drivers/forget_password", user);
+};
+
+export const checkIsRegisteredAmbulance = (token, licensePlate) => {
+    return api.get(`/driver/ambulances/${licensePlate}`, {
+        headers: {
+            Authorization: token
+        }
+    });
+};
+
+export const fetchConfig = token => {
+    return api.get("/system/configurations", {
+        headers: {
+            Authorization: token
+        }
+    });
 };

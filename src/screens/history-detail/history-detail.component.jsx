@@ -48,7 +48,7 @@ const HistoryDetailScreen = ({ navigation, token, history }) => {
                         <Text style={styles.name}>{request.user.displayName}</Text>
                         <Text style={styles.phone}>{request.user.phone}</Text>
                     </View>
-                    <Text style={styles.status}>Thành công</Text>
+                    <Text style={styles.status}>{request.status}</Text>
                 </View>
             )}
             {request && (

@@ -19,11 +19,6 @@ export const logout = () => ({
     type: UserActionTypes.LOGOUT
 });
 
-export const updateUser = user => ({
-    type: UserActionTypes.UPDATE_USER,
-    payload: user
-});
-
 export const updateConfirmingStatus = status => ({
     type: UserActionTypes.UPDATE_CONFIRMING_STATUS,
     payload: status
@@ -31,4 +26,27 @@ export const updateConfirmingStatus = status => ({
 
 export const handleApprovedRegisterAmbulance = () => ({
     type: UserActionTypes.HANDLE_APPROVED_REGISTER_AMBULANCE
+});
+
+export const handleUnregisterAmbulance = () => ({
+    type: UserActionTypes.HANDLE_UNREGISTER_AMBULANCE
+});
+
+export const handleUpdateAmbulance = () => ({
+    type: UserActionTypes.HANDLE_UPDATE_AMBULANCE
+});
+
+export const updateUser = (userId, token, user) => ({
+    type: UserActionTypes.UPDATE_USER_START,
+    payload: { userId, token, user }
+});
+
+export const updateUserSuccess = user => ({
+    type: UserActionTypes.UPDATE_USER_SUCCESS,
+    payload: user
+});
+
+export const updateUserFail = error => ({
+    type: UserActionTypes.UPDATE_USER_FAIL,
+    payload: error
 });

@@ -1,176 +1,162 @@
-import React from "react";
-import { Image, ScrollView, StyleSheet, Text, TextInput, View, Alert } from "react-native";
-import { Button } from "react-native-paper";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import React, { useState } from "react";
+import { StyleSheet, Text, TextInput, View } from "react-native";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
+
+import { selectCurrentUser, selectToken } from "../../redux/user/user.selectors";
+import { updateUser } from "../../redux/user/user.actions";
+import messages from "../../uitls/message.data";
+import { selectStatusCode } from "../../redux/message/message.selectors";
 
 import BackgroundImage from "../../components/background-screen.component";
 import Header from "../../components/header.component";
+import AvatarNameCol from "../../components/avatar-name-column.component";
+import KeyboardAvoiding from "../../components/keyboard-avoding.component";
+import ButtonText from "../../components/button-text.component";
+import Message from "../../components/message.component";
 
-const colors = {
-    themeColor: "#4263ec",
-    white: "#fff",
-    background: "f4f6fc",
-    greyish: "#a4a4a4",
-    tint: "#2b49c3"
-};
+const AccountScreen = ({ navigation, currentUser, token, updateUser, statusCode }) => {
+    const [linkImage, setLinkImage] = useState(currentUser.imageUrl);
+    const [displayName, setDisplayName] = useState(currentUser.displayName);
+    const [phone, setPhone] = useState(currentUser.phone);
 
-function AccountScreen(props) {
+    const handlerUploadImage = () => {
+        const image = {
+            uri: linkImage,
+            name: linkImage.substring(linkImage.lastIndexOf("/") + 1),
+            type: "image/png"
+        };
+        updateUser(currentUser.userId, token, { displayName, phone, image });
+    };
+
     return (
-        <View style={styles.container}>
-            <BackgroundImage>
-                {/* Header */}
-                <View style={{ flex: 1, marginTop: 10 }}>
-                    <Header
-                        title="Thông tin cá nhân"
-                        passedIcon={() => (
-                            <Icon
-                                name="menu"
-                                size={30}
-                                color="#a2a2db"
-                                style={{ width: 20 }}
-                                onPress={() => props.navigation.openDrawer()}
-                            />
-                        )}
+        <BackgroundImage>
+            <Message
+                visible={statusCode}
+                message={messages[statusCode]}
+                isMessage={statusCode < 400}
+            />
+            <Header title="Thông tin cá nhân" gotoScreen={() => navigation.goBack()} />
+            <View style={styles.container_info}>
+                <AvatarNameCol
+                    linkImage={linkImage}
+                    setLinkImage={setLinkImage}
+                    textContent={currentUser.displayName}
+                />
+                <Text style={styles.joining_day_title}>Ngày tham gia</Text>
+                <Text style={styles.joining_day}>28/10/2020</Text>
+            </View>
+            <KeyboardAvoiding style={styles.container_content}>
+                <View style={styles.container_text_input}>
+                    <Text style={styles.label}>Tên *</Text>
+                    <TextInput
+                        style={styles.text_input}
+                        defaultValue={displayName}
+                        onChangeText={value => setDisplayName(value)}
                     />
                 </View>
-                <View style={{ flex: 1 }}>
-                    <Text style={styles.policy}>Những thông tin cá nhân sẽ được bảo mật theo chính sách quy định của Nhà Nước</Text>
+                <View style={styles.container_text_input}>
+                    <Text style={styles.label}>Số điện thoại *</Text>
+                    <TextInput
+                        style={styles.text_input}
+                        defaultValue={phone}
+                        onChangeText={value => setPhone(value)}
+                    />
                 </View>
-                <View style={{ flex: 4.5 }}>
-                    <View>
-                        <Text style={styles.titleText}>Họ và tên:</Text>
-                        <TextInput placeholder="Lê Quang Huy" style={styles.textInputInfo} />
-                    </View>
-                    <View>
-                        <Text style={styles.titleText}>Số điện thoại:</Text>
-                        <TextInput placeholder="0359680538" style={styles.textInputInfo} />
-                    </View>
-                    <View>
-                        <Text style={styles.titleText}>Biển số xe:</Text>
-                        <TextInput placeholder="71 - B1 963.32" style={styles.textInputInfo} />
-                    </View>
-                </View>
-                <View style={{ flex: 1, alignItems: "center" }}>
-                    <Text style={styles.textConfirm}>Hình ảnh xác thực</Text>
-                </View>
-                <View style={{ flex: 4 }}>
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginHorizontal: -28 }}>
-                        <View style={styles.imageConfirmView}>
-                            <Image
-                                source={require("../../../assets/images/chung-minh.jpg")}
-                                style={styles.imageConfirmView_Image}
-                            />
-                            <View style={styles.imageConfirmView_Text_View}>
-                                <Text style={styles.imageConfirmView_Text}>CMND/Thẻ căn cước hoặc hộ chiếu</Text>
-                            </View>
-                        </View>
-                        <View style={styles.imageConfirmView}>
-                            <Image
-                                source={require("../../../assets/images/giayphep.jpg")}
-                                style={styles.imageConfirmView_Image}
-                            />
-                            <View style={styles.imageConfirmView_Text_View}>
-                                <Text style={styles.imageConfirmView_Text}>Giấy phép lái xe</Text>
-                            </View>
-                        </View>
-                        <View style={styles.imageConfirmView}>
-                            <Image
-                                source={require("../../../assets/images/giaydangkyxe.jpg")}
-                                style={styles.imageConfirmView_Image}
-                            />
-                            <View style={styles.imageConfirmView_Text_View}>
-                                <Text style={styles.imageConfirmView_Text}>Giấy đăng ký xe</Text>
-                            </View>
-                        </View>
-                        <View style={styles.imageConfirmView}>
-                            <Image
-                                source={require("../../../assets/images/xecuuthuong.jpg")}
-                                style={styles.imageConfirmView_Image}
-                            />
-                            <View style={styles.imageConfirmView_Text_View}>
-                                <Text style={styles.imageConfirmView_Text}>Xe cứu thương</Text>
-                            </View>
-                        </View>
-                    </ScrollView>
-                </View>
-                <View style={{ flex: 1, paddingHorizontal: 10 }}>
-                    <Button
-                        mode="contained"
-                        color="green"
-                        labelStyle={{ fontSize: 17, fontWeight: "bold" }}
-                        onPress={() => {
-                            Alert.alert(
-                                "Cập nhập thành công"
-                            );
-                        }}
-                    >
-                        CẬP NHẬP
-                    </Button>
-                </View>
-            </BackgroundImage>
-        </View>
+            </KeyboardAvoiding>
+            <View style={styles.container_button_save}>
+                <ButtonText
+                    textContent="Lưu"
+                    styleText={styles.button_text}
+                    styleButton={styles.button_size}
+                    gotoScreen={handlerUploadImage}
+                />
+                <Text style={styles.text_policy}>
+                    * Các thông tin cá nhân được bảo mật theo chính sách, qui định của Nhà nước
+                </Text>
+            </View>
+        </BackgroundImage>
     );
-}
+};
+
+const mapStateToProps = createStructuredSelector({
+    currentUser: selectCurrentUser,
+    token: selectToken,
+    statusCode: selectStatusCode
+});
+
+const mapDispatchToProps = dispatch => ({
+    updateUser: (userId, token, user) => dispatch(updateUser(userId, token, user))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(AccountScreen);
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        width: "100%",
+        display: "flex",
         flexDirection: "column"
     },
-    textInputInfo: {
-        paddingLeft: 10,
-        backgroundColor: colors.white,
-        flexDirection: "row",
-        marginHorizontal: 16,
-        borderRadius: 20,
-        paddingVertical: 10,
-        fontSize: 15
+    container_content: {
+        width: "85%"
     },
-    policy: {
-        fontFamily: "Texgyreadventor-regular",
-        paddingHorizontal: 10,
-        fontSize: 14,
-        color: "#a2a2db",
-        textAlign: "center"
-    },
-    editInfo: {
-        flex: 2
-    },
-
-    titleText: {
-        flexDirection: "row",
-        marginHorizontal: 16,
-        marginVertical: 4,
-        borderRadius: 20,
-        fontSize: 15
-    },
-    textConfirm: {
-        fontSize: 20,
-        fontFamily: "Texgyreadventor-bold",
-        color: "#522289"
-    },
-    imageConfirmView: {
-        backgroundColor: "#FEFEFE",
-        height: 170,
-        width: 190,
-        borderRadius: 15,
-        padding: 5
-    },
-    imageConfirmView_Text_View: {
+    container_info: {
         flexDirection: "column",
-        width: 180,
-        textAlign: "center"
+        justifyContent: "center",
+        alignItems: "center"
     },
-    imageConfirmView_Text: {
-        fontSize: 13,
-        color: "#a2a2db",
-        textAlign: "center"
+    container_text_input: {
+        marginTop: 15,
+        borderBottomWidth: 0.5,
+        borderBottomColor: "#B9C5E6",
+        paddingBottom: 3
     },
-    imageConfirmView_Image: {
-        width: 180,
-        borderRadius: 10,
-        height: 130
+    container_button_save: {
+        flexDirection: "column",
+        marginTop: 10
+    },
+    joining_day_title: {
+        fontSize: 14,
+        color: "#26324A",
+        fontWeight: "400",
+        fontFamily: "Texgyreadventor-regular"
+    },
+    joining_day: {
+        fontSize: 16,
+        color: "#26324A",
+        fontWeight: "600",
+        fontFamily: "Texgyreadventor-regular"
+    },
+    label: {
+        fontSize: 12,
+        fontFamily: "Texgyreadventor-regular",
+        color: "#787881"
+    },
+    text_input: {
+        width: "85%",
+        marginTop: 3,
+        fontSize: 16,
+        fontFamily: "Texgyreadventor-regular",
+        color: "#494958"
+    },
+    //css button save:
+    button_size: {
+        marginVertical: 20,
+        backgroundColor: "#FFF",
+        paddingVertical: 10,
+        paddingHorizontal: 40,
+        elevation: 20
+    },
+    button_text: {
+        color: "#26324A",
+        fontFamily: "Texgyreadventor-regular",
+        fontSize: 16
+    },
+    text_policy: {
+        marginTop: 10,
+        fontSize: 12,
+        color: "#8B8B8B",
+        textAlign: "center",
+        fontFamily: "Texgyreadventor-regular"
     }
 });
-
-export default AccountScreen;
