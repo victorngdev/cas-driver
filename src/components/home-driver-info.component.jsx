@@ -1,34 +1,57 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import Icon from "react-native-vector-icons/Ionicons";
 
-const HomeDriverInfo = ({ addressName, addressValue }) => (
-    <View style={styles.driverInfo}>
-        <View style={styles.currentLocation}>
-            <Text style={styles.locationTitle}>{addressName}</Text>
-            <Text style={styles.value}>{addressValue}</Text>
+const HomeDriverInfo = ({ addressName, addressValue, toggleSettingSheet, toggleRequestSheet }) => (
+    <>
+        <View style={styles.container}>
+            <View style={styles.currentLocation}>
+                <Text style={styles.locationTitle}>{addressName}</Text>
+                <Text style={styles.value}>{addressValue}</Text>
+            </View>
+            <TouchableOpacity style={styles.action} onPress={toggleSettingSheet}>
+                <Icon style={styles.icon} size={18} name="ios-settings" />
+                <Text style={styles.setting}>Thiết lập nhận yêu cầu</Text>
+            </TouchableOpacity>
         </View>
-    </View>
+        <View style={[styles.container, styles.requestInfo]}>
+            <TouchableOpacity onPress={toggleRequestSheet}>
+                <Text style={styles.message}>6 yêu cầu đang chờ xác nhận</Text>
+            </TouchableOpacity>
+        </View>
+    </>
 );
 
 export default HomeDriverInfo;
 
 const styles = StyleSheet.create({
-    driverInfo: {
-        flex: 1,
-        flexDirection: "row",
+    container: {
+        width: "97%",
+        height: "auto",
+        flexDirection: "column",
         paddingHorizontal: 10,
-        backgroundColor: "#fff"
+        backgroundColor: "#fff",
+        borderRadius: 10,
+        marginBottom: 2,
+        zIndex: 1
+    },
+    requestInfo: {
+        paddingVertical: 15,
+        alignItems: "center"
+    },
+    message: {
+        fontFamily: "Texgyreadventor-bold",
+        color: "#444444"
     },
     currentLocation: {
-        flex: 4,
-        // flexBasis: "70%",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
         paddingHorizontal: 10
     },
     locationTitle: {
-        fontSize: 16,
+        fontSize: 14,
         marginVertical: 5,
         fontFamily: "Texgyreadventor-bold",
         color: "#444444"
@@ -39,7 +62,6 @@ const styles = StyleSheet.create({
         color: "#444444"
     },
     rating: {
-        // flexBasis: "25%",
         flex: 2,
         justifyContent: "center",
         alignItems: "center"
@@ -49,5 +71,27 @@ const styles = StyleSheet.create({
         fontFamily: "Texgyreadventor-bold",
         color: "#444444",
         textAlign: "center"
+    },
+    action: {
+        width: "100%",
+        alignItems: "center",
+        position: "relative",
+        justifyContent: "center"
+    },
+    setting: {
+        width: "95%",
+        textAlign: "center",
+        marginVertical: 10,
+        paddingVertical: 10,
+        backgroundColor: "#e7ecf9",
+        borderRadius: 20,
+        fontFamily: "Texgyreadventor-bold",
+        color: "#333",
+        fontSize: 13
+    },
+    icon: {
+        position: "absolute",
+        zIndex: 1,
+        left: "22%"
     }
 });

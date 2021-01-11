@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, Text, TextInput, View, Dimensions } from "react-native";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 
@@ -26,7 +26,7 @@ const AccountScreen = ({ navigation, currentUser, token, updateUser, statusCode 
             name: linkImage.substring(linkImage.lastIndexOf("/") + 1),
             type: "image/png"
         };
-        updateUser(currentUser.userId, token, { displayName, phone, image });
+        updateUser(currentUser.id, token, { displayName, phone, image });
     };
 
     return (
@@ -44,7 +44,7 @@ const AccountScreen = ({ navigation, currentUser, token, updateUser, statusCode 
                     textContent={currentUser.displayName}
                 />
                 <Text style={styles.joining_day_title}>Ngày tham gia</Text>
-                <Text style={styles.joining_day}>28/10/2020</Text>
+                <Text style={styles.joining_day}>{currentUser.dateCreated}</Text>
             </View>
             <KeyboardAvoiding style={styles.container_content}>
                 <View style={styles.container_text_input}>
@@ -141,15 +141,15 @@ const styles = StyleSheet.create({
     },
     //css button save:
     button_size: {
+        width: Dimensions.get("screen").width * 0.85,
         marginVertical: 20,
-        backgroundColor: "#FFF",
+        backgroundColor: "#e7ecf9",
         paddingVertical: 10,
-        paddingHorizontal: 40,
-        elevation: 20
+        paddingHorizontal: 40
     },
     button_text: {
         color: "#26324A",
-        fontFamily: "Texgyreadventor-regular",
+        fontFamily: "Texgyreadventor-bold",
         fontSize: 16
     },
     text_policy: {

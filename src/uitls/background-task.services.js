@@ -1,8 +1,8 @@
 import * as TaskManager from "expo-task-manager";
 
-import { initLocation, firestore, syncLocationToRequest } from "../firebase/firebase.utils";
+import { initLocation, syncLocationToRequest } from "../firebase/firebase.utils";
 
-export const configureTask = ({ currentUser, isReady, inRequest }) => {
+export const configureTask = ({ currentUser, inRequest }) => {
     TaskManager.defineTask("syncLocation", ({ data, error }) => {
         if (error) {
             return;
@@ -12,7 +12,7 @@ export const configureTask = ({ currentUser, isReady, inRequest }) => {
             if (inRequest) {
                 syncLocationToRequest(currentUser.username, latitude, longitude);
             } else {
-                isReady && currentUser && initLocation(currentUser.username, latitude, longitude);
+                currentUser && initLocation(currentUser.username, latitude, longitude);
             }
         }
     });

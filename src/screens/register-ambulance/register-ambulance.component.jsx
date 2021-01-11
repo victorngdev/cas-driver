@@ -82,7 +82,7 @@ const RegisterAmbulanceScreen = ({
                 registerLicense: registerLicense.uri,
                 registryCertificate: registryCertificate.uri
             };
-            registerAmbulance(token, currentUser.userId, ambulance);
+            registerAmbulance(token, currentUser.id, ambulance);
             setLoading(false);
         });
     };
@@ -96,7 +96,7 @@ const RegisterAmbulanceScreen = ({
             setLoading(true);
             await uploadImage(identityCard.base64).then(response => {
                 const ambulance = {
-                    ambulanceId: currentAmbulance.ambulanceId,
+                    ambulanceId: currentAmbulance.id,
                     displayName,
                     phone,
                     licensePlate,
@@ -106,12 +106,12 @@ const RegisterAmbulanceScreen = ({
                     registryCertificate: registryCertificate.uri
                 };
 
-                updateAmbulance(token, currentUser.userId, ambulance);
+                updateAmbulance(token, currentUser.id, ambulance);
                 setLoading(false);
             });
         } else {
-            updateAmbulance(token, currentUser.userId, {
-                ambulanceId: currentAmbulance.ambulanceId,
+            updateAmbulance(token, currentUser.id, {
+                ambulanceId: currentAmbulance.id,
                 displayName,
                 phone,
                 licensePlate,

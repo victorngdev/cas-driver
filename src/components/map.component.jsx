@@ -7,18 +7,14 @@ import { createStructuredSelector } from "reselect";
 import Geocoder from "react-native-geocoding";
 
 import { firestore } from "../firebase/firebase.utils";
-import {
-    selectIsAccepted,
-    selectIsArrived,
-    selectRequestId
-} from "../redux/request/request.selectors";
+import { selectIsArrived, selectRequestId } from "../redux/request/request.selectors";
 import { selectCurrentUser } from "../redux/user/user.selectors";
 
 import MapDirection from "./map-direction.component";
 
 Geocoder.init("AIzaSyA3wjgHRZGPb4I96XDM-Eev7f1QQM_Mpp8", { language: "vi" });
 
-const Map = ({ source, setLocation, requestId, currentUser, isArrived, isAccepted }) => {
+const Map = ({ source, setLocation, requestId, currentUser, isArrived }) => {
     const mapRef = useRef(null);
     const [region, setRegion] = useState(null);
 
@@ -115,8 +111,7 @@ const Map = ({ source, setLocation, requestId, currentUser, isArrived, isAccepte
 const mapStateToProps = createStructuredSelector({
     requestId: selectRequestId,
     currentUser: selectCurrentUser,
-    isArrived: selectIsArrived,
-    isAccepted: selectIsAccepted
+    isArrived: selectIsArrived
 });
 
 export default connect(mapStateToProps)(Map);

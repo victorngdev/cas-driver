@@ -13,14 +13,8 @@ const problems = [
     { itemId: 3, value: "third", label: "Bệnh nhân yêu cầu xuống xe" }
 ];
 
-const ProblemModal = ({
-    isVisible,
-    setIsProblem,
-    handleReport,
-    setProblemOption,
-    problemOption
-}) => (
-    <CustomModal title="Báo cáo sự cố" visible={isVisible}>
+const ProblemModal = ({ onClose, onSubmit, setProblemOption, problemOption }) => (
+    <CustomModal title="Báo cáo sự cố">
         <KeyboardAvoiding style={styles.content}>
             <View style={styles.optionContainer}>
                 <RadioButton.Group
@@ -43,13 +37,13 @@ const ProblemModal = ({
                         itemId: 1,
                         label: "Đóng",
                         type: "reject",
-                        action: () => setIsProblem(false),
+                        action: () => onClose(false),
                         style: { paddingHorizontal: 30 }
                     },
                     {
                         itemId: 2,
                         label: "Xác nhận",
-                        action: handleReport,
+                        action: onSubmit,
                         style: { paddingHorizontal: 30 }
                     }
                 ]}
@@ -68,6 +62,7 @@ const styles = StyleSheet.create({
         paddingVertical: 20
     },
     optionOther: {
+        marginHorizontal: 10,
         paddingVertical: 5,
         paddingHorizontal: 15,
         borderWidth: 0.5,

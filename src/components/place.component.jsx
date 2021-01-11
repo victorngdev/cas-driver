@@ -2,19 +2,26 @@ import React, { useState } from "react";
 import { StyleSheet, Text, TextInput, Image, View } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
 
-const Place = ({ place: { name, address, date, time }, icon, title, distance, isEditable }) => {
+const Place = ({
+    place: { name, address, date, time },
+    icon,
+    title,
+    distance,
+    isEditable,
+    isHistory
+}) => {
     const [isEdit, setIsEdit] = useState(false);
     const [newAddress, setNewAddress] = useState(address);
 
     return (
-        <View style={date ? styles.place_history : styles.place}>
-            {!date ? (
+        <View style={isHistory ? styles.place_history : styles.place}>
+            {date ? (
                 <View style={styles.icon}>
                     <Image
                         style={{ width: 25, height: 25, marginRight: 10 }}
                         source={{ uri: icon }}
                     />
-                    {title ? <Text style={styles.title}>{title}</Text> : null}
+                    {title && <Text style={styles.title}>{title}</Text>}
                 </View>
             ) : (
                 <Image style={{ width: 25, height: 25, marginRight: 10 }} source={{ uri: icon }} />
@@ -86,7 +93,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         borderRadius: 10,
         borderColor: "#000",
-        borderWidth: 0.5,
+        borderWidth: 0.25,
         paddingVertical: 5,
         paddingHorizontal: 10,
         marginVertical: 2
@@ -116,7 +123,9 @@ const styles = StyleSheet.create({
     },
     icon: {
         flexBasis: "25%",
-        alignItems: "center"
+        alignItems: "center",
+        display: "flex",
+        flexDirection: "column"
     },
     iconDateTime: {
         width: 30,

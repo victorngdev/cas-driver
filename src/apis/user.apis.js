@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const api = axios.create({
-    baseURL: "http://caselastic-env-1.eba-rh86ed2y.ap-southeast-1.elasticbeanstalk.com/api/users"
+    baseURL: "http://192.168.1.170:3000/api/users"
 });
 
 export const login = (username, password) => {
@@ -12,7 +12,7 @@ export const login = (username, password) => {
 };
 
 export const updateUser = (userId, token, user) => {
-    return api.put(`/storage/update-profile-image/${userId}`, user, {
+    return api.put(`/${userId}/profile`, user, {
         headers: {
             Authorization: token
         }

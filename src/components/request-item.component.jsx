@@ -1,27 +1,52 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, View, Dimensions, Image, TouchableOpacity } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, Text, Image, StyleSheet } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/FontAwesome5";
 
-import RequestInfoItem from "../components/request-info-item.component";
-import Rating from "../components/rating.component";
+import RequestInfoItem from "./request-info-item.component";
 
 const place = {
     name: "Benh vien Tu Du",
     address: "284 Cống Quỳnh, P.Phạm Ngũ Lão, Q.1, Hồ Chí Minh"
 };
 
-const HistoryComponent = () => {
+const RequestItem = () => {
     const viewStateIcon = {
         false: require("../../assets/icons/details.png"),
         true: require("../../assets/icons/less.png")
     };
     const [viewState, setViewState] = useState(false);
+    const [timer, setTimer] = useState(899);
+    const [minute, setMinute] = useState(14);
+    const [second, setSecond] = useState(59);
+
+    useEffect(() => {
+        const event = setInterval(() => {
+            if (!timer) {
+                setTimer(899);
+            } else {
+                setTimer(timer - 1);
+            }
+
+            setMinute(Math.floor(timer / 60));
+            setSecond(Math.floor(timer % 60));
+        }, 1000);
+
+        return () => clearInterval(event);
+    });
 
     return (
         <View style={styles.container}>
             <View style={styles.overview}>
-                <View style={[styles.overviewItem, { flexBasis: "25%", marginRight: 30 }]}>
-                    <Text style={styles.title}>Tổng quan:</Text>
+                <View style={styles.overviewItem}>
+                    <Text style={styles.title}>Cách bạn:</Text>
+                    <View style={styles.distance}>
+                        <Text style={styles.distanceValue}>15</Text>
+                        <Text style={styles.distanceUnit}>km</Text>
+                    </View>
+                </View>
+                <View style={[styles.overviewItem, { flexBasis: "32%" }]}>
+                    <Text style={styles.title}>Loại yêu cầu:</Text>
                     <Text style={[styles.title, { fontSize: 9 }]}>14:38 10/01/2021</Text>
                     <View style={styles.requestType}>
                         <Icon size={14} color="#333" name="taxi" />
@@ -29,13 +54,16 @@ const HistoryComponent = () => {
                     </View>
                 </View>
                 <View style={[styles.overviewItem, { flex: 1 }]}>
-                    <Text style={styles.title}>Trạng thái:</Text>
-                    <Text style={[styles.title, { fontSize: 9 }]}>17:15 10/01/2021</Text>
-                    <View style={styles.requestType}>
-                        <Icon size={14} color="#333" name="street-view" />
-                        <Text style={[styles.requestTypeValue, { backgroundColor: "#118539" }]}>
-                            Thành công
-                        </Text>
+                    <Text style={styles.timeout}>{`${String(minute).padStart(2, "0")}:${String(
+                        second
+                    ).padStart(2, "0")}`}</Text>
+                    <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                        <TouchableOpacity>
+                            <Text style={styles.action}>Chấp nhận</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <Text style={styles.clear}>Xóa</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </View>
@@ -43,6 +71,7 @@ const HistoryComponent = () => {
                 <View style={styles.iconContainer}>
                     <Icon size={18} color="#09acfe" name="chevron-circle-up" />
                     <Icon size={12} color="#555" name="ellipsis-v" />
+                    <Text style={styles.requestDistanceValue}>25km</Text>
                     <Icon size={12} color="#555" name="ellipsis-v" />
                     <Icon size={18} color="#f9650c" name="chevron-circle-down" />
                 </View>
@@ -83,9 +112,6 @@ const HistoryComponent = () => {
                     <RequestInfoItem content="Bị tai nạn giao thông rất nghiêm trọng" />
                     <Text style={styles.infoTitle}>Ghi chú</Text>
                     <RequestInfoItem content="Cần dụng cụ sơ cứu tại chỗ" />
-                    <Text style={styles.infoTitle}>Đánh giá</Text>
-                    <Rating level={5} size={8} />
-                    <RequestInfoItem content="Tài xế chạy xe rất có tâm" />
                 </>
             )}
             <TouchableOpacity
@@ -98,18 +124,17 @@ const HistoryComponent = () => {
     );
 };
 
-export default HistoryComponent;
+export default RequestItem;
 
 const styles = StyleSheet.create({
     container: {
-        width: "100%",
         paddingVertical: 15,
         paddingHorizontal: 10,
         paddingBottom: 10,
         borderRadius: 15,
         borderWidth: 1,
         borderColor: "#b3b9c8",
-        marginVertical: 5
+        marginTop: 10
     },
     locationOverview: {
         flexDirection: "row",
@@ -138,25 +163,42 @@ const styles = StyleSheet.create({
     },
     overview: {
         flexDirection: "row",
-        justifyContent: "space-between",
+        justifyContent: "space-around",
         alignItems: "flex-start",
         marginBottom: 5
     },
     overviewItem: {
-        justifyContent: "flex-start"
+        flexBasis: "23%"
     },
     title: {
         fontFamily: "Texgyreadventor-bold",
         fontSize: 11,
         color: "#6c7fa6"
     },
+    requestDistanceValue: {
+        fontFamily: "Texgyreadventor-bold",
+        fontSize: 10,
+        lineHeight: 14,
+        color: "#6c7fa6"
+    },
+    distance: {
+        flexDirection: "row",
+        alignItems: "flex-end",
+        height: 35
+    },
+    distanceValue: {
+        fontFamily: "Texgyreadventor-bold",
+        fontSize: 23
+    },
+    distanceUnit: {
+        fontFamily: "Texgyreadventor-bold",
+        fontSize: 12,
+        lineHeight: 26,
+        color: "#333"
+    },
     requestType: {
         flexDirection: "row",
         alignItems: "center"
-    },
-    feedback: {
-        fontFamily: "Texgyreadventor-regular",
-        fontSize: 10
     },
     requestTypeValue: {
         fontFamily: "Texgyreadventor-bold",

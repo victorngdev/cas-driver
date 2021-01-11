@@ -3,7 +3,7 @@ import { put, all, call, takeLatest } from "redux-saga/effects";
 import { login, updateUser } from "../../apis/user.apis";
 import { fetchAmbulance } from "../ambulance/ambulance.actions";
 import { updateStatusCode } from "../message/message.action";
-import { signInFail, signInSuccess, updateUserFail } from "./user.actions";
+import { signInFail, signInSuccess, updateUserFail, updateUserSuccess } from "./user.actions";
 import { uploadImageToS3 } from "../../apis/core.apis";
 
 import UserActionTypes from "./user.types";
@@ -14,7 +14,7 @@ export function* signInStart({ payload: { username, password } }) {
         const user = yield response.data;
 
         yield put(signInSuccess(user));
-        yield put(fetchAmbulance(`${user.type} ${user.token}`, user.userId));
+        yield put(fetchAmbulance(`${user.type} ${user.token}`, user.id));
     } catch (error) {
         yield put(signInFail(error));
         yield put(updateStatusCode(401));

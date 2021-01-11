@@ -5,7 +5,7 @@ const Rating = ({ level, size }) => (
     <View style={styles.rating}>
         <Image
             style={styles.star}
-            style={{ width: size, height: size, marginHorizontal: 2 }}
+            style={{ width: size, height: size }}
             source={{ uri: "https://i.ibb.co/DR4mTc0/heart.png" }}
         />
         {level >= 2 ? (

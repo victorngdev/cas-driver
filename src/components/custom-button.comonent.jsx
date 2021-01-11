@@ -2,24 +2,6 @@ import React, { useState, useEffect } from "react";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
 
 const CustomButton = ({ action, label, type, style, counter, onTimeout }) => {
-    const [timer, setTimer] = useState(counter * 60);
-    const [minute, setMinute] = useState(counter);
-    const [second, setSecond] = useState(0);
-
-    useEffect(() => {
-        if (counter && !timer) {
-            onTimeout();
-        }
-
-        const interval = setTimeout(() => {
-            setMinute(Math.floor(timer / 60));
-            setSecond(Math.floor(timer % 60));
-            setTimer(timer - 1);
-        }, 1000);
-
-        return () => clearTimeout(interval);
-    });
-
     const mapKey = {
         reject: styles.reject,
         finish: styles.finish

@@ -1,18 +1,13 @@
 import React from "react";
 
 import { Text, View, StyleSheet } from "react-native";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import Icon from "react-native-vector-icons/MaterialIcons";
 
-const Header = ({ title, gotoScreen }) => {
+const Header = ({ title, style, gotoScreen }) => {
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, style]}>
             <View style={styles.container_back_button}>
-                <MaterialCommunityIcons
-                    name="chevron-left"
-                    size={25}
-                    color="#494958"
-                    onPress={gotoScreen}
-                />
+                <Icon onPress={gotoScreen} size={20} color="#666" name="keyboard-backspace" />
             </View>
             <View style={styles.container_header_title}>
                 <Text style={styles.text_content}>{title}</Text>
@@ -47,7 +42,7 @@ const styles = StyleSheet.create({
         height: 21
     },
     text_content: {
-        fontSize: 16,
+        fontSize: 15,
         fontFamily: "Texgyreadventor-bold",
         color: "#494958",
         textAlign: "center"

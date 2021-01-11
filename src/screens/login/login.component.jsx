@@ -19,8 +19,8 @@ import Message from "../../components/message.component";
 import styles from "./login.style";
 
 const LoginScreen = ({ navigation, signIn, currentUser, statusCode }) => {
-    const [username, setUsername] = useState("0931452369");
-    const [password, setPassword] = useState("123");
+    const [username, setUsername] = useState("0931738872");
+    const [password, setPassword] = useState("123456");
 
     useEffect(() => {
         currentUser && navigation.navigate("Home");

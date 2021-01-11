@@ -27,7 +27,8 @@ export default HomeHeader;
 
 const styles = StyleSheet.create({
     header: {
-        flex: 1,
+        position: "relative",
+        height: "auto",
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",

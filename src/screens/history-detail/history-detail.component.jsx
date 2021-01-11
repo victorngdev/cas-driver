@@ -13,18 +13,10 @@ import { fetchHistoryDetails } from "../../apis/core.apis";
 import { selectHistory } from "../../redux/request/request.selectors";
 import Header from "../../components/header.component";
 
-const pickUp = {
-    name: "Vị trí bệnh nhân",
-    address: "1141/15/7, Lê Công, Gò Vấp",
-    date: "20/07/2020",
-    time: "10:20"
-};
-
-const destination = {
-    name: "Bệnh viện Quân Y",
-    address: "365 Lê Văn Việt, Q.9, Tp. HCM",
-    date: "20/07/2020",
-    time: "12:20"
+const mapStatus = {
+    SUCCESS: "Thành công",
+    FAIL: "Không thành công",
+    CANCELED: "Bị hủy bỏ"
 };
 
 const HistoryDetailScreen = ({ navigation, token, history }) => {
@@ -36,19 +28,19 @@ const HistoryDetailScreen = ({ navigation, token, history }) => {
 
     return (
         <View style={styles.container}>
-            <Header title="Chi tiết" gotoScreen={() => navigation.goBack()} />
+            <Header
+                style={{ backgroundColor: "#fff" }}
+                title="Chi tiết"
+                gotoScreen={() => navigation.goBack()}
+            />
             {request && (
                 <View style={styles.driverInfo}>
-                    <Image
-                        style={styles.background}
-                        source={require("../../../assets/images/request-details-bg.png")}
-                    />
                     <View style={styles.content}>
-                        <Image style={styles.image} source={{ uri: request.user.imageUrl }} />
-                        <Text style={styles.name}>{request.user.displayName}</Text>
-                        <Text style={styles.phone}>{request.user.phone}</Text>
+                        <Image style={styles.image} source={{ uri: request.requester.imageUrl }} />
+                        <Text style={styles.name}>{request.requester.displayName}</Text>
+                        <Text style={styles.phone}>{request.requester.phone}</Text>
                     </View>
-                    <Text style={styles.status}>{request.status}</Text>
+                    <Text style={styles.status}>{mapStatus[request.request_status]}</Text>
                 </View>
             )}
             {request && (
@@ -58,11 +50,13 @@ const HistoryDetailScreen = ({ navigation, token, history }) => {
                             title="Điếm đón"
                             place={request.pickUp}
                             icon="https://i.ibb.co/D8HPk12/placeholder.png"
+                            isHistory
                         />
                         <Place
                             title="Điếm nhận"
                             place={request.destination}
                             icon="https://i.ibb.co/gWdQ69d/radar.png"
+                            isHistory
                         />
                         {request.feedbackDriver && (
                             <FeedbackShow
@@ -101,16 +95,17 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     driverInfo: {
-        height: "40%",
+        width: "100%",
+        height: "auto",
         justifyContent: "center",
         alignItems: "center",
-        position: "relative"
+        position: "relative",
+        backgroundColor: "rgba(255,255,255,0.7)",
+        borderBottomLeftRadius: 45,
+        borderBottomRightRadius: 45
     },
     content: {
         width: "100%",
-        position: "absolute",
-        top: 0,
-        left: 0,
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
@@ -122,10 +117,10 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 50
     },
     image: {
-        width: 90,
-        height: 90,
-        borderRadius: 45,
-        marginTop: 50
+        width: 100,
+        height: 100,
+        borderRadius: 50,
+        marginTop: 20
     },
     name: {
         fontSize: 20,
@@ -133,15 +128,11 @@ const styles = StyleSheet.create({
         color: "#26324A",
         fontFamily: "Texgyreadventor-bold"
     },
-    licensePlate: {
-        fontSize: 12,
-        color: "#787881",
-        fontFamily: "Texgyreadventor-regular"
-    },
     phone: {
         fontSize: 16,
         color: "#494958",
-        fontFamily: "Texgyreadventor-bold"
+        fontFamily: "Texgyreadventor-bold",
+        marginBottom: 35
     },
     status: {
         position: "absolute",
@@ -158,7 +149,7 @@ const styles = StyleSheet.create({
     },
     details: {
         width: "100%",
-        height: "45%",
+        height: "50%",
         display: "flex",
         flexDirection: "column",
         marginTop: 30,

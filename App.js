@@ -17,6 +17,9 @@ import HistoryDetailScreen from "./src/screens/history-detail/history-detail.com
 import RegisterScreen from "./src/screens/register/register.component";
 import OtpScreen from "./src/screens/otp/otp.component";
 import ResetPassScreen from "./src/screens/reset-password/reset-password.component";
+import PickupScreen from "./src/screens/pickup/pickup.component";
+import DestinationScreen from "./src/screens/destination/destination.component";
+import Test from "./src/screens/home/test.component";
 
 const Drawer = createDrawerNavigator();
 
@@ -38,11 +41,14 @@ class App extends React.Component {
             <Provider store={store}>
                 <NavigationContainer>
                     <Drawer.Navigator
-                        initialRouteName="Login"
+                        initialRouteName="History"
                         drawerContent={props => <DrawerContent {...props} />}
                     >
                         <Drawer.Screen name="Home" component={HomeScreen} />
+                        <Drawer.Screen name="Test" component={Test} />
                         <Drawer.Screen name="Login" component={LoginScreen} />
+                        <Drawer.Screen name="Pickup" component={PickupScreen} />
+                        <Drawer.Screen name="Destination" component={DestinationScreen} />
                         <Drawer.Screen name="AccountInfo" component={AccountScreen} />
                         <Drawer.Screen name="History" component={HistoryScreen} />
                         <Drawer.Screen

@@ -14,7 +14,7 @@ const options = [
     { itemId: 5, value: "Bệnh nhân liên lạc đề nghị huỷ" }
 ];
 
-const RejectModal = ({ rejectOption, setRejectOption, isVisible, setIsReject, handleReject }) => (
+const RejectModal = ({ rejectOption, setRejectOption, isVisible, onClose, onSubmit }) => (
     <CustomModal title="Lí do hủy yêu cầu" visible={isVisible}>
         <View style={styles.optionContainer}>
             <RadioButton.Group value={rejectOption} onValueChange={value => setRejectOption(value)}>
@@ -30,13 +30,13 @@ const RejectModal = ({ rejectOption, setRejectOption, isVisible, setIsReject, ha
                     itemId: 1,
                     label: "Đóng",
                     type: "reject",
-                    action: () => setIsReject(false),
+                    action: () => onClose(false),
                     style: { paddingHorizontal: 30 }
                 },
                 {
                     itemId: 2,
                     label: "Xác nhận",
-                    action: handleReject,
+                    action: onSubmit,
                     style: { paddingHorizontal: 30 }
                 }
             ]}
