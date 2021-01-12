@@ -68,7 +68,7 @@ const RequestBottomSheet = ({ requestRef }) => {
             snapPoints={["90%", "45%", 0]}
             renderContent={renderContent}
             renderHeader={renderHeader}
-            initialSnap={0}
+            initialSnap={2}
         />
     );
 };

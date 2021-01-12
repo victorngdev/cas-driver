@@ -18,3 +18,7 @@ export const updateUser = (userId, token, user) => {
         }
     });
 };
+
+export const updateSetting = setting => {
+    return api.put("/setting", setting);
+};

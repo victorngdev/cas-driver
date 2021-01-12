@@ -4,6 +4,12 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { RadioButton } from "react-native-paper";
 import BottomSheet from "reanimated-bottom-sheet";
 import Slider from "@react-native-community/slider";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
+
+import { selectSetting, selectUsername } from "../redux/user/user.selectors";
+import { updateSetting } from "../redux/user/user.actions";
+import { saveSetting } from "../firebase/firebase.utils";
 
 import CustomOption from "./option.component";
 
@@ -13,11 +19,16 @@ const options = [
     { itemId: 3, value: "Đi về nhà" }
 ];
 
-const SettingBottomSheet = ({ settingRef, onValueChange, onSubmit }) => {
-    const [setting, setSetting] = useState({
-        distance: 150,
-        typeRequest: 6
-    });
+const SettingBottomSheet = ({ username, setting, settingRef, updateSetting }) => {
+    const [currentsetting, setCurrentSetting] = useState(setting);
+
+    const handleSaveSetting = () => {
+        const { distance, typeRequest } = currentsetting;
+
+        saveSetting(username, distance, typeRequest);
+        updateSetting(currentsetting);
+        settingRef.current.snapTo(2);
+    };
 
     const renderContent = () => (
         <View style={styles.setting}>
@@ -25,8 +36,10 @@ const SettingBottomSheet = ({ settingRef, onValueChange, onSubmit }) => {
             <View style={styles.option}>
                 <Text style={styles.label}>Loại yêu cầu</Text>
                 <RadioButton.Group
-                    onValueChange={value => setSetting({ ...setting, typeRequest: value })}
-                    value={setting.typeRequest}
+                    onValueChange={value =>
+                        setCurrentSetting({ ...currentsetting, typeRequest: value })
+                    }
+                    value={currentsetting.typeRequest}
                 >
                     {options.map(({ itemId, value }) => (
                         <CustomOption key={itemId} value={itemId} label={value} />
@@ -35,7 +48,7 @@ const SettingBottomSheet = ({ settingRef, onValueChange, onSubmit }) => {
             </View>
             <View style={{ flexDirection: "column", alignItems: "flex-start" }}>
                 <Text style={styles.label}>Khoảng cách nhận yêu cầu</Text>
-                <Text style={styles.distance}>{setting.distance} km</Text>
+                <Text style={styles.distance}>{currentsetting.distance} km</Text>
                 <Slider
                     style={{ width: "100%" }}
                     minimumValue={10}
@@ -44,11 +57,13 @@ const SettingBottomSheet = ({ settingRef, onValueChange, onSubmit }) => {
                     maximumTrackTintColor="#ff0000"
                     thumbTintColor="#102eef"
                     step={5}
-                    value={setting.distance}
-                    onSlidingComplete={value => setSetting({ ...setting, distance: value })}
+                    value={currentsetting.distance}
+                    onSlidingComplete={value =>
+                        setCurrentSetting({ ...currentsetting, distance: value })
+                    }
                 />
             </View>
-            <TouchableOpacity onPress={onSubmit}>
+            <TouchableOpacity onPress={handleSaveSetting}>
                 <Text style={styles.action}>Lưu thay đổi</Text>
             </TouchableOpacity>
         </View>
@@ -66,7 +81,16 @@ const SettingBottomSheet = ({ settingRef, onValueChange, onSubmit }) => {
     );
 };
 
-export default SettingBottomSheet;
+const mapStateToProps = createStructuredSelector({
+    username: selectUsername,
+    setting: selectSetting
+});
+
+const mapDispatchToProps = dispatch => ({
+    updateSetting: setting => dispatch(updateSetting(setting))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SettingBottomSheet);
 
 const styles = StyleSheet.create({
     setting: {

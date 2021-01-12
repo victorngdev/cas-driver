@@ -1,8 +1,9 @@
 import UserActionTypes from "./user.types";
 
 const INITIAL_STATE = {
-    currentUser: { id: 102, username: "0931738872", displayName: "Victor" },
-    error: null
+    currentUser: null,
+    error: null,
+    setting: null
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
@@ -10,12 +11,8 @@ const userReducer = (state = INITIAL_STATE, action) => {
         case UserActionTypes.SIGN_IN_SUCCESS:
             return {
                 ...state,
-                currentUser: action.payload
-            };
-        case UserActionTypes.SIGN_IN_FAIL:
-            return {
-                ...state,
-                error: action.payload
+                currentUser: action.payload.user,
+                setting: action.payload.setting
             };
         case UserActionTypes.UPDATE_CONFIRMING_STATUS:
             return {
@@ -51,6 +48,17 @@ const userReducer = (state = INITIAL_STATE, action) => {
                     displayName: action.payload.displayName,
                     phone: action.payload.phone
                 }
+            };
+        case UserActionTypes.UPDATE_SETTING_SUCCESS:
+            return {
+                ...state,
+                setting: action.payload
+            };
+        case UserActionTypes.UPDATE_SETTING_FAIL:
+        case UserActionTypes.SIGN_IN_FAIL:
+            return {
+                ...state,
+                error: action.payload
             };
         default:
             return state;

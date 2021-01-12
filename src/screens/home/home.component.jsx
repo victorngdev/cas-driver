@@ -113,10 +113,7 @@ const HomeScreen = ({
 
     return (
         <View style={styles.container}>
-            <SettingBottomSheet
-                settingRef={settingRef}
-                onSubmit={() => settingRef.current.snapTo(2)}
-            />
+            <SettingBottomSheet settingRef={settingRef} />
             <RequestBottomSheet requestRef={requestRef} />
             {location && (
                 <>

@@ -55,7 +55,8 @@ const messages = {
     201: "Đăng ký xe thành công! Vui lòng chờ xác nhận từ quản trị viên trước khi nhận được yêu cầu.",
     202: "Hủy đăng ký xe cứu thương thành công!",
     203: "Cập nhật thông tin xe cứu thương thành công!",
-    204: "Cập nhật thông tin cá nhân thành công!"
+    204: "Cập nhật thông tin cá nhân thành công!",
+    205: "Thiết lập nhận yêu cầu thành công!"
 };
 
 export default messages;

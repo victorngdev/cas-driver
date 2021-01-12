@@ -9,11 +9,11 @@ export const configureTask = ({ currentUser, inRequest }) => {
         }
         if (data) {
             const { latitude, longitude } = data.locations[0].coords;
-            if (inRequest) {
-                syncLocationToRequest(currentUser.username, latitude, longitude);
-            } else {
-                currentUser && initLocation(currentUser.username, latitude, longitude);
-            }
+            // if (inRequest) {
+            //     syncLocationToRequest(currentUser.username, latitude, longitude);
+            // } else {
+            //     currentUser && initLocation(currentUser.username, latitude, longitude);
+            // }
         }
     });
 };

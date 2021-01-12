@@ -18,6 +18,16 @@ export const firestore = firebase.firestore();
 const GeoFirestore = geofirestore.initializeApp(firestore);
 const geocollection = GeoFirestore.collection("drivers");
 
+export const saveSetting = async (username, distance, requestType) => {
+    await firestore
+        .collection("drivers")
+        .doc(username)
+        .set(
+            { distance, emergency: !(requestType % 3), home: !(requestType % 2) },
+            { merge: true }
+        );
+};
+
 export const updateRequest = async (driverId, poolId, requestId, status) => {
     const requestRef = firestore.collection("requests").doc(`${requestId}`);
     await requestRef.update({
@@ -46,17 +56,23 @@ export const syncLocationToRequest = async (poolId, latitude, longitude) => {
     if (latitude && longitude) {
         const driverRef = firestore.collection("drivers").doc(`${poolId}`);
 
-        await driverRef.set({
-            latitude,
-            longitude
-        });
+        await driverRef.set(
+            {
+                latitude,
+                longitude
+            },
+            { merge: true }
+        );
     }
 };
 
 export const initLocation = async (userId, latitude, longitude) => {
-    geocollection.doc(`${userId}`).set({
-        coordinates: new firebase.firestore.GeoPoint(latitude, longitude)
-    });
+    geocollection.doc(`${userId}`).set(
+        {
+            coordinates: new firebase.firestore.GeoPoint(latitude, longitude)
+        },
+        { merge: true }
+    );
 };
 
 export const rejectRequest = async requestId => {
@@ -65,12 +81,6 @@ export const rejectRequest = async requestId => {
     await requestRef.update({
         status: "rejected"
     });
-};
-
-export const addToBlacklist = async (username, requestId) => {
-    const requestRef = firestore.collection("requests").doc(`${requestId}`);
-
-    await requestRef.update({ blacklist: firebase.firestore.FieldValue.arrayUnion(username) });
 };
 
 export const pickUpPatient = async requestId => {

@@ -41,7 +41,7 @@ class App extends React.Component {
             <Provider store={store}>
                 <NavigationContainer>
                     <Drawer.Navigator
-                        initialRouteName="History"
+                        initialRouteName="Login"
                         drawerContent={props => <DrawerContent {...props} />}
                     >
                         <Drawer.Screen name="Home" component={HomeScreen} />

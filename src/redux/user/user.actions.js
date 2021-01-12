@@ -50,3 +50,18 @@ export const updateUserFail = error => ({
     type: UserActionTypes.UPDATE_USER_FAIL,
     payload: error
 });
+
+export const updateSetting = setting => ({
+    type: UserActionTypes.UPDATE_SETTING_START,
+    payload: setting
+});
+
+export const updateSettingSuccess = setting => ({
+    type: UserActionTypes.UPDATE_SETTING_SUCCESS,
+    payload: setting
+});
+
+export const updateSettingFail = error => ({
+    type: UserActionTypes.UPDATE_SETTING_FAIL,
+    payload: error
+});
