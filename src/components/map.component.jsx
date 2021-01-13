@@ -14,7 +14,7 @@ import MapDirection from "./map-direction.component";
 
 Geocoder.init("AIzaSyA3wjgHRZGPb4I96XDM-Eev7f1QQM_Mpp8", { language: "vi" });
 
-const Map = ({ source, setLocation, requestId, currentUser, isArrived }) => {
+const Map = ({ source, setLocation, requestId, isArrived }) => {
     const mapRef = useRef(null);
     const [region, setRegion] = useState(null);
 
@@ -30,13 +30,13 @@ const Map = ({ source, setLocation, requestId, currentUser, isArrived }) => {
     }, []);
 
     useEffect(() => {
-        if (request && !isArrived && request.driverId === currentUser.userId) {
+        if (request && !isArrived) {
             setDestination({
                 latitude: request.sourceLatitude,
                 longitude: request.sourceLongitude
             });
         }
-        if (isArrived && request && request.driverId === currentUser.userId) {
+        if (isArrived && request) {
             setDestination({
                 latitude: request.destinationLatitude,
                 longitude: request.destinationLongitude
@@ -93,7 +93,7 @@ const Map = ({ source, setLocation, requestId, currentUser, isArrived }) => {
                                 mapRef.current.fitToCoordinates(results.coordinates, {
                                     edgePadding: {
                                         top: 20,
-                                        bottom: 20,
+                                        bottom: 550,
                                         left: 50,
                                         right: 50
                                     }

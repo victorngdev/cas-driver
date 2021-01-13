@@ -1,20 +1,17 @@
 import RequestActionTypes from "./request.types";
 
-export const fetchRequest = (token, requestId) => ({
-    type: RequestActionTypes.FETCH_REQUEST_START,
-    payload: {
-        token,
-        requestId
-    }
+export const fetchRequests = (token, requestIds) => ({
+    type: RequestActionTypes.FETCH_REQUESTS_START,
+    payload: { token, requestIds }
 });
 
-export const fetchRequestSuccess = request => ({
-    type: RequestActionTypes.FETCH_REQUEST_SUCCESS,
-    payload: request
+export const fetchRequestsSuccess = requestList => ({
+    type: RequestActionTypes.FETCH_REQUESTS_SUCCESS,
+    payload: requestList
 });
 
-export const fetchRequestFail = error => ({
-    type: RequestActionTypes.FETCH_REQUEST_FAIL,
+export const fetchRequestsFail = error => ({
+    type: RequestActionTypes.FETCH_REQUESTS_FAIL,
     payload: error
 });
 
@@ -22,13 +19,14 @@ export const clearRequest = () => ({
     type: RequestActionTypes.CLEAR_REQUEST
 });
 
-export const acceptRequest = (token, driverId, requestId) => ({
+export const acceptRequest = (token, driverId, requestId, username, request) => ({
     type: RequestActionTypes.ACCEPT_REQUEST_START,
-    payload: { token, driverId, requestId }
+    payload: { token, driverId, requestId, username, request }
 });
 
-export const acceptRequestSuccess = () => ({
-    type: RequestActionTypes.ACCEPT_REQUEST_SUCCESS
+export const acceptRequestSuccess = request => ({
+    type: RequestActionTypes.ACCEPT_REQUEST_SUCCESS,
+    payload: request
 });
 
 export const acceptRequestFail = error => ({

@@ -7,26 +7,16 @@ import { useDocumentData } from "react-firebase-hooks/firestore";
 import { selectCurrentRequest } from "../../redux/request/request.selectors";
 import { selectCurrentUser, selectToken } from "../../redux/user/user.selectors";
 import { pickedPatient, cancelRequest } from "../../redux/request/request.actions";
-import {
-    pickUpPatient,
-    initLocation,
-    clearConfirmationRequest,
-    rejectRequest,
-    firestore
-} from "../../firebase/firebase.utils";
+import { initLocation, clearConfirmationRequest, firestore } from "../../firebase/firebase.utils";
 
 import ContactItem from "../../components/contact-item.component";
 import Map from "../../components/map.component";
 import GroupButton from "../../components/group-button.component";
 import Place from "../../components/place.component";
 import RejectModal from "../../components/reject-modal.component";
+import Header from "../../components/header.component";
 
 import styles from "./pickup.styles";
-
-const pickUp = {
-    name: "400 Lê Văn Việt",
-    address: "Tăng Nhơn Phú A, Quận 9, Hồ Chí Minh"
-};
 
 const PickupScreen = ({
     token,
@@ -54,19 +44,19 @@ const PickupScreen = ({
             clearRequest();
             setIsCancelled(true);
         }
-    }, [requestStatus]);
+    }, [requestStatus, currentRequest]);
 
     const handleArrived = () => {
-        pickUpPatient(currentRequest.requestId);
         pickedPatient(token, currentRequest.requestId);
         navigation.navigate("Destination");
     };
 
     const handleReject = () => {
-        cancelRequest(token, currentRequest.requestId, rejectOption);
-        initLocation(currentUser.username, location.latitude, location.longitude);
-        clearConfirmationRequest(currentUser.username);
-        rejectRequest(currentRequest.requestId);
+        // cancelRequest(token, currentRequest.requestId, rejectOption);
+        // initLocation(currentUser.username, location.latitude, location.longitude);
+        // clearConfirmationRequest(currentUser.username);
+        // rejectRequest(currentRequest.requestId);
+        navigation.navigate("Home");
     };
 
     return (
@@ -79,14 +69,15 @@ const PickupScreen = ({
                     onSubmit={handleReject}
                 />
             )}
-            <View style={{ marginTop: 15 }}>
-                <Map setLocation={setLocation} />
+            <Header title="Đang đón bệnh nhân" />
+            <View style={{ marginTop: 5 }}>
+                <Map source={location} setLocation={setLocation} />
             </View>
             <View style={styles.transportationContainer}>
                 <View style={styles.transportation}>
                     <Place
                         title="Điểm đến"
-                        place={pickUp}
+                        place={currentRequest && currentRequest.pickUp}
                         icon="https://i.ibb.co/gWdQ69d/radar.png"
                     />
                     <View style={styles.groupContact}>
@@ -107,7 +98,7 @@ const PickupScreen = ({
                                 itemId: 1,
                                 label: "Hủy yêu cầu",
                                 type: "reject",
-                                action: () => setModal(true)
+                                action: handleReject
                             },
                             {
                                 itemId: 2,

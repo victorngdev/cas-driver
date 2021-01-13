@@ -25,7 +25,8 @@ const styles = StyleSheet.create({
         marginLeft: 10
     },
     contactLabel: {
-        fontFamily: "Texgyreadventor-regular",
+        fontFamily: "Texgyreadventor-bold",
+        color: "#555",
         fontSize: 11
     },
     phone: {

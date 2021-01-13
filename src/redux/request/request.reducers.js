@@ -1,6 +1,7 @@
 import RequestActionTypes from "./request.types";
 
 const INITIAL_STATE = {
+    requestList: [],
     currentRequest: null,
     error: null,
     isAccepted: false,
@@ -19,17 +20,17 @@ const mapKey = {
 
 const requestReducer = (state = INITIAL_STATE, action) => {
     switch (action.type) {
-        case RequestActionTypes.FETCH_REQUEST_SUCCESS:
+        case RequestActionTypes.FETCH_REQUESTS_SUCCESS:
             return {
                 ...state,
-                currentRequest: action.payload
+                requestList: action.payload
             };
         case RequestActionTypes.VIEW_HISTORY:
             return {
                 ...state,
                 history: action.payload
             };
-        case RequestActionTypes.FETCH_REQUEST_FAIL:
+        case RequestActionTypes.FETCH_REQUESTS_FAIL:
             return {
                 ...state,
                 error: action.payload
@@ -37,27 +38,14 @@ const requestReducer = (state = INITIAL_STATE, action) => {
         case RequestActionTypes.ACCEPT_REQUEST_SUCCESS:
             return {
                 ...state,
-                isAccepted: true
-            };
-        case RequestActionTypes.ACCEPT_REQUEST_FAIL:
-            return {
-                ...state,
-                error: action.payload
-            };
-        case RequestActionTypes.CANCEL_REQUEST_FAIL:
-            return {
-                ...state,
-                error: action.payload
+                isAccepted: true,
+                currentRequest: action.payload,
+                requestList: []
             };
         case RequestActionTypes.PICKED_PATIENT_SUCCESS:
             return {
                 ...state,
                 isArrived: true
-            };
-        case RequestActionTypes.PICKED_PATIENT_FAIL:
-            return {
-                ...state,
-                error: action.payload
             };
         case RequestActionTypes.FINISH_REQUEST_SUCCESS:
         case RequestActionTypes.CANCEL_REQUEST_SUCCESS:
@@ -67,12 +55,6 @@ const requestReducer = (state = INITIAL_STATE, action) => {
                 isAccepted: false,
                 currentRequest: null,
                 error: null
-            };
-        case RequestActionTypes.FINISH_REQUEST_FAIL:
-        case RequestActionTypes.FETCH_SYSTEM_CONFIG_FAIL:
-            return {
-                ...state,
-                error: action.payload
             };
         case RequestActionTypes.CLEAR_REQUEST:
             return {
@@ -90,6 +72,15 @@ const requestReducer = (state = INITIAL_STATE, action) => {
                         [mapKey[cur.itemId]]: cur.value
                     };
                 }, {})
+            };
+        case RequestActionTypes.ACCEPT_REQUEST_FAIL:
+        case RequestActionTypes.CANCEL_REQUEST_FAIL:
+        case RequestActionTypes.PICKED_PATIENT_FAIL:
+        case RequestActionTypes.FINISH_REQUEST_FAIL:
+        case RequestActionTypes.FETCH_SYSTEM_CONFIG_FAIL:
+            return {
+                ...state,
+                error: action.payload
             };
         default:
             return state;

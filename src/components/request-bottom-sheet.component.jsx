@@ -1,16 +1,63 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import BottomSheet from "reanimated-bottom-sheet";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/AntDesign";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
+import { useDocumentData } from "react-firebase-hooks/firestore";
+
+import { acceptRequest, fetchRequests } from "../redux/request/request.actions";
+import { selectCurrentUser, selectToken } from "../redux/user/user.selectors";
+import { selectRequestList } from "../redux/request/request.selectors";
+import { selectStatusCode } from "../redux/message/message.selectors";
+import { firestore } from "../firebase/firebase.utils";
+import { configureTask } from "../uitls/background-task.services";
 
 import RequestItem from "./request-item.component";
 import ArrageContainer from "./arrage-container.component";
 
-const RequestBottomSheet = ({ requestRef }) => {
+const RequestBottomSheet = ({
+    token,
+    currentUser,
+    requestRef,
+    requestList,
+    statusCode,
+    fetchRequests,
+    acceptRequest,
+    navigation
+}) => {
     const [sortBy, setSortBy] = useState("Khoảng cách");
     const [arrage, setArrage] = useState("Giảm dần");
     const [opacity, setOpacity] = useState(0);
+    const requestDocumentRef = firestore.collection("confirmations").doc(currentUser.username);
+    const [requests] = useDocumentData(requestDocumentRef);
+
+    useEffect(() => {
+        fetchRequestsInit();
+    }, []);
+
+    useEffect(() => {
+        statusCode === 206 && navigation.navigate("Pickup");
+        configureTask({ username: currentUser.username, inRequest: true });
+    }, [statusCode]);
+
+    useEffect(() => {
+        fetchRequestsInit();
+    }, [requests]);
+
+    const fetchRequestsInit = () => {
+        if (requests && requests.requestIds) {
+            const requestIds = requests.requestIds;
+
+            requestIds.length && fetchRequests(token, requestIds);
+        }
+    };
+
+    const handleAcceptRequest = request => {
+        requestRef.current.snapTo(2);
+        acceptRequest(token, currentUser.id, request.requestId, currentUser.username, request);
+    };
 
     const renderContent = () => (
         <ScrollView
@@ -18,8 +65,13 @@ const RequestBottomSheet = ({ requestRef }) => {
             showsVerticalScrollIndicator={false}
             directionalLockEnabled={true}
         >
-            <RequestItem />
-            <RequestItem />
+            {requestList.map(request => (
+                <RequestItem
+                    onAccept={() => handleAcceptRequest(request)}
+                    key={request.requestId}
+                    request={request}
+                />
+            ))}
         </ScrollView>
     );
 
@@ -73,7 +125,20 @@ const RequestBottomSheet = ({ requestRef }) => {
     );
 };
 
-export default RequestBottomSheet;
+const mapStateToProps = createStructuredSelector({
+    currentUser: selectCurrentUser,
+    token: selectToken,
+    requestList: selectRequestList,
+    statusCode: selectStatusCode
+});
+
+const mapDispatchToProps = dispatch => ({
+    fetchRequests: (token, requestIds) => dispatch(fetchRequests(token, requestIds)),
+    acceptRequest: (token, driverId, requestId, username, request) =>
+        dispatch(acceptRequest(token, driverId, requestId, username, request))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(RequestBottomSheet);
 
 const styles = StyleSheet.create({
     sheet: {

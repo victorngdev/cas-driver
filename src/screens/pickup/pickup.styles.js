@@ -19,9 +19,9 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         backgroundColor: "white",
         paddingHorizontal: 15,
-        paddingTop: 20,
-        paddingBottom: 10,
-        borderRadius: 30
+        paddingTop: 10,
+        borderTopLeftRadius: 25,
+        borderTopRightRadius: 25
     },
     transportation: {
         width: "95%",

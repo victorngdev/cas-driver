@@ -10,7 +10,21 @@ const place = {
     address: "284 Cống Quỳnh, P.Phạm Ngũ Lão, Q.1, Hồ Chí Minh"
 };
 
-const RequestItem = () => {
+const RequestItem = ({
+    request: {
+        pickUp,
+        destination,
+        healthInformation,
+        isEmergency,
+        isOther,
+        morbidity,
+        morbidityNote,
+        patientName,
+        patientPhone,
+        requester
+    },
+    onAccept
+}) => {
     const viewStateIcon = {
         false: require("../../assets/icons/details.png"),
         true: require("../../assets/icons/less.png")
@@ -50,7 +64,9 @@ const RequestItem = () => {
                     <Text style={[styles.title, { fontSize: 9 }]}>14:38 10/01/2021</Text>
                     <View style={styles.requestType}>
                         <Icon size={14} color="#333" name="taxi" />
-                        <Text style={styles.requestTypeValue}>Đi cấp cứu</Text>
+                        <Text style={styles.requestTypeValue}>
+                            {isEmergency ? "Đi cấp cứu" : "Đi về nhà"}
+                        </Text>
                     </View>
                 </View>
                 <View style={[styles.overviewItem, { flex: 1 }]}>
@@ -58,7 +74,7 @@ const RequestItem = () => {
                         second
                     ).padStart(2, "0")}`}</Text>
                     <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={onAccept}>
                             <Text style={styles.action}>Chấp nhận</Text>
                         </TouchableOpacity>
                         <TouchableOpacity>
@@ -77,12 +93,12 @@ const RequestItem = () => {
                 </View>
                 <View>
                     <View style={[styles.location, { marginBottom: 10 }]}>
-                        <Text style={styles.name}>{place.name}</Text>
-                        <Text style={styles.address}>{place.address}</Text>
+                        <Text style={styles.name}>{pickUp.name}</Text>
+                        <Text style={styles.address}>{pickUp.address}</Text>
                     </View>
                     <View style={styles.location}>
-                        <Text style={styles.name}>{place.name}</Text>
-                        <Text style={styles.address}>{place.address}</Text>
+                        <Text style={styles.name}>{destination.name}</Text>
+                        <Text style={styles.address}>{destination.address}</Text>
                     </View>
                 </View>
             </View>
@@ -91,27 +107,54 @@ const RequestItem = () => {
                     <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                         <View style={{ flexDirection: "column" }}>
                             <Text style={styles.infoTitle}>Thông tin người gọi</Text>
-                            <RequestInfoItem content="Ngô Hoàng Nam" icon="user-clock" />
+                            <RequestInfoItem content={requester.displayName} icon="user-clock" />
                             <RequestInfoItem
-                                content="0988635032"
+                                content={requester.phone}
                                 icon="old-phone"
                                 enabledNormalIcon
                             />
                         </View>
-                        <View style={{ flexDirection: "column" }}>
-                            <Text style={styles.infoTitle}>Thông tin người bệnh</Text>
-                            <RequestInfoItem content="Trịnh Hoàng Kim Anh" icon="user-injured" />
-                            <RequestInfoItem
-                                content="0931738872"
-                                icon="old-phone"
-                                enabledNormalIcon
-                            />
-                        </View>
+                        {isOther && (
+                            <View style={{ flexDirection: "column" }}>
+                                <Text style={styles.infoTitle}>Thông tin người bệnh</Text>
+                                <RequestInfoItem
+                                    content={
+                                        isOther
+                                            ? patientName || "Không có thông tin"
+                                            : requester.displayName
+                                    }
+                                    icon="user-injured"
+                                />
+                                <RequestInfoItem
+                                    content={
+                                        isOther
+                                            ? patientPhone || "Không có thông tin"
+                                            : requester.phone
+                                    }
+                                    icon="old-phone"
+                                    enabledNormalIcon
+                                />
+                            </View>
+                        )}
                     </View>
-                    <Text style={styles.infoTitle}>Tình trạng</Text>
-                    <RequestInfoItem content="Bị tai nạn giao thông rất nghiêm trọng" />
-                    <Text style={styles.infoTitle}>Ghi chú</Text>
-                    <RequestInfoItem content="Cần dụng cụ sơ cứu tại chỗ" />
+                    {healthInformation && (
+                        <>
+                            <Text style={styles.infoTitle}>Thông tin sức khỏe</Text>
+                            <RequestInfoItem content={healthInformation} />
+                        </>
+                    )}
+                    {morbidity && (
+                        <>
+                            <Text style={styles.infoTitle}>Tình trạng</Text>
+                            <RequestInfoItem content={morbidity} />
+                        </>
+                    )}
+                    {morbidityNote && (
+                        <>
+                            <Text style={styles.infoTitle}>Ghi chú</Text>
+                            <RequestInfoItem content={morbidityNote} />
+                        </>
+                    )}
                 </>
             )}
             <TouchableOpacity
@@ -156,6 +199,7 @@ const styles = StyleSheet.create({
         fontFamily: "Texgyreadventor-bold"
     },
     address: {
+        width: "90%",
         fontSize: 10,
         color: "#6c7fa6",
         marginBottom: 5,

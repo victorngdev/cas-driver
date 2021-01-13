@@ -6,13 +6,11 @@ const messages = {
     },
     acceptedRequest: {
         title: "Yêu cầu hết hạn",
-        message:
-            "Yêu cầu đã được chấp nhận bởi người khác. Hãy giữ trạng thái sẵn sàng để nhận yêu cầu từ người khác!"
+        message: "Yêu cầu đã được chấp nhận bởi người khác."
     },
     cancelled: {
         title: "Yêu cầu hết hạn",
-        message:
-            "Yêu cầu đã được gõ bởi người gửi yêu cầu. Hãy giữ trạng thái sẵn sàng để nhận yêu cầu từ người khác!"
+        message: "Yêu cầu đã được gõ bởi người gửi yêu cầu!"
     },
     ready: {
         title: "Sẵn sàng không thành công",
@@ -20,12 +18,10 @@ const messages = {
             "Bạn cần đăng ký xe trên hệ thống và được quản trị viên xét duyệt để có thể nhận yêu cầu từ người khác."
     },
     approved: {
-        message:
-            "Yêu cầu đăng ký xe của bạn đã được chấp nhận, hệ thống sẽ tiến hành đồng bộ dữ liệu sau khi bạn nhấn Xác nhận."
+        message: "Yêu cầu đăng ký xe của bạn đã được chấp nhận."
     },
     rejected: {
-        message:
-            "Yêu cầu đăng ký xe của bạn không hợp lệ. Bạn có thể xem lại các mục không hợp lệ trong phần đăng ký."
+        message: "Yêu cầu đăng ký xe của bạn không hợp lệ."
     },
     denied: {
         message:
@@ -41,7 +37,7 @@ const messages = {
     },
     cancel: {
         message:
-            "Các thông tin đã đăng ký sẽ không được truy cập lại sau bạn hủy đăng ký. Nếu các thông tin bạn đăng ký trước đó không còn giá trị hiệu lực, bạn có thể cập nhật và chờ xét duyệt từ quản trị viên."
+            "Các thông tin đã đăng ký sẽ không được truy cập lại sau khi bạn hủy đăng ký. Nếu các thông tin bạn đăng ký trước đó không còn giá trị hiệu lực, bạn có thể cập nhật và chờ xét duyệt từ quản trị viên."
     },
     phoneExisted: "* Số điện thoại đã được đăng ký",
     phoneUnexisted: "* Số điện thoại chưa được đăng ký",
@@ -56,7 +52,8 @@ const messages = {
     202: "Hủy đăng ký xe cứu thương thành công!",
     203: "Cập nhật thông tin xe cứu thương thành công!",
     204: "Cập nhật thông tin cá nhân thành công!",
-    205: "Thiết lập nhận yêu cầu thành công!"
+    205: "Thiết lập nhận yêu cầu thành công!",
+    206: "Success"
 };
 
 export default messages;

@@ -2,12 +2,16 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/Ionicons";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
 
-const HomeDriverInfo = ({ addressName, addressValue, toggleSettingSheet, toggleRequestSheet }) => (
+import { selectRequestCount } from "../redux/request/request.selectors";
+
+const HomeDriverInfo = ({ requestCount, addressValue, toggleSettingSheet, toggleRequestSheet }) => (
     <>
         <View style={styles.container}>
             <View style={styles.currentLocation}>
-                <Text style={styles.locationTitle}>{addressName}</Text>
+                <Text style={styles.locationTitle}>Vị trí của bạn</Text>
                 <Text style={styles.value}>{addressValue}</Text>
             </View>
             <TouchableOpacity style={styles.action} onPress={toggleSettingSheet}>
@@ -17,13 +21,17 @@ const HomeDriverInfo = ({ addressName, addressValue, toggleSettingSheet, toggleR
         </View>
         <View style={[styles.container, styles.requestInfo]}>
             <TouchableOpacity onPress={toggleRequestSheet}>
-                <Text style={styles.message}>6 yêu cầu đang chờ xác nhận</Text>
+                <Text style={styles.message}>{requestCount} yêu cầu đang chờ xác nhận</Text>
             </TouchableOpacity>
         </View>
     </>
 );
 
-export default HomeDriverInfo;
+const mapStateToProps = createStructuredSelector({
+    requestCount: selectRequestCount
+});
+
+export default connect(mapStateToProps)(HomeDriverInfo);
 
 const styles = StyleSheet.create({
     container: {

@@ -8,8 +8,8 @@ import {
     cancelRequestSuccess,
     fetchConfigFail,
     fetchConfigSuccess,
-    fetchRequestFail,
-    fetchRequestSuccess,
+    fetchRequestsFail,
+    fetchRequestsSuccess,
     finishRequestFail,
     finishRequestSuccess,
     pickedPatientFail,
@@ -22,24 +22,28 @@ import {
     pickedPatient,
     finishRequest
 } from "../../apis/request.apis";
+import { updateStatusCode } from "../message/message.action";
 import { fetchConfig } from "../../apis/core.apis";
 
-function* fetchRequestStart({ payload: { token, requestId } }) {
+function* fetchRequestsStart({ payload: { token, requestIds } }) {
     try {
-        const response = yield call(fetchRequest, token, requestId);
+        const queryParams = "requestId=" + requestIds.join("&requestId=");
+        const response = yield call(fetchRequest, token, queryParams);
 
-        yield put(fetchRequestSuccess(response.data));
+        yield put(fetchRequestsSuccess(response.data));
     } catch (error) {
-        yield put(fetchRequestFail(error));
+        yield put(fetchRequestsFail(error));
     }
 }
 
-function* acceptRequestStart({ payload: { token, driverId, requestId } }) {
+function* acceptRequestStart({ payload: { token, driverId, requestId, username, request } }) {
     try {
-        yield call(acceptRequest, token, driverId, requestId);
-        yield put(acceptRequestSuccess());
+        yield call(acceptRequest, token, driverId, requestId, username);
+        yield put(acceptRequestSuccess(request));
+        yield put(updateStatusCode(206));
     } catch (error) {
         yield put(acceptRequestFail(error));
+        yield put(updateStatusCode(error.message.includes("401") ? 700 : 402));
     }
 }
 
@@ -80,8 +84,8 @@ function* fetchConfigStart({ payload: token }) {
     }
 }
 
-export function* onFetchRequest() {
-    yield takeLatest(RequestActionTypes.FETCH_REQUEST_START, fetchRequestStart);
+export function* onFetchRequests() {
+    yield takeLatest(RequestActionTypes.FETCH_REQUESTS_START, fetchRequestsStart);
 }
 
 export function* onAcceptRequest() {
@@ -106,7 +110,7 @@ export function* onFetchConfig() {
 
 export default function* requestSagas() {
     yield all([
-        call(onFetchRequest),
+        call(onFetchRequests),
         call(onAcceptRequest),
         call(onCancelRequest),
         call(onPickedPatient),

@@ -1,20 +1,20 @@
 import axios from "axios";
 
 export const api = axios.create({
-    baseURL: "http://192.168.1.170:3000/api/drivers"
+    baseURL: "http://192.168.1.170:3000/api/driver"
 });
 
-export const fetchRequest = (token, requestId) => {
-    return api.get(`/requests/${requestId}`, {
+export const fetchRequest = (token, queryParams) => {
+    return api.get(`/requests?${queryParams}`, {
         headers: {
             Authorization: token
         }
     });
 };
 
-export const acceptRequest = (token, driverId, requestId) => {
+export const acceptRequest = (token, driverId, requestId, username) => {
     return api.put(
-        `/${driverId}/requests/${requestId}`,
+        `/${driverId}/requests?requestId=${requestId}&username=${username}`,
         {},
         {
             headers: {

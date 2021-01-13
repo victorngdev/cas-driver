@@ -35,7 +35,7 @@ const DestinationScreen = ({
     finishRequest,
     navigation
 }) => {
-    const [location, setLocation] = useState(null);
+    const [location, setLocation] = useState({ latitude: 10.632563, longitude: 105.323652 });
     const [modal, setModal] = useState(false);
     const [finish, setFinish] = useState(false);
 
@@ -48,9 +48,6 @@ const DestinationScreen = ({
 
     const handleFinish = () => {
         finishRequest(token, currentRequest.requestId);
-        finishRequestFirestore(currentRequest.requestId);
-        initLocation(currentUser.username, location.latitude, location.longitude);
-        clearConfirmationRequest(currentUser.username);
         navigation.navigate("Home");
     };
 
@@ -65,13 +62,13 @@ const DestinationScreen = ({
             )}
             {finish && <MessageModal action={handleFinish} content={messages.finish} />}
             <View style={{ marginTop: 15 }}>
-                <Map setLocation={setLocation} />
+                <Map source={location} setLocation={setLocation} />
             </View>
             <View style={styles.transportationContainer}>
                 <View style={styles.transportation}>
                     <Place
                         title="Điểm đến"
-                        place={pickUp}
+                        place={currentRequest.destination}
                         icon="https://i.ibb.co/gWdQ69d/radar.png"
                         isEditable
                     />

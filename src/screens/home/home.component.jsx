@@ -2,16 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 import { View } from "react-native";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
-import { useDocumentData } from "react-firebase-hooks/firestore";
 import Geocoder from "react-native-geocoding";
 import * as Location from "expo-location";
 
-import { firestore, clearConfirmationRequest } from "../../firebase/firebase.utils";
-import { selectCurrentUser, selectToken } from "../../redux/user/user.selectors";
-import { selectCurrentRequest } from "../../redux/request/request.selectors";
-import { clearRequest, fetchConfig, fetchRequest } from "../../redux/request/request.actions";
+import { clearConfirmationRequest } from "../../firebase/firebase.utils";
+import { clearRequest } from "../../redux/request/request.actions";
 import { handleApprovedRegisterAmbulance } from "../../redux/user/user.actions";
-import { getAmbulanceNote } from "../../redux/ambulance/ambulance.actions";
+import { selectUsername } from "../../redux/user/user.selectors";
 import { selectCurrentAmbulance } from "../../redux/ambulance/ambulance.selectors";
 import { selectStatusCode } from "../../redux/message/message.selectors";
 import { configureTask } from "../../uitls/background-task.services";
@@ -30,68 +27,35 @@ import styles from "./home.style";
 Geocoder.init("AIzaSyA3wjgHRZGPb4I96XDM-Eev7f1QQM_Mpp8", { language: "vi" });
 
 const HomeScreen = ({
-    currentUser,
-    token,
-    currentRequest,
     currentAmbulance,
+    username,
     handleApprovedRegisterAmbulance,
-    getAmbulanceNote,
     statusCode,
-    fetchConfig,
     navigation
 }) => {
     const [confirmationStatus, setConfirmationStatus] = useState(null);
     const [location, setLocation] = useState(null);
-    const documentConfirmationRef = firestore.collection("confirmations").doc(currentUser.username);
-    const [confirmation] = useDocumentData(documentConfirmationRef);
     const settingRef = useRef(null);
     const requestRef = useRef(null);
 
-    const documentRequestRef = firestore
-        .collection("requests")
-        .doc((currentRequest && `${currentRequest.requestId}`) || "0");
-
-    const [requestStatus] = useDocumentData(documentRequestRef);
-
     useEffect(() => {
-        if (currentUser.registered) {
+        if (currentAmbulance && currentAmbulance.ambulance_status === "ACIVE") {
             Location.startLocationUpdatesAsync("syncLocation", {
                 accuracy: Location.Accuracy.Balanced,
                 distanceInterval: 1,
                 timeInterval: 5
             });
-            configureTask({ currentUser });
         }
         navigator.geolocation.getCurrentPosition(async position => {
             let { latitude, longitude } = position.coords;
             setLocation(latitude, longitude);
         });
+        configureTask({ username });
         initBackgroundTask(false);
-    }, []);
-
-    useEffect(() => {
-        if (confirmation && confirmation.requestId) {
-            fetchConfig(token);
-        }
-        if (confirmation && confirmation.confirmationStatus) {
-            setConfirmationStatus(confirmation.confirmationStatus);
-        }
-    }, [confirmation]);
-
-    useEffect(() => {
-        if (!requestStatus) return;
-        if (
-            currentRequest &&
-            requestStatus.status === "accepted" &&
-            requestStatus.driverId !== currentUser.userId
-        ) {
-            clearConfirmationRequest(currentUser.username);
-            // Clear request from confirmation pool data
-        }
-    }, [requestStatus]);
+    }, [currentAmbulance]);
 
     const initBackgroundTask = async inRequest => {
-        configureTask({ currentUser, inRequest });
+        configureTask({ username, inRequest });
         await Location.startLocationUpdatesAsync("syncLocation", {
             accuracy: Location.Accuracy.Balanced,
             distanceInterval: 1,
@@ -99,22 +63,21 @@ const HomeScreen = ({
         });
     };
 
-    const handleApproved = () => {
+    const handleAmbulanceApproved = () => {
         setConfirmationStatus(null);
         handleApprovedRegisterAmbulance();
-        clearConfirmationRequest(currentUser.username);
+        clearConfirmationRequest(username);
     };
 
-    const handleRejected = () => {
+    const handleAmbulanceRejected = () => {
         setConfirmationStatus(null);
-        clearConfirmationRequest(currentUser.username);
-        getAmbulanceNote(token, currentAmbulance.ambulanceId);
+        clearConfirmationRequest(username);
     };
 
     return (
         <View style={styles.container}>
             <SettingBottomSheet settingRef={settingRef} />
-            <RequestBottomSheet requestRef={requestRef} />
+            <RequestBottomSheet navigation={navigation} requestRef={requestRef} />
             {location && (
                 <>
                     <Message
@@ -125,12 +88,14 @@ const HomeScreen = ({
                     {confirmationStatus && (
                         <MessageModal
                             action={
-                                confirmationStatus === "approved" ? handleApproved : handleRejected
+                                confirmationStatus === "approved"
+                                    ? handleAmbulanceApproved
+                                    : handleAmbulanceRejected
                             }
                             content={messages[confirmationStatus]}
                         />
                     )}
-                    <Header title="Chờ yêu cầu" gotoScreen={() => navigation.goBack()} />
+                    <Header title="Chờ yêu cầu" gotoScreen={() => navigation.openDrawer()} />
                     <View style={{ flex: 12, marginTop: 5, borderRadius: 10 }}>
                         <Map source={location} setLocation={setLocation} />
                     </View>
@@ -138,7 +103,6 @@ const HomeScreen = ({
                         <HomeDriverInfo
                             toggleRequestSheet={() => requestRef.current.snapTo(0)}
                             toggleSettingSheet={() => settingRef.current.snapTo(0)}
-                            addressName="Vị trí của bạn"
                             addressValue={location.address || "Đang cập nhật..."}
                         />
                     </View>
@@ -149,19 +113,14 @@ const HomeScreen = ({
 };
 
 const mapStateToProps = createStructuredSelector({
-    token: selectToken,
-    currentRequest: selectCurrentRequest,
-    currentUser: selectCurrentUser,
-    currentAmbulance: selectCurrentAmbulance,
-    statusCode: selectStatusCode
+    username: selectUsername,
+    statusCode: selectStatusCode,
+    currentAmbulance: selectCurrentAmbulance
 });
 
 const mapDispatchToProps = dispatch => ({
-    fetchRequest: (token, requestId) => dispatch(fetchRequest(token, requestId)),
     clearRequest: () => dispatch(clearRequest()),
-    handleApprovedRegisterAmbulance: () => dispatch(handleApprovedRegisterAmbulance()),
-    getAmbulanceNote: (token, ambulanceId) => dispatch(getAmbulanceNote(token, ambulanceId)),
-    fetchConfig: token => dispatch(fetchConfig(token))
+    handleApprovedRegisterAmbulance: () => dispatch(handleApprovedRegisterAmbulance())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);

@@ -28,30 +28,6 @@ export const saveSetting = async (username, distance, requestType) => {
         );
 };
 
-export const updateRequest = async (driverId, poolId, requestId, status) => {
-    const requestRef = firestore.collection("requests").doc(`${requestId}`);
-    await requestRef.update({
-        status,
-        driverId,
-        poolId
-    });
-};
-
-export const finishRequestFirestore = async requestId => {
-    const requestRef = firestore.collection("requests").doc(`${requestId}`);
-    await requestRef.update({
-        status: "finished"
-    });
-};
-
-export const clearConfirmationRequest = async poolId => {
-    const confirmationRef = firestore.collection("confirmations").doc(`${poolId}`);
-    await confirmationRef.set({
-        requestId: 0,
-        confirmationStatus: ""
-    });
-};
-
 export const syncLocationToRequest = async (poolId, latitude, longitude) => {
     if (latitude && longitude) {
         const driverRef = firestore.collection("drivers").doc(`${poolId}`);
@@ -73,20 +49,6 @@ export const initLocation = async (userId, latitude, longitude) => {
         },
         { merge: true }
     );
-};
-
-export const rejectRequest = async requestId => {
-    const requestRef = firestore.collection("requests").doc(`${requestId}`);
-
-    await requestRef.update({
-        status: "rejected"
-    });
-};
-
-export const pickUpPatient = async requestId => {
-    const requestRef = firestore.collection("requests").doc(`${requestId}`);
-
-    await requestRef.update({ status: "picked" });
 };
 
 export default firebase;

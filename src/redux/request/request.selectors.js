@@ -22,3 +22,10 @@ export const selectConfirmationTimeout = createSelector(
     [selectRequest],
     request => request.config.confirmationTimeout
 );
+
+export const selectRequestList = createSelector([selectRequest], request => request.requestList);
+
+export const selectRequestCount = createSelector(
+    [selectRequest],
+    request => request.requestList.length
+);
