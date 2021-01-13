@@ -73,7 +73,7 @@ const SettingBottomSheet = ({ username, setting, settingRef, updateSetting }) =>
         <BottomSheet
             enabledContentGestureInteraction={false}
             ref={settingRef}
-            snapPoints={[345, 200, 0]}
+            snapPoints={[350, 200, 0]}
             initialSnap={2}
             borderRadius={30}
             renderContent={renderContent}

@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "http://192.168.1.170:3000/api/driver"
-    // baseURL: "http://caselastic-env-1.eba-rh86ed2y.ap-southeast-1.elasticbeanstalk.com/api/driver"
+    // baseURL: "http://192.168.1.170:3000/api/driver"
+    baseURL: "https://cas-server-nodejs.herokuapp.com/api/driver"
 });
 
 export const fetchAmbulance = (token, userId) => {
