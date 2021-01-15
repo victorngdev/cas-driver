@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet } from "react-native";
 import BottomSheet from "reanimated-bottom-sheet";
 import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/AntDesign";
@@ -8,6 +8,7 @@ import { createStructuredSelector } from "reselect";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 
 import { acceptRequest, fetchRequests } from "../redux/request/request.actions";
+import { clearStatusCode } from "../redux/message/message.action";
 import { selectCurrentUser, selectToken } from "../redux/user/user.selectors";
 import { selectRequestList } from "../redux/request/request.selectors";
 import { selectStatusCode } from "../redux/message/message.selectors";
@@ -25,26 +26,47 @@ const RequestBottomSheet = ({
     statusCode,
     fetchRequests,
     acceptRequest,
+    clearStatusCode,
     navigation
 }) => {
     const [sortBy, setSortBy] = useState("Khoảng cách");
     const [arrage, setArrage] = useState("Giảm dần");
     const [opacity, setOpacity] = useState(0);
+    const [location, setLocation] = useState(null);
+    const [loading, setLoading] = useState(false);
     const requestDocumentRef = firestore.collection("confirmations").doc(currentUser.username);
     const [requests] = useDocumentData(requestDocumentRef);
 
     useEffect(() => {
+        initLocation();
         fetchRequestsInit();
+        const timer = setInterval(() => {
+            initLocation();
+        }, 10000);
+
+        return () => clearInterval(timer);
     }, []);
 
     useEffect(() => {
-        statusCode === 206 && navigation.navigate("Pickup");
-        configureTask({ username: currentUser.username, inRequest: true });
+        if (statusCode === 206) {
+            clearStatusCode();
+            configureTask({ username: currentUser.username, inRequest: true });
+            setLoading(false);
+            requestRef.current.snapTo(2);
+            navigation.replace("Request");
+        }
     }, [statusCode]);
 
     useEffect(() => {
         fetchRequestsInit();
     }, [requests]);
+
+    const initLocation = () => {
+        navigator.geolocation.getCurrentPosition(async position => {
+            let { latitude, longitude } = position.coords;
+            setLocation({ latitude, longitude });
+        });
+    };
 
     const fetchRequestsInit = () => {
         if (requests && requests.requestIds) {
@@ -55,8 +77,10 @@ const RequestBottomSheet = ({
     };
 
     const handleAcceptRequest = request => {
-        requestRef.current.snapTo(2);
-        acceptRequest(token, currentUser.id, request.requestId, currentUser.username, request);
+        setLoading(true);
+        setTimeout(() => {
+            acceptRequest(token, currentUser.id, request.requestId, currentUser.username, request);
+        }, 1500);
     };
 
     const renderContent = () => (
@@ -64,9 +88,19 @@ const RequestBottomSheet = ({
             style={styles.sheet}
             showsVerticalScrollIndicator={false}
             directionalLockEnabled={true}
+            scrollEnabled={!loading}
         >
+            {loading && (
+                <View style={[styles.spinner, { height: requestList.length > 2 ? "80%" : "100%" }]}>
+                    <Image
+                        style={{ width: 150, height: 150 }}
+                        source={require("../../assets/icons/loading.gif")}
+                    />
+                </View>
+            )}
             {requestList.map(request => (
                 <RequestItem
+                    location={location}
                     onAccept={() => handleAcceptRequest(request)}
                     key={request.requestId}
                     request={request}
@@ -117,10 +151,11 @@ const RequestBottomSheet = ({
     return (
         <BottomSheet
             ref={requestRef}
-            snapPoints={["90%", "45%", 0]}
+            snapPoints={["85%", "45%", 0]}
             renderContent={renderContent}
             renderHeader={renderHeader}
             initialSnap={2}
+            enabledContentGestureInteraction={false}
         />
     );
 };
@@ -135,17 +170,28 @@ const mapStateToProps = createStructuredSelector({
 const mapDispatchToProps = dispatch => ({
     fetchRequests: (token, requestIds) => dispatch(fetchRequests(token, requestIds)),
     acceptRequest: (token, driverId, requestId, username, request) =>
-        dispatch(acceptRequest(token, driverId, requestId, username, request))
+        dispatch(acceptRequest(token, driverId, requestId, username, request)),
+    clearStatusCode: () => dispatch(clearStatusCode())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RequestBottomSheet);
 
 const styles = StyleSheet.create({
     sheet: {
+        position: "relative",
         width: "100%",
         height: "100%",
         backgroundColor: "#fff",
-        paddingHorizontal: 15
+        paddingHorizontal: 15,
+        display: "flex"
+    },
+    spinner: {
+        position: "absolute",
+        width: "100%",
+        backgroundColor: "rgba(255, 255, 255, 0.65)",
+        zIndex: 1,
+        alignItems: "center",
+        justifyContent: "center"
     },
     header: {
         display: "flex",

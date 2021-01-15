@@ -38,30 +38,20 @@ const requestReducer = (state = INITIAL_STATE, action) => {
         case RequestActionTypes.ACCEPT_REQUEST_SUCCESS:
             return {
                 ...state,
-                isAccepted: true,
                 currentRequest: action.payload,
                 requestList: []
-            };
-        case RequestActionTypes.PICKED_PATIENT_SUCCESS:
-            return {
-                ...state,
-                isArrived: true
             };
         case RequestActionTypes.FINISH_REQUEST_SUCCESS:
         case RequestActionTypes.CANCEL_REQUEST_SUCCESS:
             return {
                 ...state,
-                isArrived: false,
-                isAccepted: false,
                 currentRequest: null,
                 error: null
             };
         case RequestActionTypes.CLEAR_REQUEST:
             return {
                 ...state,
-                currentRequest: null,
-                isAccepted: false,
-                isArrived: false
+                currentRequest: null
             };
         case RequestActionTypes.FETCH_SYSTEM_CONFIG_SUCCESS:
             return {

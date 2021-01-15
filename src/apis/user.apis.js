@@ -1,8 +1,8 @@
 import axios from "axios";
 
 export const api = axios.create({
-    // baseURL: "http://192.168.1.170:3000/api/users"
-    baseURL: "https://cas-server-nodejs.herokuapp.com/api/users"
+    baseURL: "http://192.168.1.170:3000/api/users"
+    // baseURL: "https://cas-server-nodejs.herokuapp.com/api/users"
 });
 
 export const login = (username, password) => {

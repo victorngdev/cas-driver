@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View } from "react-native";
+import { View, PermissionsAndroid } from "react-native";
 import { connect } from "react-redux";
+import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { createStructuredSelector } from "reselect";
-import Geocoder from "react-native-geocoding";
 import * as Location from "expo-location";
+import Geocoder from "react-native-geocoding";
 
 import { clearConfirmationRequest } from "../../firebase/firebase.utils";
 import { clearRequest } from "../../redux/request/request.actions";
@@ -16,7 +17,6 @@ import messages from "../../uitls/message.data";
 
 import HomeDriverInfo from "../../components/home-driver-info.component";
 import MessageModal from "../../components/message-modal.component";
-import Map from "../../components/map.component";
 import Message from "../../components/message.component";
 import RequestBottomSheet from "../../components/request-bottom-sheet.component";
 import SettingBottomSheet from "../../components/setting-bottom-sheet.componet";
@@ -39,6 +39,15 @@ const HomeScreen = ({
     const requestRef = useRef(null);
 
     useEffect(() => {
+        initLocation();
+        const timer = setInterval(() => {
+            initLocation();
+        }, 10000);
+
+        return () => clearInterval(timer);
+    }, []);
+
+    useEffect(() => {
         if (currentAmbulance && currentAmbulance.ambulance_status === "ACIVE") {
             Location.startLocationUpdatesAsync("syncLocation", {
                 accuracy: Location.Accuracy.Balanced,
@@ -46,10 +55,6 @@ const HomeScreen = ({
                 timeInterval: 5
             });
         }
-        navigator.geolocation.getCurrentPosition(async position => {
-            let { latitude, longitude } = position.coords;
-            setLocation(latitude, longitude);
-        });
         configureTask({ username });
         initBackgroundTask(false);
     }, [currentAmbulance]);
@@ -60,6 +65,19 @@ const HomeScreen = ({
             accuracy: Location.Accuracy.Balanced,
             distanceInterval: 1,
             timeInterval: 5
+        });
+    };
+
+    const initLocation = () => {
+        navigator.geolocation.getCurrentPosition(async position => {
+            let { latitude, longitude } = position.coords;
+            Geocoder.from(latitude, longitude).then(json =>
+                setLocation({
+                    address: json.results[0].formatted_address,
+                    latitude,
+                    longitude
+                })
+            );
         });
     };
 
@@ -78,36 +96,44 @@ const HomeScreen = ({
         <View style={styles.container}>
             <SettingBottomSheet settingRef={settingRef} />
             <RequestBottomSheet navigation={navigation} requestRef={requestRef} />
-            {location && (
-                <>
-                    <Message
-                        message={messages[statusCode]}
-                        visible={statusCode}
-                        isMessage={statusCode < 400}
-                    />
-                    {confirmationStatus && (
-                        <MessageModal
-                            action={
-                                confirmationStatus === "approved"
-                                    ? handleAmbulanceApproved
-                                    : handleAmbulanceRejected
-                            }
-                            content={messages[confirmationStatus]}
-                        />
-                    )}
-                    <Header title="Chờ yêu cầu" gotoScreen={() => navigation.openDrawer()} />
-                    <View style={{ flex: 12, marginTop: 5, borderRadius: 10 }}>
-                        <Map source={location} setLocation={setLocation} />
-                    </View>
-                    <View style={styles.info}>
-                        <HomeDriverInfo
-                            toggleRequestSheet={() => requestRef.current.snapTo(0)}
-                            toggleSettingSheet={() => settingRef.current.snapTo(0)}
-                            addressValue={location.address || "Đang cập nhật..."}
-                        />
-                    </View>
-                </>
+            {confirmationStatus && (
+                <MessageModal
+                    action={
+                        confirmationStatus === "approved"
+                            ? handleAmbulanceApproved
+                            : handleAmbulanceRejected
+                    }
+                    content={messages[confirmationStatus]}
+                />
             )}
+            <Header title="Chờ yêu cầu" gotoScreen={() => navigation.openDrawer()} />
+            <View style={{ flex: 12, marginTop: 5, borderRadius: 10 }}>
+                <MapView
+                    provider={PROVIDER_GOOGLE}
+                    initialRegion={{
+                        ...location,
+                        latitudeDelta: 0.0043,
+                        longitudeDelta: 0.0024
+                    }}
+                    showsMyLocationButton={true}
+                    showsUserLocation={true}
+                    loadingEnabled
+                    followsUserLocation={true}
+                    style={{ width: "100%", height: "100%" }}
+                    onMapReady={() =>
+                        PermissionsAndroid.request(
+                            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+                        )
+                    }
+                />
+            </View>
+            <View style={styles.info}>
+                <HomeDriverInfo
+                    toggleRequestSheet={() => requestRef.current.snapTo(0)}
+                    toggleSettingSheet={() => settingRef.current.snapTo(0)}
+                    addressValue={location ? location.address : "Đang cập nhật..."}
+                />
+            </View>
         </View>
     );
 };

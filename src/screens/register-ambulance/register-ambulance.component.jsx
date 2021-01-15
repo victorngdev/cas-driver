@@ -21,7 +21,6 @@ import CustomInputLabel from "../../components/custom-input-label.component";
 import ImageCapture from "../../components/image-capture.component";
 import MessageModal from "../../components/message-modal.component";
 import Spinner from "../../components/spinner.component";
-import ReasonModal from "../../components/reason-modal.component";
 import Header from "../../components/header.component";
 
 const RegisterAmbulanceScreen = ({

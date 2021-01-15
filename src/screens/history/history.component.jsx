@@ -10,16 +10,24 @@ import { fetchHistory } from "../../apis/core.apis";
 
 import Header from "../../components/header.component";
 import HistoryComponent from "../../components/history-row.component";
+import Spinner from "../../components/spinner.component";
 
 const HistoryScreen = ({ currentUser, token, navigation, viewHistory }) => {
     const [history, setHistory] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetchHistory(token, currentUser.id).then(response => setHistory(response.data));
-    }, [token]);
+        fetchHistory(token, currentUser.id).then(response =>
+            setTimeout(() => {
+                setHistory(response.data);
+                setLoading(false);
+            }, 1500)
+        );
+    }, []);
 
     return (
         <View style={styles.container}>
+            {loading && <Spinner />}
             <Header title="Lịch sử" gotoScreen={() => navigation.jumpTo("Home")} />
             <ScrollView
                 style={{ width: "90%" }}

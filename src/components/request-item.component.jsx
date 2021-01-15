@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, Animated, StyleSheet } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
+import getDistance from "geolib/es/getDistance";
 
 import RequestInfoItem from "./request-info-item.component";
 
-const place = {
-    name: "Benh vien Tu Du",
-    address: "284 Cống Quỳnh, P.Phạm Ngũ Lão, Q.1, Hồ Chí Minh"
-};
-
 const RequestItem = ({
+    location,
     request: {
         pickUp,
         destination,
@@ -30,36 +28,37 @@ const RequestItem = ({
         true: require("../../assets/icons/less.png")
     };
     const [viewState, setViewState] = useState(false);
-    const [timer, setTimer] = useState(899);
-    const [minute, setMinute] = useState(14);
-    const [second, setSecond] = useState(59);
 
-    useEffect(() => {
-        const event = setInterval(() => {
-            if (!timer) {
-                setTimer(899);
-            } else {
-                setTimer(timer - 1);
-            }
+    const children = remainingTime => {
+        const minutes = Math.floor(remainingTime / 60);
+        const seconds = remainingTime % 60;
 
-            setMinute(Math.floor(timer / 60));
-            setSecond(Math.floor(timer % 60));
-        }, 1000);
+        return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+    };
 
-        return () => clearInterval(event);
-    });
+    const calculateDistance = () => {
+        if (!location) return "...";
+
+        const distance =
+            getDistance(
+                { latitude: pickUp.latitude, longitude: pickUp.longitude },
+                { latitude: location.latitude, longitude: location.longitude }
+            ) / 1000;
+
+        return distance.toFixed(1);
+    };
 
     return (
         <View style={styles.container}>
             <View style={styles.overview}>
-                <View style={styles.overviewItem}>
+                <View style={{ marginRight: 5 }}>
                     <Text style={styles.title}>Cách bạn:</Text>
                     <View style={styles.distance}>
-                        <Text style={styles.distanceValue}>15</Text>
+                        <Text style={styles.distanceValue}>{calculateDistance()}</Text>
                         <Text style={styles.distanceUnit}>km</Text>
                     </View>
                 </View>
-                <View style={[styles.overviewItem, { flexBasis: "32%" }]}>
+                <View style={{ flexBasis: "30%" }}>
                     <Text style={styles.title}>Loại yêu cầu:</Text>
                     <Text style={[styles.title, { fontSize: 9 }]}>14:38 10/01/2021</Text>
                     <View style={styles.requestType}>
@@ -69,11 +68,21 @@ const RequestItem = ({
                         </Text>
                     </View>
                 </View>
-                <View style={[styles.overviewItem, { flex: 1 }]}>
-                    <Text style={styles.timeout}>{`${String(minute).padStart(2, "0")}:${String(
-                        second
-                    ).padStart(2, "0")}`}</Text>
-                    <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
+                    <CountdownCircleTimer
+                        isPlaying
+                        duration={900}
+                        strokeWidth={3}
+                        size={55}
+                        colors="#09acfe"
+                    >
+                        {({ remainingTime }) => (
+                            <Animated.Text style={styles.timeout}>
+                                {children(remainingTime)}
+                            </Animated.Text>
+                        )}
+                    </CountdownCircleTimer>
+                    <View style={{ flexDirection: "column", marginLeft: 2 }}>
                         <TouchableOpacity onPress={onAccept}>
                             <Text style={styles.action}>Chấp nhận</Text>
                         </TouchableOpacity>
@@ -104,7 +113,12 @@ const RequestItem = ({
             </View>
             {viewState && (
                 <>
-                    <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between"
+                        }}
+                    >
                         <View style={{ flexDirection: "column" }}>
                             <Text style={styles.infoTitle}>Thông tin người gọi</Text>
                             <RequestInfoItem content={requester.displayName} icon="user-clock" />
@@ -172,7 +186,7 @@ export default RequestItem;
 const styles = StyleSheet.create({
     container: {
         paddingVertical: 15,
-        paddingHorizontal: 10,
+        paddingHorizontal: 15,
         paddingBottom: 10,
         borderRadius: 15,
         borderWidth: 1,
@@ -210,9 +224,6 @@ const styles = StyleSheet.create({
         justifyContent: "space-around",
         alignItems: "flex-start",
         marginBottom: 5
-    },
-    overviewItem: {
-        flexBasis: "23%"
     },
     title: {
         fontFamily: "Texgyreadventor-bold",
@@ -271,19 +282,20 @@ const styles = StyleSheet.create({
     action: {
         fontFamily: "Texgyreadventor-bold",
         fontSize: 12,
-        paddingHorizontal: 13,
+        paddingHorizontal: 8,
         paddingVertical: 2,
         borderRadius: 12,
-        backgroundColor: "rgba(52, 133, 13, 0.2)",
-        color: "#34850d"
+        backgroundColor: "#f5f5f3",
+        color: "#09acfe"
     },
     clear: {
-        color: "#e7524d",
+        color: "#777",
         fontFamily: "Texgyreadventor-bold",
         fontSize: 12,
-        paddingHorizontal: 10,
         paddingVertical: 2,
         borderRadius: 12,
-        backgroundColor: "rgba(231, 82, 77, 0.2)"
+        backgroundColor: "#f5f5f3",
+        textAlign: "center",
+        marginTop: 3
     }
 });

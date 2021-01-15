@@ -4,8 +4,8 @@ import { RNS3 } from "react-native-aws3";
 import aws from "../config/awskey";
 
 const api = axios.create({
-    // baseURL: "http://192.168.1.170:3000/api"
-    baseURL: "https://cas-server-nodejs.herokuapp.com/api"
+    baseURL: "http://192.168.1.170:3000/api"
+    // baseURL: "https://cas-server-nodejs.herokuapp.com/api"
 });
 
 export const uploadImage = base64str => {

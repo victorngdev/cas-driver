@@ -5,14 +5,13 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: "column",
         backgroundColor: "#fff",
-        position: "relative",
         backgroundColor: "#fff"
     },
     info: {
         width: "100%",
         height: "auto",
         position: "absolute",
-        bottom: 5,
+        bottom: 0,
         left: 0,
         alignItems: "center"
     }

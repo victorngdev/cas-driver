@@ -59,7 +59,7 @@ function* cancelRequestStart({ payload: { token, requestId, reason } }) {
 function* pickedPatientStart({ payload: { token, requestId } }) {
     try {
         yield call(pickedPatient, token, requestId);
-        yield put(pickedPatientSuccess());
+        yield put(updateStatusCode(200));
     } catch (error) {
         yield put(pickedPatientFail(error));
     }
@@ -69,6 +69,7 @@ function* finishRequestStart({ payload: { token, requestId } }) {
     try {
         yield call(finishRequest, token, requestId);
         yield put(finishRequestSuccess());
+        yield put(updateStatusCode(207));
     } catch (error) {
         yield put(finishRequestFail(error));
     }

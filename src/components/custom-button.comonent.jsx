@@ -27,10 +27,10 @@ const styles = StyleSheet.create({
         fontFamily: "Texgyreadventor-bold",
         fontSize: 13,
         borderRadius: 25,
-        color: "#0a1b8a",
+        color: "#0132f5",
         paddingVertical: 10,
         paddingHorizontal: 30,
-        backgroundColor: "#e4e6eb"
+        backgroundColor: "#f5f5f3"
     },
 
     counter: {

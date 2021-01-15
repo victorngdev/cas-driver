@@ -53,10 +53,6 @@ export const pickedPatient = (token, requestId) => ({
     payload: { token, requestId }
 });
 
-export const pickedPatientSuccess = () => ({
-    type: RequestActionTypes.PICKED_PATIENT_SUCCESS
-});
-
 export const pickedPatientFail = error => ({
     type: RequestActionTypes.PICKED_PATIENT_FAIL,
     payload: error
