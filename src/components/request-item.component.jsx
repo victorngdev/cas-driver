@@ -11,6 +11,8 @@ const RequestItem = ({
     location,
     request: {
         pickUp,
+        createdDate,
+        createdTime,
         destination,
         healthInformation,
         isEmergency,
@@ -28,6 +30,15 @@ const RequestItem = ({
         true: require("../../assets/icons/less.png")
     };
     const [viewState, setViewState] = useState(false);
+    const [timer, setTimer] = useState(0);
+
+    useEffect(() => {
+        const current = new Date().toISOString();
+        const start = `${createdDate}T${createdTime}Z`;
+        const diff = 25200 - (new Date(start).getTime() - new Date(current).getTime()) / 1000;
+
+        setTimer(15 * 60 - Math.round(diff));
+    }, []);
 
     const children = remainingTime => {
         const minutes = Math.floor(remainingTime / 60);
@@ -60,7 +71,9 @@ const RequestItem = ({
                 </View>
                 <View style={{ flexBasis: "30%" }}>
                     <Text style={styles.title}>Loại yêu cầu:</Text>
-                    <Text style={[styles.title, { fontSize: 9 }]}>14:38 10/01/2021</Text>
+                    <Text style={[styles.title, { fontSize: 9 }]}>{`${createdTime} ${new Date(
+                        createdDate
+                    ).toLocaleDateString()}`}</Text>
                     <View style={styles.requestType}>
                         <Icon size={14} color="#333" name="taxi" />
                         <Text style={styles.requestTypeValue}>
@@ -69,19 +82,22 @@ const RequestItem = ({
                     </View>
                 </View>
                 <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
-                    <CountdownCircleTimer
-                        isPlaying
-                        duration={900}
-                        strokeWidth={3}
-                        size={55}
-                        colors="#09acfe"
-                    >
-                        {({ remainingTime }) => (
-                            <Animated.Text style={styles.timeout}>
-                                {children(remainingTime)}
-                            </Animated.Text>
-                        )}
-                    </CountdownCircleTimer>
+                    {timer > 0 && (
+                        <CountdownCircleTimer
+                            isPlaying
+                            duration={900}
+                            initialRemainingTime={timer}
+                            strokeWidth={3}
+                            size={55}
+                            colors="#09acfe"
+                        >
+                            {({ remainingTime }) => (
+                                <Animated.Text style={styles.timeout}>
+                                    {children(remainingTime)}
+                                </Animated.Text>
+                            )}
+                        </CountdownCircleTimer>
+                    )}
                     <View style={{ flexDirection: "column", marginLeft: 2 }}>
                         <TouchableOpacity onPress={onAccept}>
                             <Text style={styles.action}>Chấp nhận</Text>

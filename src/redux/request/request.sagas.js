@@ -12,8 +12,7 @@ import {
     fetchRequestsSuccess,
     finishRequestFail,
     finishRequestSuccess,
-    pickedPatientFail,
-    pickedPatientSuccess
+    pickedPatientFail
 } from "./request.actions";
 import {
     acceptRequest,
