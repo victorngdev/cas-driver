@@ -71,9 +71,16 @@ const RequestBottomSheet = ({
     const fetchRequestsInit = () => {
         if (requests && requests.requestIds) {
             const requestIds = requests.requestIds;
+            const preRequestIds =
+                (requestList && requestList.map(request => request.requestId)) || [];
+            const difference = findDifference(requestIds, preRequestIds);
 
-            requestIds.length && fetchRequests(token, requestIds);
+            difference.length && fetchRequests(token, difference);
         }
+    };
+
+    const findDifference = (source, target) => {
+        return (target.length && source.filter(d => !target.some(pd => pd === d))) || source;
     };
 
     const handleAcceptRequest = request => {

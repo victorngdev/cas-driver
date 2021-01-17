@@ -40,29 +40,25 @@ const Map = ({ destination }) => {
                     PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
                 }
             >
-                {destination && (
-                    <>
-                        <MapDirection
-                            origin={location}
-                            destination={destination}
-                            onReady={results =>
-                                mapRef.current.fitToCoordinates(results.coordinates, {
-                                    edgePadding: {
-                                        top: 20,
-                                        bottom: 550,
-                                        left: 50,
-                                        right: 50
-                                    }
-                                })
+                <MapDirection
+                    origin={location}
+                    destination={destination}
+                    onReady={results =>
+                        mapRef.current.fitToCoordinates(results.coordinates, {
+                            edgePadding: {
+                                top: 20,
+                                bottom: 550,
+                                left: 50,
+                                right: 50
                             }
-                        />
-                        <Marker
-                            tracksViewChanges={false}
-                            icon={require("../../assets/icons/location.png")}
-                            coordinate={destination}
-                        />
-                    </>
-                )}
+                        })
+                    }
+                />
+                <Marker
+                    tracksViewChanges={false}
+                    icon={require("../../assets/icons/location.png")}
+                    coordinate={destination}
+                />
             </MapView>
         </View>
     );

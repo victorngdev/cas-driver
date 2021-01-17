@@ -8,7 +8,7 @@ const MapDirection = ({ origin, destination, onReady }) => {
             origin={origin}
             destination={destination}
             onReady={onReady}
-            strokeWidth={3}
+            strokeWidth={4}
             strokeColor="#315bef"
             language="vi"
             resetOnChange={false}

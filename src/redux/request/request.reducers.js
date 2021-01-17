@@ -23,7 +23,7 @@ const requestReducer = (state = INITIAL_STATE, action) => {
         case RequestActionTypes.FETCH_REQUESTS_SUCCESS:
             return {
                 ...state,
-                requestList: action.payload
+                requestList: state.requestList.concat(action.payload)
             };
         case RequestActionTypes.VIEW_HISTORY:
             return {
@@ -63,11 +63,17 @@ const requestReducer = (state = INITIAL_STATE, action) => {
                     };
                 }, {})
             };
+        case RequestActionTypes.REJECT_REQUEST_SUCCESS:
+            return {
+                ...state,
+                requestList: state.requestList.filter(item => item.requestId !== action.payload)
+            };
         case RequestActionTypes.ACCEPT_REQUEST_FAIL:
         case RequestActionTypes.CANCEL_REQUEST_FAIL:
         case RequestActionTypes.PICKED_PATIENT_FAIL:
         case RequestActionTypes.FINISH_REQUEST_FAIL:
         case RequestActionTypes.FETCH_SYSTEM_CONFIG_FAIL:
+        case RequestActionTypes.REJECT_REQUEST_FAIL:
             return {
                 ...state,
                 error: action.payload

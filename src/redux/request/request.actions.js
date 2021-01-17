@@ -48,6 +48,21 @@ export const cancelRequestFail = error => ({
     payload: error
 });
 
+export const rejectRequest = (token, requestId, username) => ({
+    type: RequestActionTypes.REJECT_REQUEST_START,
+    payload: { token, requestId, username }
+});
+
+export const rejectRequestSuccess = requestId => ({
+    type: RequestActionTypes.REJECT_REQUEST_SUCCESS,
+    payload: requestId
+});
+
+export const rejectRequestFail = error => ({
+    type: RequestActionTypes.REJECT_REQUEST_FAIL,
+    payload: error
+});
+
 export const pickedPatient = (token, requestId) => ({
     type: RequestActionTypes.PICKED_PATIENT_START,
     payload: { token, requestId }

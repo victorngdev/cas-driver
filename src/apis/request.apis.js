@@ -37,6 +37,18 @@ export const cancelRequest = (token, requestId, note) => {
     );
 };
 
+export const rejectRequest = (token, requestId, username) => {
+    return api.put(
+        `/requests/reject?requestId=${requestId}&username=${username}`,
+        {},
+        {
+            headers: {
+                Authorization: token
+            }
+        }
+    );
+};
+
 export const pickedPatient = (token, requestId) => {
     return api.put(
         `/requests/pickup/${requestId}`,

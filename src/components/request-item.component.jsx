@@ -4,12 +4,21 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 import getDistance from "geolib/es/getDistance";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
+
+import { selectToken, selectUsername } from "../redux/user/user.selectors";
+import { rejectRequest } from "../redux/request/request.actions";
 
 import RequestInfoItem from "./request-info-item.component";
+import Spinner from "./spinner.component";
 
 const RequestItem = ({
     location,
+    token,
+    username,
     request: {
+        requestId,
         pickUp,
         createdDate,
         createdTime,
@@ -23,7 +32,8 @@ const RequestItem = ({
         patientPhone,
         requester
     },
-    onAccept
+    onAccept,
+    rejectRequest
 }) => {
     const viewStateIcon = {
         false: require("../../assets/icons/details.png"),
@@ -31,12 +41,20 @@ const RequestItem = ({
     };
     const [viewState, setViewState] = useState(false);
     const [timer, setTimer] = useState(0);
+    const [distance, setDistance] = useState(0);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const current = new Date().toISOString();
         const start = `${createdDate}T${createdTime}Z`;
         const diff = 25200 - (new Date(start).getTime() - new Date(current).getTime()) / 1000;
+        const distance =
+            getDistance(
+                { latitude: pickUp.latitude, longitude: pickUp.longitude },
+                { latitude: destination.latitude, longitude: destination.longitude }
+            ) / 1000;
 
+        setDistance(distance.toFixed(1));
         setTimer(15 * 60 - Math.round(diff));
     }, []);
 
@@ -61,6 +79,7 @@ const RequestItem = ({
 
     return (
         <View style={styles.container}>
+            {loading && <Spinner style={{ height: "115%", width: "110%" }} />}
             <View style={styles.overview}>
                 <View style={{ marginRight: 5 }}>
                     <Text style={styles.title}>Cách bạn:</Text>
@@ -102,8 +121,15 @@ const RequestItem = ({
                         <TouchableOpacity onPress={onAccept}>
                             <Text style={styles.action}>Chấp nhận</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity>
-                            <Text style={styles.clear}>Xóa</Text>
+                        <TouchableOpacity
+                            onPress={() => {
+                                setLoading(true);
+                                rejectRequest(token, requestId, username);
+                            }}
+                        >
+                            <Text style={[styles.action, { color: "#666", marginTop: 3 }]}>
+                                Xóa
+                            </Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -112,7 +138,7 @@ const RequestItem = ({
                 <View style={styles.iconContainer}>
                     <Icon size={18} color="#09acfe" name="chevron-circle-up" />
                     <Icon size={12} color="#555" name="ellipsis-v" />
-                    <Text style={styles.requestDistanceValue}>25km</Text>
+                    <Text style={styles.requestDistanceValue}>{distance}km</Text>
                     <Icon size={12} color="#555" name="ellipsis-v" />
                     <Icon size={18} color="#f9650c" name="chevron-circle-down" />
                 </View>
@@ -197,7 +223,17 @@ const RequestItem = ({
     );
 };
 
-export default RequestItem;
+const mapStateToProps = createStructuredSelector({
+    token: selectToken,
+    username: selectUsername
+});
+
+const mapDispatchToProps = dispatch => ({
+    rejectRequest: (token, requestId, username) =>
+        dispatch(rejectRequest(token, requestId, username))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(RequestItem);
 
 const styles = StyleSheet.create({
     container: {
@@ -207,7 +243,8 @@ const styles = StyleSheet.create({
         borderRadius: 15,
         borderWidth: 1,
         borderColor: "#b3b9c8",
-        marginTop: 10
+        marginTop: 10,
+        overflow: "hidden"
     },
     locationOverview: {
         flexDirection: "row",
@@ -298,20 +335,11 @@ const styles = StyleSheet.create({
     action: {
         fontFamily: "Texgyreadventor-bold",
         fontSize: 12,
-        paddingHorizontal: 8,
-        paddingVertical: 2,
-        borderRadius: 12,
-        backgroundColor: "#f5f5f3",
-        color: "#09acfe"
-    },
-    clear: {
-        color: "#777",
-        fontFamily: "Texgyreadventor-bold",
-        fontSize: 12,
+        paddingHorizontal: 12,
         paddingVertical: 2,
         borderRadius: 12,
         backgroundColor: "#f5f5f3",
         textAlign: "center",
-        marginTop: 3
+        color: "#09acfe"
     }
 });

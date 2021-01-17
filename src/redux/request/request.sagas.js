@@ -12,14 +12,17 @@ import {
     fetchRequestsSuccess,
     finishRequestFail,
     finishRequestSuccess,
-    pickedPatientFail
+    pickedPatientFail,
+    rejectRequestFail,
+    rejectRequestSuccess
 } from "./request.actions";
 import {
     acceptRequest,
     cancelRequest,
     fetchRequest,
     pickedPatient,
-    finishRequest
+    finishRequest,
+    rejectRequest
 } from "../../apis/request.apis";
 import { updateStatusCode } from "../message/message.action";
 import { fetchConfig } from "../../apis/core.apis";
@@ -52,6 +55,7 @@ function* cancelRequestStart({ payload: { token, requestId, reason } }) {
         yield put(cancelRequestSuccess());
     } catch (error) {
         yield put(cancelRequestFail(error));
+        yield put(updateStatusCode(error.message.includes("401") ? 700 : 402));
     }
 }
 
@@ -61,6 +65,7 @@ function* pickedPatientStart({ payload: { token, requestId } }) {
         yield put(updateStatusCode(200));
     } catch (error) {
         yield put(pickedPatientFail(error));
+        yield put(updateStatusCode(error.message.includes("401") ? 700 : 402));
     }
 }
 
@@ -71,6 +76,17 @@ function* finishRequestStart({ payload: { token, requestId } }) {
         yield put(updateStatusCode(207));
     } catch (error) {
         yield put(finishRequestFail(error));
+        yield put(updateStatusCode(error.message.includes("401") ? 700 : 402));
+    }
+}
+
+function* rejectRequestStart({ payload: { token, requestId, username } }) {
+    try {
+        yield call(rejectRequest, token, requestId, username);
+        yield put(rejectRequestSuccess(requestId));
+    } catch (error) {
+        yield put(rejectRequestFail(error));
+        yield put(updateStatusCode(error.message.includes("401") ? 700 : 402));
     }
 }
 
@@ -104,6 +120,10 @@ export function* onFinishRequest() {
     yield takeLatest(RequestActionTypes.FINISH_REQUEST_START, finishRequestStart);
 }
 
+export function* onRejectRequest() {
+    yield takeLatest(RequestActionTypes.REJECT_REQUEST_START, rejectRequestStart);
+}
+
 export function* onFetchConfig() {
     yield takeLatest(RequestActionTypes.FETCH_SYSTEM_CONFIG_START, fetchConfigStart);
 }
@@ -115,6 +135,7 @@ export default function* requestSagas() {
         call(onCancelRequest),
         call(onPickedPatient),
         call(onFinishRequest),
+        call(onRejectRequest),
         call(onFetchConfig)
     ]);
 }

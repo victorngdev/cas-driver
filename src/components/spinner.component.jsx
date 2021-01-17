@@ -1,8 +1,8 @@
 import React from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Image, StyleSheet } from "react-native";
 
-const Spinner = ({ label }) => (
-    <View style={styles.spinner}>
+const Spinner = ({ style }) => (
+    <View style={[styles.spinner, style]}>
         <View style={styles.overplay}>
             <Image style={styles.image} source={require("../../assets/icons/loading.gif")} />
         </View>
