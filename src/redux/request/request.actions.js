@@ -19,6 +19,11 @@ export const clearRequest = () => ({
     type: RequestActionTypes.CLEAR_REQUEST
 });
 
+export const removeRequests = requestList => ({
+    type: RequestActionTypes.REMOVE_REQUESTS,
+    payload: requestList
+});
+
 export const acceptRequest = (token, driverId, requestId, username, request) => ({
     type: RequestActionTypes.ACCEPT_REQUEST_START,
     payload: { token, driverId, requestId, username, request }
@@ -48,14 +53,14 @@ export const cancelRequestFail = error => ({
     payload: error
 });
 
-export const rejectRequest = (token, requestId, username) => ({
+export const rejectRequest = (token, requestIds, username) => ({
     type: RequestActionTypes.REJECT_REQUEST_START,
-    payload: { token, requestId, username }
+    payload: { token, requestIds, username }
 });
 
-export const rejectRequestSuccess = requestId => ({
+export const rejectRequestSuccess = requestIds => ({
     type: RequestActionTypes.REJECT_REQUEST_SUCCESS,
-    payload: requestId
+    payload: requestIds
 });
 
 export const rejectRequestFail = error => ({

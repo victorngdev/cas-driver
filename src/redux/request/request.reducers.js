@@ -25,6 +25,11 @@ const requestReducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 requestList: state.requestList.concat(action.payload)
             };
+        case RequestActionTypes.REMOVE_REQUESTS:
+            return {
+                ...state,
+                requestList: action.payload
+            };
         case RequestActionTypes.VIEW_HISTORY:
             return {
                 ...state,
@@ -66,7 +71,7 @@ const requestReducer = (state = INITIAL_STATE, action) => {
         case RequestActionTypes.REJECT_REQUEST_SUCCESS:
             return {
                 ...state,
-                requestList: state.requestList.filter(item => item.requestId !== action.payload)
+                requestList: state.requestList.filter(r => !action.payload.includes(r.requestId))
             };
         case RequestActionTypes.ACCEPT_REQUEST_FAIL:
         case RequestActionTypes.CANCEL_REQUEST_FAIL:

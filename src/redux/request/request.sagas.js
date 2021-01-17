@@ -80,10 +80,12 @@ function* finishRequestStart({ payload: { token, requestId } }) {
     }
 }
 
-function* rejectRequestStart({ payload: { token, requestId, username } }) {
+function* rejectRequestStart({ payload: { token, requestIds, username } }) {
     try {
-        yield call(rejectRequest, token, requestId, username);
-        yield put(rejectRequestSuccess(requestId));
+        const queryParams = "requestId=" + requestIds.join("&requestId=");
+
+        yield call(rejectRequest, token, queryParams, username);
+        yield put(rejectRequestSuccess(requestIds));
     } catch (error) {
         yield put(rejectRequestFail(error));
         yield put(updateStatusCode(error.message.includes("401") ? 700 : 402));

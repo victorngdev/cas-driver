@@ -21,7 +21,11 @@ const HomeDriverInfo = ({ requestCount, addressValue, toggleSettingSheet, toggle
         </View>
         <View style={[styles.container, styles.requestInfo]}>
             <TouchableOpacity onPress={toggleRequestSheet}>
-                <Text style={styles.message}>{requestCount} yêu cầu đang chờ xác nhận</Text>
+                <Text style={styles.message}>
+                    {requestCount
+                        ? `${requestCount} yêu cầu đang chờ xác nhận`
+                        : "Không có yêu cầu mới"}
+                </Text>
             </TouchableOpacity>
         </View>
     </>

@@ -7,7 +7,12 @@ import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 
-import { acceptRequest, fetchRequests } from "../redux/request/request.actions";
+import {
+    acceptRequest,
+    fetchRequests,
+    removeRequests,
+    rejectRequest
+} from "../redux/request/request.actions";
 import { clearStatusCode } from "../redux/message/message.action";
 import { selectCurrentUser, selectToken } from "../redux/user/user.selectors";
 import { selectRequestList } from "../redux/request/request.selectors";
@@ -27,6 +32,8 @@ const RequestBottomSheet = ({
     fetchRequests,
     acceptRequest,
     clearStatusCode,
+    removeRequests,
+    rejectRequest,
     navigation
 }) => {
     const [sortBy, setSortBy] = useState("Khoảng cách");
@@ -73,14 +80,25 @@ const RequestBottomSheet = ({
             const requestIds = requests.requestIds;
             const preRequestIds =
                 (requestList && requestList.map(request => request.requestId)) || [];
-            const difference = findDifference(requestIds, preRequestIds);
+            const newRequests = findDifference(requestIds, preRequestIds);
+            const removedRequests = findDifference(preRequestIds, requestIds);
 
-            difference.length && fetchRequests(token, difference);
+            newRequests.length && fetchRequests(token, newRequests);
+            removedRequests.length &&
+                removeRequests(requestList.filter(r => !removedRequests.includes(r.requestId)));
         }
     };
 
     const findDifference = (source, target) => {
-        return (target.length && source.filter(d => !target.some(pd => pd === d))) || source;
+        return (target.length && source.filter(d => !target.includes(d))) || source;
+    };
+
+    const handleRejectAllRequest = () => {
+        setLoading(true);
+        const requestIds = (requestList && requestList.map(request => request.requestId)) || [];
+
+        requestIds.length && rejectRequest(token, requestIds, currentUser.username);
+        setLoading(false);
     };
 
     const handleAcceptRequest = request => {
@@ -105,20 +123,24 @@ const RequestBottomSheet = ({
                     />
                 </View>
             )}
-            {requestList.map(request => (
-                <RequestItem
-                    location={location}
-                    onAccept={() => handleAcceptRequest(request)}
-                    key={request.requestId}
-                    request={request}
-                />
-            ))}
+            {requestList.length ? (
+                requestList.map(request => (
+                    <RequestItem
+                        location={location}
+                        onAccept={() => handleAcceptRequest(request)}
+                        key={request.requestId}
+                        request={request}
+                    />
+                ))
+            ) : (
+                <Text style={styles.emptyMessage}>Không có yêu cầu mới</Text>
+            )}
         </ScrollView>
     );
 
     const renderHeader = () => (
         <View style={styles.header}>
-            <TouchableOpacity style={{ width: 80 }}>
+            <TouchableOpacity onPress={handleRejectAllRequest} style={{ width: 80 }}>
                 <Text style={styles.action}>Xóa tất cả</Text>
             </TouchableOpacity>
             <View style={{ alignItems: "center", position: "relative" }}>
@@ -178,7 +200,10 @@ const mapDispatchToProps = dispatch => ({
     fetchRequests: (token, requestIds) => dispatch(fetchRequests(token, requestIds)),
     acceptRequest: (token, driverId, requestId, username, request) =>
         dispatch(acceptRequest(token, driverId, requestId, username, request)),
-    clearStatusCode: () => dispatch(clearStatusCode())
+    clearStatusCode: () => dispatch(clearStatusCode()),
+    removeRequests: requestList => dispatch(removeRequests(requestList)),
+    rejectRequest: (token, requestIds, username) =>
+        dispatch(rejectRequest(token, requestIds, username))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RequestBottomSheet);
@@ -199,6 +224,13 @@ const styles = StyleSheet.create({
         zIndex: 1,
         alignItems: "center",
         justifyContent: "center"
+    },
+    emptyMessage: {
+        width: "100%",
+        marginTop: 200,
+        fontFamily: "Texgyreadventor-bold",
+        color: "#6c7fa6",
+        textAlign: "center"
     },
     header: {
         display: "flex",

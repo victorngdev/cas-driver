@@ -37,9 +37,9 @@ export const cancelRequest = (token, requestId, note) => {
     );
 };
 
-export const rejectRequest = (token, requestId, username) => {
+export const rejectRequest = (token, queryParams, username) => {
     return api.put(
-        `/requests/reject?requestId=${requestId}&username=${username}`,
+        `/requests/reject?${queryParams}&username=${username}`,
         {},
         {
             headers: {

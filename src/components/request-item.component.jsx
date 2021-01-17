@@ -124,7 +124,7 @@ const RequestItem = ({
                         <TouchableOpacity
                             onPress={() => {
                                 setLoading(true);
-                                rejectRequest(token, requestId, username);
+                                rejectRequest(token, [requestId], username);
                             }}
                         >
                             <Text style={[styles.action, { color: "#666", marginTop: 3 }]}>
@@ -229,8 +229,8 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch => ({
-    rejectRequest: (token, requestId, username) =>
-        dispatch(rejectRequest(token, requestId, username))
+    rejectRequest: (token, requestIds, username) =>
+        dispatch(rejectRequest(token, requestIds, username))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RequestItem);
