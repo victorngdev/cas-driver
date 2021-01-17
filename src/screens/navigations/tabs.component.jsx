@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
         borderTopWidth: 0.25,
         backgroundColor: "white",
         elevation: 0,
-        height: 43,
+        height: 45,
         paddingTop: 10
     },
     tabActive: {
@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     },
     label: {
         fontFamily: "Texgyreadventor-bold",
-        fontSize: 10,
+        fontSize: 11,
         marginBottom: 2
     }
 });

@@ -1,19 +1,39 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Dimensions, Image, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import getDistance from "geolib/es/getDistance";
 import Icon from "react-native-vector-icons/FontAwesome5";
 
 import RequestInfoItem from "../components/request-info-item.component";
 import Rating from "../components/rating.component";
 
-const place = {
-    name: "Benh vien Tu Du",
-    address: "284 Cống Quỳnh, P.Phạm Ngũ Lão, Q.1, Hồ Chí Minh"
-};
+const HistoryItem = ({ label, content }) => (
+    <>
+        <Text style={styles.infoTitle}>{label}</Text>
+        <RequestInfoItem content={content} />
+    </>
+);
 
-const HistoryComponent = () => {
+const HistoryComponent = ({
+    pickUp,
+    destination,
+    isEmergency,
+    isOther,
+    request_status,
+    patientName,
+    patientPhone,
+    requester,
+    morbidity,
+    morbidityNote,
+    feedbackDriver,
+    ratingDriver
+}) => {
     const viewStateIcon = {
         false: require("../../assets/icons/details.png"),
         true: require("../../assets/icons/less.png")
+    };
+    const mapStatus = {
+        SUCCESS: "Thành công",
+        FAIL: "Không thành công"
     };
     const [viewState, setViewState] = useState(false);
 
@@ -21,21 +41,44 @@ const HistoryComponent = () => {
         <View style={styles.container}>
             <View style={styles.overview}>
                 <View style={[styles.overviewItem, { flexBasis: "25%", marginRight: 30 }]}>
-                    <Text style={styles.title}>Tổng quan:</Text>
-                    <Text style={[styles.title, { fontSize: 9 }]}>14:38 10/01/2021</Text>
+                    <Text style={styles.title}>Điểm đón:</Text>
+                    <Text style={[styles.title, { fontSize: 9 }]}>
+                        {pickUp.time} {pickUp.date}
+                    </Text>
                     <View style={styles.requestType}>
                         <Icon size={14} color="#333" name="taxi" />
-                        <Text style={styles.requestTypeValue}>Đi cấp cứu</Text>
+                        <Text style={styles.requestTypeValue}>
+                            {isEmergency ? "Đi cấp cứu" : "Đi về nhà"}
+                        </Text>
                     </View>
                 </View>
-                <View style={[styles.overviewItem, { flex: 1 }]}>
-                    <Text style={styles.title}>Trạng thái:</Text>
-                    <Text style={[styles.title, { fontSize: 9 }]}>17:15 10/01/2021</Text>
+                <View style={[styles.overviewItem, { flexBasis: "35%" }]}>
+                    <Text style={styles.title}>Điểm đến:</Text>
+                    <Text style={[styles.title, { fontSize: 9 }]}>
+                        {destination.time} {destination.date}
+                    </Text>
                     <View style={styles.requestType}>
                         <Icon size={14} color="#333" name="street-view" />
                         <Text style={[styles.requestTypeValue, { backgroundColor: "#118539" }]}>
-                            Thành công
+                            {mapStatus[request_status]}
                         </Text>
+                    </View>
+                </View>
+                <View style={{ flex: 1 }}>
+                    <Text style={styles.title}>Lộ trình:</Text>
+                    <View style={styles.distance}>
+                        <Text style={styles.distanceValue}>
+                            {(
+                                getDistance(
+                                    { latitude: pickUp.latitude, longitude: pickUp.longitude },
+                                    {
+                                        latitude: destination.latitude,
+                                        longitude: destination.longitude
+                                    }
+                                ) / 1000
+                            ).toFixed(1)}
+                        </Text>
+                        <Text style={styles.distanceUnit}>km</Text>
                     </View>
                 </View>
             </View>
@@ -48,12 +91,12 @@ const HistoryComponent = () => {
                 </View>
                 <View>
                     <View style={[styles.location, { marginBottom: 10 }]}>
-                        <Text style={styles.name}>{place.name}</Text>
-                        <Text style={styles.address}>{place.address}</Text>
+                        <Text style={styles.name}>{pickUp.name}</Text>
+                        <Text style={styles.address}>{pickUp.address}</Text>
                     </View>
                     <View style={styles.location}>
-                        <Text style={styles.name}>{place.name}</Text>
-                        <Text style={styles.address}>{place.address}</Text>
+                        <Text style={styles.name}>{destination.name}</Text>
+                        <Text style={styles.address}>{destination.address}</Text>
                     </View>
                 </View>
             </View>
@@ -62,30 +105,39 @@ const HistoryComponent = () => {
                     <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                         <View style={{ flexDirection: "column" }}>
                             <Text style={styles.infoTitle}>Thông tin người gọi</Text>
-                            <RequestInfoItem content="Ngô Hoàng Nam" icon="user-clock" />
+                            <RequestInfoItem content={requester.displayName} icon="user-clock" />
                             <RequestInfoItem
-                                content="0988635032"
+                                content={requester.phone}
                                 icon="old-phone"
                                 enabledNormalIcon
                             />
                         </View>
-                        <View style={{ flexDirection: "column" }}>
-                            <Text style={styles.infoTitle}>Thông tin người bệnh</Text>
-                            <RequestInfoItem content="Trịnh Hoàng Kim Anh" icon="user-injured" />
-                            <RequestInfoItem
-                                content="0931738872"
-                                icon="old-phone"
-                                enabledNormalIcon
-                            />
-                        </View>
+                        {isOther && (
+                            <View style={{ flexDirection: "column" }}>
+                                <Text style={styles.infoTitle}>Thông tin người bệnh</Text>
+                                <RequestInfoItem
+                                    content={patientName || "Không có thông tin"}
+                                    icon="user-injured"
+                                />
+                                <RequestInfoItem
+                                    content={patientPhone || "Không có thông tin"}
+                                    icon="old-phone"
+                                    enabledNormalIcon
+                                />
+                            </View>
+                        )}
                     </View>
-                    <Text style={styles.infoTitle}>Tình trạng</Text>
-                    <RequestInfoItem content="Bị tai nạn giao thông rất nghiêm trọng" />
-                    <Text style={styles.infoTitle}>Ghi chú</Text>
-                    <RequestInfoItem content="Cần dụng cụ sơ cứu tại chỗ" />
-                    <Text style={styles.infoTitle}>Đánh giá</Text>
-                    <Rating level={5} size={8} />
-                    <RequestInfoItem content="Tài xế chạy xe rất có tâm" />
+                    {morbidity && <HistoryItem label="Tình trạng" content={morbidity} />}
+                    {morbidityNote && <HistoryItem label="Ghi chú" content={morbidityNote} />}
+                    {(ratingDriver || feedbackDriver) && (
+                        <>
+                            <Text style={styles.infoTitle}>Đánh giá</Text>
+                            <Rating level={ratingDriver} size={8} />
+                            <RequestInfoItem
+                                content={feedbackDriver || "Không có đánh giá về bạn"}
+                            />
+                        </>
+                    )}
                 </>
             )}
             <TouchableOpacity
@@ -149,6 +201,21 @@ const styles = StyleSheet.create({
         fontFamily: "Texgyreadventor-bold",
         fontSize: 11,
         color: "#6c7fa6"
+    },
+    distance: {
+        flexDirection: "row",
+        alignItems: "flex-end",
+        height: 35
+    },
+    distanceValue: {
+        fontFamily: "Texgyreadventor-bold",
+        fontSize: 23
+    },
+    distanceUnit: {
+        fontFamily: "Texgyreadventor-bold",
+        fontSize: 12,
+        lineHeight: 26,
+        color: "#333"
     },
     requestType: {
         flexDirection: "row",

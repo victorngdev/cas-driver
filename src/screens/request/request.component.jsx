@@ -65,7 +65,7 @@ const RequestScreen = ({
                 clearStatusCode();
                 setLoading(false);
                 finished && navigation.replace("Home");
-            }, 1500);
+            }, 750);
         }
     }, [statusCode]);
 

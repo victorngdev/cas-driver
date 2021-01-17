@@ -6,7 +6,6 @@ const INITIAL_STATE = {
     error: null,
     isAccepted: false,
     isArrived: false,
-    history: null,
     config: null
 };
 
@@ -29,11 +28,6 @@ const requestReducer = (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 requestList: action.payload
-            };
-        case RequestActionTypes.VIEW_HISTORY:
-            return {
-                ...state,
-                history: action.payload
             };
         case RequestActionTypes.FETCH_REQUESTS_FAIL:
             return {

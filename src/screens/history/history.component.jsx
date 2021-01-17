@@ -5,7 +5,6 @@ import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 
 import { selectCurrentUser, selectToken } from "../../redux/user/user.selectors";
-import { viewHistory } from "../../redux/request/request.actions";
 import { fetchHistory } from "../../apis/core.apis";
 
 import Header from "../../components/header.component";
@@ -21,24 +20,23 @@ const HistoryScreen = ({ currentUser, token, navigation, viewHistory }) => {
             setTimeout(() => {
                 setHistory(response.data);
                 setLoading(false);
-            }, 1500)
+            }, 500)
         );
     }, []);
 
     return (
         <View style={styles.container}>
             {loading && <Spinner />}
-            <Header title="Lịch sử" gotoScreen={() => navigation.jumpTo("Home")} />
+            <Header title="Lịch sử" gotoScreen={() => navigation.goBack()} />
             <ScrollView
                 style={{ width: "90%" }}
                 showsVerticalScrollIndicator={false}
                 directionalLockEnabled={true}
             >
                 {history.length
-                    ? history.map(({ requestId, ...otherProps }) => (
+                    ? history.map(({ id, ...otherProps }) => (
                           <HistoryComponent
-                              key={requestId}
-                              requestId={requestId}
+                              key={id}
                               {...otherProps}
                               onPress={() => {
                                   viewHistory(requestId);
@@ -57,11 +55,7 @@ const mapStateToProps = createStructuredSelector({
     token: selectToken
 });
 
-const mapDispatchToProps = dispatch => ({
-    viewHistory: history => dispatch(viewHistory(history))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(HistoryScreen);
+export default connect(mapStateToProps)(HistoryScreen);
 
 const styles = StyleSheet.create({
     container: {

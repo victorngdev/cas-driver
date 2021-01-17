@@ -92,11 +92,6 @@ export const finishRequestFail = error => ({
     payload: error
 });
 
-export const viewHistory = history => ({
-    type: RequestActionTypes.VIEW_HISTORY,
-    payload: history
-});
-
 export const fetchConfig = token => ({
     type: RequestActionTypes.FETCH_SYSTEM_CONFIG_START,
     payload: token
