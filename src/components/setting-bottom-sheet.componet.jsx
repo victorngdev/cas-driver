@@ -58,7 +58,7 @@ const SettingBottomSheet = ({ username, setting, settingRef, updateSetting }) =>
                     thumbTintColor="#102eef"
                     step={5}
                     value={currentsetting.distance}
-                    onSlidingComplete={value =>
+                    onValueChange={value =>
                         setCurrentSetting({ ...currentsetting, distance: value })
                     }
                 />

@@ -27,7 +27,7 @@ const HistoryScreen = ({ currentUser, token, navigation, viewHistory }) => {
     return (
         <View style={styles.container}>
             {loading && <Spinner />}
-            <Header title="Lịch sử" gotoScreen={() => navigation.goBack()} />
+            <Header title="Lịch sử" />
             <ScrollView
                 style={{ width: "90%" }}
                 showsVerticalScrollIndicator={false}

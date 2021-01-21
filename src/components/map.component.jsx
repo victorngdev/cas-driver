@@ -19,7 +19,7 @@ const Map = ({ destination }) => {
     }, []);
 
     return (
-        <View style={[styles.container_mapview]}>
+        <View style={styles.container_mapview}>
             <MapView
                 ref={mapRef}
                 provider={PROVIDER_GOOGLE}

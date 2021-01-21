@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
         fontFamily: "Texgyreadventor-bold"
     },
     address: {
-        width: "90%",
+        flexBasis: "80%",
         fontSize: 10,
         color: "#6c7fa6",
         marginBottom: 5,
