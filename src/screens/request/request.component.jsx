@@ -3,11 +3,14 @@ import { View } from "react-native";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import { useDocumentData } from "react-firebase-hooks/firestore";
+import * as Location from "expo-location";
+
+import { configureTask } from "../../uitls/background-task.services";
 
 import { pickedPatient, finishRequest, cancelRequest } from "../../redux/request/request.actions";
 import { clearStatusCode } from "../../redux/message/message.action";
 import { selectCurrentRequest } from "../../redux/request/request.selectors";
-import { selectToken } from "../../redux/user/user.selectors";
+import { selectToken, selectUsername } from "../../redux/user/user.selectors";
 import { selectStatusCode } from "../../redux/message/message.selectors";
 import { firestore } from "../../firebase/firebase.utils";
 
@@ -23,6 +26,7 @@ import styles from "./request.styles";
 
 const RequestScreen = ({
     token,
+    username,
     currentRequest,
     statusCode,
     pickedPatient,
@@ -45,11 +49,16 @@ const RequestScreen = ({
     const [requestStatus] = useDocumentData(documentRequestRef);
 
     useEffect(() => {
-        currentRequest &&
+        if (currentRequest) {
             setDestination({
                 latitude: currentRequest.pickUp.latitude,
                 longitude: currentRequest.pickUp.longitude
             });
+            Location.startLocationUpdatesAsync("syncLocation", {
+                distanceInterval: 50
+            });
+            configureTask({ username, inRequest: true });
+        }
     }, []);
 
     useEffect(() => {
@@ -154,7 +163,8 @@ const RequestScreen = ({
 const mapStateToProps = createStructuredSelector({
     token: selectToken,
     currentRequest: selectCurrentRequest,
-    statusCode: selectStatusCode
+    statusCode: selectStatusCode,
+    username: selectUsername
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -6,6 +6,7 @@ import Icon from "react-native-vector-icons/AntDesign";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import { useDocumentData } from "react-firebase-hooks/firestore";
+import getDistance from "geolib/es/getDistance";
 
 import {
     acceptRequest,
@@ -36,8 +37,9 @@ const RequestBottomSheet = ({
     rejectRequest,
     navigation
 }) => {
-    const [sortBy, setSortBy] = useState("Khoảng cách");
-    const [arrage, setArrage] = useState("Giảm dần");
+    const [sortBy, setSortBy] = useState("createdTime");
+    const [arrage, setArrage] = useState("desc");
+    const [filter, setFilter] = useState(6);
     const [opacity, setOpacity] = useState(0);
     const [location, setLocation] = useState(null);
     const [loading, setLoading] = useState(false);
@@ -69,10 +71,26 @@ const RequestBottomSheet = ({
     }, [requests]);
 
     const initLocation = () => {
-        navigator.geolocation.getCurrentPosition(async position => {
-            let { latitude, longitude } = position.coords;
-            setLocation({ latitude, longitude });
-        });
+        navigator.geolocation.getCurrentPosition(
+            async position => {
+                let { latitude, longitude } = position.coords;
+                setLocation({ latitude, longitude });
+            },
+            () => {},
+            { enableHighAccuracy: true }
+        );
+    };
+
+    const calculateDistance = (latitude, longitude) => {
+        if (!location) return 0;
+
+        const distance =
+            getDistance(
+                { latitude, longitude },
+                { latitude: location.latitude, longitude: location.longitude }
+            ) / 1000;
+
+        return distance.toFixed(1);
     };
 
     const fetchRequestsInit = () => {
@@ -108,35 +126,51 @@ const RequestBottomSheet = ({
         }, 1500);
     };
 
-    const renderContent = () => (
-        <ScrollView
-            style={styles.sheet}
-            showsVerticalScrollIndicator={false}
-            directionalLockEnabled={true}
-            scrollEnabled={!loading}
-        >
-            {loading && (
-                <View style={[styles.spinner, { height: requestList.length > 2 ? "80%" : "100%" }]}>
-                    <Image
-                        style={{ width: 150, height: 150 }}
-                        source={require("../../assets/icons/loading.gif")}
-                    />
-                </View>
-            )}
-            {requestList.length ? (
-                requestList.map(request => (
-                    <RequestItem
-                        location={location}
-                        onAccept={() => handleAcceptRequest(request)}
-                        key={request.requestId}
-                        request={request}
-                    />
-                ))
-            ) : (
-                <Text style={styles.emptyMessage}>Không có yêu cầu mới</Text>
-            )}
-        </ScrollView>
-    );
+    const renderContent = () => {
+        let list = requestList
+            .map(r => ({
+                ...r,
+                distance: calculateDistance(r.pickUp.latitude, r.pickUp.longitude),
+                requestType: r.isEmergency ? 2 : 3
+            }))
+            .sort((a, b) => a[sortBy].localeCompare(b[sortBy]) * (arrage === "desc" ? -1 : 1))
+            .filter(r => !(filter % r.requestType));
+
+        return (
+            <ScrollView
+                style={styles.sheet}
+                showsVerticalScrollIndicator={false}
+                directionalLockEnabled={true}
+                scrollEnabled={!loading}
+            >
+                {loading && (
+                    <View
+                        style={[
+                            styles.spinner,
+                            { height: requestList.length > 2 ? "80%" : "100%" }
+                        ]}
+                    >
+                        <Image
+                            style={{ width: 150, height: 150 }}
+                            source={require("../../assets/icons/loading.gif")}
+                        />
+                    </View>
+                )}
+                {list.length ? (
+                    list.map(request => (
+                        <RequestItem
+                            location={location}
+                            onAccept={() => handleAcceptRequest(request)}
+                            key={request.requestId}
+                            request={request}
+                        />
+                    ))
+                ) : (
+                    <Text style={styles.emptyMessage}>Không có yêu cầu mới</Text>
+                )}
+            </ScrollView>
+        );
+    };
 
     const renderHeader = () => (
         <View style={styles.header}>
@@ -155,16 +189,22 @@ const RequestBottomSheet = ({
                 </TouchableOpacity>
                 <View style={[styles.arrangeOption, { opacity: opacity }]}>
                     <ArrageContainer
+                        title="Loại yêu cầu"
+                        current={filter}
+                        onValueChange={setFilter}
+                        options={[6, 2, 3]}
+                    />
+                    <ArrageContainer
                         title="Sắp xếp theo"
                         current={sortBy}
                         onValueChange={setSortBy}
-                        options={["Khoảng cách", "Loại yêu cầu", "Thời gian chờ"]}
+                        options={["createdTime", "distance"]}
                     />
                     <ArrageContainer
                         title="Thứ tự"
                         current={arrage}
                         onValueChange={setArrage}
-                        options={["Tăng dần", "Giảm dần"]}
+                        options={["desc", "asc"]}
                     />
                 </View>
             </View>

@@ -4,6 +4,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { RadioButton } from "react-native-paper";
 import BottomSheet from "reanimated-bottom-sheet";
 import Slider from "@react-native-community/slider";
+import Icon from "react-native-vector-icons/AntDesign";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 
@@ -15,7 +16,7 @@ import CustomOption from "./option.component";
 
 const options = [
     { itemId: 6, value: "Tất cả" },
-    { itemId: 2, value: "Cấp cứu" },
+    { itemId: 2, value: "Đến bệnh viện" },
     { itemId: 3, value: "Đi về nhà" }
 ];
 
@@ -32,7 +33,10 @@ const SettingBottomSheet = ({ username, setting, settingRef, updateSetting }) =>
 
     const renderContent = () => (
         <View style={styles.setting}>
-            <Text style={styles.title}>Thiết lập nhận yêu cầu</Text>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Text style={styles.title}>Thiết lập nhận yêu cầu</Text>
+                <Icon onPress={() => settingRef.current.snapTo(2)} size={18} name="close" />
+            </View>
             <View style={styles.option}>
                 <Text style={styles.label}>Loại yêu cầu</Text>
                 <RadioButton.Group
@@ -100,7 +104,7 @@ const styles = StyleSheet.create({
         paddingTop: 10
     },
     title: {
-        width: "100%",
+        width: "95%",
         textAlign: "center",
         fontFamily: "Texgyreadventor-bold",
         fontSize: 16

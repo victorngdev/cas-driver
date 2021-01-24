@@ -48,23 +48,16 @@ const HomeScreen = ({
     }, []);
 
     useEffect(() => {
-        if (currentAmbulance && currentAmbulance.ambulance_status === "ACIVE") {
-            Location.startLocationUpdatesAsync("syncLocation", {
-                accuracy: Location.Accuracy.Balanced,
-                distanceInterval: 1,
-                timeInterval: 5
-            });
+        if (currentAmbulance && currentAmbulance.ambulance_status === "ACTIVE") {
+            initBackgroundTask(false);
         }
-        configureTask({ username });
-        initBackgroundTask(false);
     }, [currentAmbulance]);
 
     const initBackgroundTask = async inRequest => {
         configureTask({ username, inRequest });
         await Location.startLocationUpdatesAsync("syncLocation", {
-            accuracy: Location.Accuracy.Balanced,
-            distanceInterval: 1,
-            timeInterval: 5
+            deferredUpdatesDistance: 2000,
+            distanceInterval: 2000
         });
     };
 
@@ -106,7 +99,7 @@ const HomeScreen = ({
                     content={messages[confirmationStatus]}
                 />
             )}
-            <Header title="Chờ yêu cầu" gotoScreen={() => navigation.openDrawer()} />
+            <Header title="Chờ yêu cầu" />
             <View style={{ flex: 12, marginTop: 5, borderRadius: 10 }}>
                 <MapView
                     provider={PROVIDER_GOOGLE}

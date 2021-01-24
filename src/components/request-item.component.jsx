@@ -3,7 +3,6 @@ import { View, Text, Image, Animated, StyleSheet } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
-import getDistance from "geolib/es/getDistance";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 
@@ -14,7 +13,6 @@ import RequestInfoItem from "./request-info-item.component";
 import Spinner from "./spinner.component";
 
 const RequestItem = ({
-    location,
     token,
     username,
     request: {
@@ -30,7 +28,8 @@ const RequestItem = ({
         morbidityNote,
         patientName,
         patientPhone,
-        requester
+        requester,
+        distance
     },
     onAccept,
     rejectRequest
@@ -41,20 +40,12 @@ const RequestItem = ({
     };
     const [viewState, setViewState] = useState(false);
     const [timer, setTimer] = useState(0);
-    const [distance, setDistance] = useState(0);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const current = new Date().toISOString();
         const start = `${createdDate}T${createdTime}Z`;
-        const diff = 25200 - (new Date(start).getTime() - new Date(current).getTime()) / 1000;
-        const distance =
-            getDistance(
-                { latitude: pickUp.latitude, longitude: pickUp.longitude },
-                { latitude: destination.latitude, longitude: destination.longitude }
-            ) / 1000;
-
-        setDistance(distance.toFixed(1));
+        const diff = 25200 - (new Date(start).getTime() - new Date(current).getTime()) / 1000 - 3;
         setTimer(15 * 60 - Math.round(diff));
     }, []);
 
@@ -65,18 +56,6 @@ const RequestItem = ({
         return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
     };
 
-    const calculateDistance = () => {
-        if (!location) return "...";
-
-        const distance =
-            getDistance(
-                { latitude: pickUp.latitude, longitude: pickUp.longitude },
-                { latitude: location.latitude, longitude: location.longitude }
-            ) / 1000;
-
-        return distance.toFixed(1);
-    };
-
     return (
         <View style={styles.container}>
             {loading && <Spinner style={{ height: "115%", width: "110%" }} />}
@@ -84,19 +63,24 @@ const RequestItem = ({
                 <View style={{ marginRight: 5 }}>
                     <Text style={styles.title}>Cách bạn:</Text>
                     <View style={styles.distance}>
-                        <Text style={styles.distanceValue}>{calculateDistance()}</Text>
+                        <Text style={styles.distanceValue}>{distance ? distance : "..."}</Text>
                         <Text style={styles.distanceUnit}>km</Text>
                     </View>
                 </View>
-                <View style={{ flexBasis: "30%" }}>
+                <View style={{ flexBasis: "35%" }}>
                     <Text style={styles.title}>Loại yêu cầu:</Text>
                     <Text style={[styles.title, { fontSize: 9 }]}>{`${createdTime} ${new Date(
                         createdDate
                     ).toLocaleDateString()}`}</Text>
                     <View style={styles.requestType}>
                         <Icon size={14} color="#333" name="taxi" />
-                        <Text style={styles.requestTypeValue}>
-                            {isEmergency ? "Đi cấp cứu" : "Đi về nhà"}
+                        <Text
+                            style={[
+                                styles.requestTypeValue,
+                                !isEmergency && { backgroundColor: "#6ad4d2" }
+                            ]}
+                        >
+                            {isEmergency ? "Đến bệnh viện" : "Đi về nhà"}
                         </Text>
                     </View>
                 </View>

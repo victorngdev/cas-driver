@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, TextInput, View, Dimensions } from "react-native";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
@@ -14,13 +14,20 @@ import AvatarNameCol from "../../components/avatar-name-column.component";
 import KeyboardAvoiding from "../../components/keyboard-avoding.component";
 import ButtonText from "../../components/button-text.component";
 import Message from "../../components/message.component";
+import Spinner from "../../components/spinner.component";
 
 const AccountScreen = ({ navigation, currentUser, token, updateUser, statusCode }) => {
     const [linkImage, setLinkImage] = useState(currentUser.imageUrl);
     const [displayName, setDisplayName] = useState(currentUser.displayName);
     const [phone, setPhone] = useState(currentUser.phone);
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        statusCode && setLoading(false);
+    }, [statusCode]);
 
     const handlerUploadImage = () => {
+        setLoading(true);
         const image = {
             uri: linkImage,
             name: linkImage.substring(linkImage.lastIndexOf("/") + 1),
@@ -31,6 +38,7 @@ const AccountScreen = ({ navigation, currentUser, token, updateUser, statusCode 
 
     return (
         <BackgroundImage>
+            {loading && <Spinner />}
             <Message
                 visible={statusCode}
                 message={messages[statusCode]}

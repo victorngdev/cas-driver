@@ -40,7 +40,7 @@ const HistoryComponent = ({
     return (
         <View style={styles.container}>
             <View style={styles.overview}>
-                <View style={[styles.overviewItem, { flexBasis: "25%", marginRight: 30 }]}>
+                <View style={[styles.overviewItem, { flexBasis: "28%", marginRight: 30 }]}>
                     <Text style={styles.title}>Điểm đón:</Text>
                     <Text style={[styles.title, { fontSize: 9 }]}>
                         {pickUp.time} {pickUp.date}
@@ -48,7 +48,7 @@ const HistoryComponent = ({
                     <View style={styles.requestType}>
                         <Icon size={14} color="#333" name="taxi" />
                         <Text style={styles.requestTypeValue}>
-                            {isEmergency ? "Đi cấp cứu" : "Đi về nhà"}
+                            {isEmergency ? "Đến bệnh viện" : "Đi về nhà"}
                         </Text>
                     </View>
                 </View>
