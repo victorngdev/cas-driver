@@ -74,31 +74,11 @@ const HomeScreen = ({
         });
     };
 
-    const handleAmbulanceApproved = () => {
-        setConfirmationStatus(null);
-        handleApprovedRegisterAmbulance();
-        clearConfirmationRequest(username);
-    };
-
-    const handleAmbulanceRejected = () => {
-        setConfirmationStatus(null);
-        clearConfirmationRequest(username);
-    };
-
     return (
         <View style={styles.container}>
             <SettingBottomSheet settingRef={settingRef} />
             <RequestBottomSheet navigation={navigation} requestRef={requestRef} />
-            {confirmationStatus && (
-                <MessageModal
-                    action={
-                        confirmationStatus === "approved"
-                            ? handleAmbulanceApproved
-                            : handleAmbulanceRejected
-                    }
-                    content={messages[confirmationStatus]}
-                />
-            )}
+            {confirmationStatus && <MessageModal content={messages[confirmationStatus]} />}
             <Header title="Chờ yêu cầu" />
             <View style={{ flex: 12, marginTop: 5, borderRadius: 10 }}>
                 <MapView
@@ -125,6 +105,7 @@ const HomeScreen = ({
                     toggleRequestSheet={() => requestRef.current.snapTo(0)}
                     toggleSettingSheet={() => settingRef.current.snapTo(0)}
                     addressValue={location ? location.address : "Đang cập nhật..."}
+                    navigation={navigation}
                 />
             </View>
         </View>

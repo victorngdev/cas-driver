@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
@@ -33,18 +33,20 @@ const HistoryScreen = ({ currentUser, token, navigation, viewHistory }) => {
                 showsVerticalScrollIndicator={false}
                 directionalLockEnabled={true}
             >
-                {history.length
-                    ? history.map(({ id, ...otherProps }) => (
-                          <HistoryComponent
-                              key={id}
-                              {...otherProps}
-                              onPress={() => {
-                                  viewHistory(requestId);
-                                  navigation.navigate("HistoryDetail");
-                              }}
-                          />
-                      ))
-                    : null}
+                {history.length ? (
+                    history.map(({ id, ...otherProps }) => (
+                        <HistoryComponent
+                            key={id}
+                            {...otherProps}
+                            onPress={() => {
+                                viewHistory(requestId);
+                                navigation.navigate("HistoryDetail");
+                            }}
+                        />
+                    ))
+                ) : (
+                    <Text style={styles.emptyMessage}>Không có yêu cầu nào được thực hiện</Text>
+                )}
             </ScrollView>
         </View>
     );
@@ -63,5 +65,13 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         alignItems: "center",
         backgroundColor: "white"
+    },
+    emptyMessage: {
+        fontFamily: "Texgyreadventor-bold",
+        fontSize: 13,
+        color: "#555",
+        width: "100%",
+        marginTop: "50%",
+        textAlign: "center"
     }
 });

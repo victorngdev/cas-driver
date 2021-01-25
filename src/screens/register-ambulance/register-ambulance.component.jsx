@@ -71,10 +71,7 @@ const RegisterAmbulanceScreen = ({
         setMessageModal(false);
         setLoading(true);
         await uploadImage(identityCard.base64).then(response => {
-            console.log(response.data.data.display_url);
             const ambulance = {
-                displayName,
-                phone,
                 licensePlate,
                 identityCard: response.data.data.display_url,
                 driverLicense: driverLicense.uri,

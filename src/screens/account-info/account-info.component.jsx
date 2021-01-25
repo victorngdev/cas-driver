@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, TextInput, View, Dimensions } from "react-native";
+import React, { useState, useEffect, useRef } from "react";
+import { StyleSheet, Text, TextInput, View, TouchableOpacity } from "react-native";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
+import * as firebase from "firebase";
+import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 
 import { selectCurrentUser, selectToken } from "../../redux/user/user.selectors";
-import { updateUser } from "../../redux/user/user.actions";
+import { updateUser, logout } from "../../redux/user/user.actions";
 import messages from "../../uitls/message.data";
 import { selectStatusCode } from "../../redux/message/message.selectors";
 
@@ -12,49 +14,123 @@ import BackgroundImage from "../../components/background-screen.component";
 import Header from "../../components/header.component";
 import AvatarNameCol from "../../components/avatar-name-column.component";
 import KeyboardAvoiding from "../../components/keyboard-avoding.component";
-import ButtonText from "../../components/button-text.component";
-import Message from "../../components/message.component";
 import Spinner from "../../components/spinner.component";
+import CustomModal from "../../components/custom-modal.componet";
+import MessageModal from "../../components/message-modal.component";
 
-const AccountScreen = ({ navigation, currentUser, token, updateUser, statusCode }) => {
+const firebaseConfig = {
+    apiKey: "AIzaSyA1akYjqm5cVgCJvcgAFVguS0sw70hv4ds",
+    authDomain: "charitym-ambulance.firebaseapp.com",
+    databaseURL: "https://charitym-ambulance.firebaseio.com",
+    projectId: "charitym-ambulance",
+    storageBucket: "charitym-ambulance.appspot.com",
+    messagingSenderId: "801731513492",
+    appId: "1:801731513492:web:30978d836981cb9b6d3881"
+};
+
+const AccountScreen = ({ currentUser, token, updateUser, statusCode, logout }) => {
     const [linkImage, setLinkImage] = useState(currentUser.imageUrl);
     const [displayName, setDisplayName] = useState(currentUser.displayName);
     const [phone, setPhone] = useState(currentUser.phone);
+    const recaptchaVerifier = useRef(null);
+    const [verificationId, setVerificationId] = useState(null);
+    const [otp, setOtp] = useState(null);
+    const [invalidOTP, setInvalidOTP] = useState(null);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         statusCode && setLoading(false);
     }, [statusCode]);
 
-    const handlerUploadImage = () => {
+    const handleUpdate = () => {
+        if (phone !== currentUser.phone) {
+            try {
+                const phoneProvider = new firebase.auth.PhoneAuthProvider();
+                phoneProvider
+                    .verifyPhoneNumber(`+84${phone.slice(1)}`, recaptchaVerifier.current)
+                    .then(setVerificationId);
+            } catch (error) {
+                console.log(error);
+            }
+        } else {
+            updateUserProfile();
+        }
+    };
+
+    const confirmCode = async () => {
+        try {
+            const credential = firebase.auth.PhoneAuthProvider.credential(verificationId, otp);
+            await firebase.auth().signInWithCredential(credential);
+            updateUserProfile();
+        } catch (error) {
+            setInvalidOTP("Mã OTP không hợp lệ");
+        }
+    };
+
+    const updateUserProfile = () => {
         setLoading(true);
-        const image = {
-            uri: linkImage,
-            name: linkImage.substring(linkImage.lastIndexOf("/") + 1),
-            type: "image/png"
-        };
+        const image =
+            linkImage === currentUser.imageUrl
+                ? {
+                      uri: linkImage,
+                      name: linkImage.substring(linkImage.lastIndexOf("/") + 1),
+                      type: "image/png"
+                  }
+                : linkImage;
         updateUser(currentUser.id, token, { displayName, phone, image });
     };
 
     return (
         <BackgroundImage>
             {loading && <Spinner />}
-            <Message
-                visible={statusCode}
-                message={messages[statusCode]}
-                isMessage={statusCode < 400}
+            {statusCode && (
+                <MessageModal message={messages[statusCode]} isMessage={statusCode < 400} />
+            )}
+            <FirebaseRecaptchaVerifierModal
+                ref={recaptchaVerifier}
+                firebaseConfig={firebaseConfig}
             />
-            <Header title="Thông tin cá nhân" gotoScreen={() => navigation.goBack()} />
-            <View style={styles.container_info}>
-                <AvatarNameCol
-                    linkImage={linkImage}
-                    setLinkImage={setLinkImage}
-                    textContent={currentUser.displayName}
-                />
-                <Text style={styles.joining_day_title}>Ngày tham gia</Text>
-                <Text style={styles.joining_day}>{currentUser.dateCreated}</Text>
+            {!!verificationId && (
+                <CustomModal title="Xác thực OTP">
+                    <Text style={styles.title}>Mã OTP *</Text>
+                    {invalidOTP && <Text style={styles.invalid}>{invalidOTP}</Text>}
+                    <TextInput
+                        keyboardType="numeric"
+                        style={styles.otp}
+                        onChangeText={value => setOtp(value)}
+                    />
+                    <View style={styles.groupAction}>
+                        <TouchableOpacity onPress={() => setVerificationId(null)}>
+                            <Text style={styles.button_otp}>Hủy</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={confirmCode}>
+                            <Text style={styles.button_otp}>Xác nhận</Text>
+                        </TouchableOpacity>
+                    </View>
+                </CustomModal>
+            )}
+            <View>
+                <Header title="Thông tin cá nhân" />
             </View>
-            <KeyboardAvoiding style={styles.container_content}>
+            <KeyboardAvoiding style={styles.container}>
+                <View style={styles.container_info}>
+                    <AvatarNameCol
+                        linkImage={linkImage}
+                        setLinkImage={setLinkImage}
+                        textContent={currentUser.displayName}
+                    />
+                    <TouchableOpacity
+                        onPress={() => {
+                            logout();
+                        }}
+                    >
+                        <Text style={styles.logout}>Đăng xuất</Text>
+                    </TouchableOpacity>
+                    <Text style={styles.joining_day_title}>Ngày tham gia</Text>
+                    <Text style={styles.joining_day}>
+                        {new Date(currentUser.dateCreated).toLocaleDateString("en-EN")}
+                    </Text>
+                </View>
                 <View style={styles.container_text_input}>
                     <Text style={styles.label}>Tên *</Text>
                     <TextInput
@@ -69,20 +145,13 @@ const AccountScreen = ({ navigation, currentUser, token, updateUser, statusCode 
                         style={styles.text_input}
                         defaultValue={phone}
                         onChangeText={value => setPhone(value)}
+                        keyboardType="numeric"
                     />
                 </View>
             </KeyboardAvoiding>
-            <View style={styles.container_button_save}>
-                <ButtonText
-                    textContent="Lưu"
-                    styleText={styles.button_text}
-                    styleButton={styles.button_size}
-                    gotoScreen={handlerUploadImage}
-                />
-                <Text style={styles.text_policy}>
-                    * Các thông tin cá nhân được bảo mật theo chính sách, qui định của Nhà nước
-                </Text>
-            </View>
+            <TouchableOpacity onPress={handleUpdate}>
+                <Text style={styles.action}>Lưu thay đổi</Text>
+            </TouchableOpacity>
         </BackgroundImage>
     );
 };
@@ -94,19 +163,18 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = dispatch => ({
-    updateUser: (userId, token, user) => dispatch(updateUser(userId, token, user))
+    updateUser: (userId, token, user) => dispatch(updateUser(userId, token, user)),
+    logout: () => dispatch(logout())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AccountScreen);
 
 const styles = StyleSheet.create({
+    //css container:
     container: {
-        width: "100%",
+        width: "85%",
         display: "flex",
         flexDirection: "column"
-    },
-    container_content: {
-        width: "85%"
     },
     container_info: {
         flexDirection: "column",
@@ -119,10 +187,84 @@ const styles = StyleSheet.create({
         borderBottomColor: "#B9C5E6",
         paddingBottom: 3
     },
-    container_button_save: {
-        flexDirection: "column",
-        marginTop: 10
+    title: {
+        fontFamily: "Texgyreadventor-regular",
+        width: "90%",
+        marginBottom: 10,
+        fontSize: 13
     },
+    invalid: {
+        fontFamily: "Texgyreadventor-regular",
+        width: "90%",
+        marginBottom: 10,
+        fontSize: 12,
+        color: "#ff0000"
+    },
+    otp: {
+        fontFamily: "Texgyreadventor-regular",
+        width: "90%",
+        fontSize: 16,
+        paddingVertical: 7,
+        paddingHorizontal: 10,
+        borderWidth: 0.5,
+        borderColor: "rgba(0, 0, 0, 0.85)",
+        borderRadius: 5
+    },
+    button_otp: {
+        fontFamily: "Texgyreadventor-bold",
+        fontSize: 15,
+        marginVertical: 7
+    },
+    groupAction: {
+        width: "100%",
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-around",
+        alignItems: "center",
+        borderTopWidth: 0.5,
+        marginTop: 20
+    },
+    modal: {
+        flex: 1,
+        position: "absolute",
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(0, 0, 0, 0.85)",
+        zIndex: -1,
+        opacity: 0
+    },
+    modal__content: {
+        width: "90%",
+        height: "25%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        backgroundColor: "#fff",
+        borderRadius: 20,
+        paddingHorizontal: 10
+    },
+    status: {
+        fontFamily: "Texgyreadventor-bold",
+        fontSize: 18,
+        marginTop: 30
+    },
+    action: {
+        width: "85%",
+        paddingVertical: 10,
+        borderRadius: 20,
+        backgroundColor: "#f5f5f5",
+        fontFamily: "Texgyreadventor-bold",
+        fontSize: 13,
+        color: "#222",
+        textAlign: "center",
+        marginLeft: "7%",
+        marginTop: 20
+    },
+    //css child:
     joining_day_title: {
         fontSize: 14,
         color: "#26324A",
@@ -147,24 +289,10 @@ const styles = StyleSheet.create({
         fontFamily: "Texgyreadventor-regular",
         color: "#494958"
     },
-    //css button save:
-    button_size: {
-        width: Dimensions.get("screen").width * 0.85,
-        marginVertical: 20,
-        backgroundColor: "#e7ecf9",
-        paddingVertical: 10,
-        paddingHorizontal: 40
-    },
-    button_text: {
-        color: "#26324A",
+    logout: {
         fontFamily: "Texgyreadventor-bold",
-        fontSize: 16
-    },
-    text_policy: {
-        marginTop: 10,
-        fontSize: 12,
-        color: "#8B8B8B",
-        textAlign: "center",
-        fontFamily: "Texgyreadventor-regular"
+        color: "#494958",
+        fontSize: 13,
+        marginBottom: 10
     }
 });

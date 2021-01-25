@@ -6,33 +6,72 @@ import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 
 import { selectRequestCount } from "../redux/request/request.selectors";
+import { selectCurrentAmbulance } from "../redux/ambulance/ambulance.selectors";
 
-const HomeDriverInfo = ({ requestCount, addressValue, toggleSettingSheet, toggleRequestSheet }) => (
-    <>
-        <View style={styles.container}>
-            <View style={styles.currentLocation}>
-                <Text style={styles.locationTitle}>Vị trí của bạn</Text>
-                <Text style={styles.value}>{addressValue}</Text>
+const HomeDriverInfo = ({
+    currentAmbulance,
+    requestCount,
+    addressValue,
+    toggleSettingSheet,
+    toggleRequestSheet,
+    navigation
+}) => {
+    const registered = currentAmbulance && currentAmbulance.ambulance_status === "ACTIVE";
+
+    return (
+        <>
+            <View style={styles.container}>
+                <View style={styles.currentLocation}>
+                    <Text style={styles.locationTitle}>Vị trí của bạn</Text>
+                    <Text style={styles.value}>{addressValue}</Text>
+                </View>
+                {registered ? (
+                    <TouchableOpacity style={styles.action} onPress={toggleSettingSheet}>
+                        <Icon style={styles.icon} size={18} name="ios-settings" />
+                        <Text style={[styles.setting, { marginVertical: 10, paddingVertical: 10 }]}>
+                            Thiết lập nhận yêu cầu
+                        </Text>
+                    </TouchableOpacity>
+                ) : (
+                    <Text
+                        style={[
+                            styles.message,
+                            { marginVertical: 15, width: "100%", textAlign: "center" }
+                        ]}
+                    >
+                        Bạn cần đăng ký xe để nhận yêu cầu
+                    </Text>
+                )}
             </View>
-            <TouchableOpacity style={styles.action} onPress={toggleSettingSheet}>
-                <Icon style={styles.icon} size={18} name="ios-settings" />
-                <Text style={styles.setting}>Thiết lập nhận yêu cầu</Text>
-            </TouchableOpacity>
-        </View>
-        <View style={[styles.container, styles.requestInfo]}>
-            <TouchableOpacity onPress={toggleRequestSheet}>
-                <Text style={styles.message}>
-                    {requestCount
-                        ? `${requestCount} yêu cầu đang chờ xác nhận`
-                        : "Không có yêu cầu mới"}
-                </Text>
-            </TouchableOpacity>
-        </View>
-    </>
-);
+            <View style={[styles.container, styles.requestInfo]}>
+                {registered ? (
+                    <TouchableOpacity onPress={toggleRequestSheet}>
+                        <Text style={styles.message}>
+                            {requestCount
+                                ? `${requestCount} yêu cầu đang chờ xác nhận`
+                                : "Không có yêu cầu mới"}
+                        </Text>
+                    </TouchableOpacity>
+                ) : (
+                    <TouchableOpacity
+                        style={styles.action}
+                        onPress={() => navigation.navigate("Đăng ký xe")}
+                    >
+                        <Text
+                            style={[styles.setting, { paddingVertical: 10, paddingHorizontal: 65 }]}
+                        >
+                            Đăng ký xe
+                        </Text>
+                    </TouchableOpacity>
+                )}
+            </View>
+        </>
+    );
+};
 
 const mapStateToProps = createStructuredSelector({
-    requestCount: selectRequestCount
+    requestCount: selectRequestCount,
+    currentAmbulance: selectCurrentAmbulance
 });
 
 export default connect(mapStateToProps)(HomeDriverInfo);
@@ -49,12 +88,13 @@ const styles = StyleSheet.create({
         zIndex: 1
     },
     requestInfo: {
-        paddingVertical: 15,
+        paddingVertical: 7,
         alignItems: "center"
     },
     message: {
         fontFamily: "Texgyreadventor-bold",
-        color: "#444444"
+        color: "#444444",
+        paddingVertical: 6
     },
     currentLocation: {
         display: "flex",
@@ -93,8 +133,6 @@ const styles = StyleSheet.create({
     setting: {
         width: "95%",
         textAlign: "center",
-        marginVertical: 10,
-        paddingVertical: 10,
         backgroundColor: "#e7ecf9",
         borderRadius: 20,
         fontFamily: "Texgyreadventor-bold",
@@ -105,5 +143,11 @@ const styles = StyleSheet.create({
         position: "absolute",
         zIndex: 1,
         left: "22%"
+    },
+    registered: {
+        fontFamily: "Texgyreadventor-bold",
+        color: "#333",
+        fontSize: 13,
+        backgroundColor: "#e7ecf9"
     }
 });

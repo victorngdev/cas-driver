@@ -21,7 +21,8 @@ const Tabs = () => (
         tabBarOptions={{
             style: styles.navigator,
             activeTintColor: COLORS.primary,
-            labelStyle: styles.label
+            labelStyle: styles.label,
+            keyboardHidesTabBar: true
         }}
         initialRouteName="Trang chủ"
     >
