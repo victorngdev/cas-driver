@@ -143,7 +143,7 @@ const RegisterAmbulanceScreen = ({
                 {messageModal && (
                     <MessageModal
                         onClose={() => setMessageModal(false)}
-                        content={messages.registered}
+                        message={messages.registered}
                         onSubmit={handleRegister}
                     />
                 )}
