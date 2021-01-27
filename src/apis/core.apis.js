@@ -4,8 +4,9 @@ import { RNS3 } from "react-native-aws3";
 import aws from "../config/awskey";
 
 const api = axios.create({
-    baseURL: "http://192.168.43.241:3000/api"
-    // baseURL: "https://cas-server-nodejs.herokuapp.com/api"
+    baseURL:
+        "http://casservernodejsversion01-env.eba-dmxzbmkd.ap-southeast-1.elasticbeanstalk.com/api"
+    // baseURL: "http://192.168.1.26:3000/api"
 });
 
 export const uploadImage = base64str => {
@@ -31,8 +32,8 @@ export const uploadImageToS3 = file => {
     return RNS3.put(file, config);
 };
 
-export const fetchHistory = (token, userId) => {
-    return api.get(`/driver/${userId}/requests/history?pageIndex=1`, {
+export const fetchHistory = (token, userId, pageIndex) => {
+    return api.get(`/driver/${userId}/requests/history?pageIndex=${pageIndex}`, {
         headers: {
             Authorization: token
         }
@@ -52,7 +53,7 @@ export const checkExistedPhoneNumber = phone => {
 };
 
 export const checkIsRegister = phone => {
-    return api.get(`/users/drivers/check_exist?username=${phone}`);
+    return api.get(`/users/drivers/registered?username=${phone}`);
 };
 
 export const registerAccount = user => {

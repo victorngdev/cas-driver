@@ -55,7 +55,7 @@ const SettingBottomSheet = ({ username, setting, settingRef, updateSetting }) =>
                 <Text style={styles.distance}>{currentsetting.distance} km</Text>
                 <Slider
                     style={{ width: "100%" }}
-                    minimumValue={10}
+                    minimumValue={1}
                     maximumValue={500}
                     minimumTrackTintColor="#102eef"
                     maximumTrackTintColor="#ff0000"

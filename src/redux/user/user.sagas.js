@@ -18,10 +18,10 @@ import UserActionTypes from "./user.types";
 export function* signInStart({ payload: { username, password } }) {
     try {
         const response = yield call(login, username, password);
-        const result = response.data;
+        const result = yield response.data;
 
         yield put(signInSuccess(result));
-        yield put(fetchAmbulance(`${result.user.type} ${result.user.token}`, result.user.id));
+        yield put(fetchAmbulance(`Bearer ${result.user.token}`, result.user.id));
     } catch (error) {
         yield put(signInFail(error));
         yield put(updateStatusCode(401));
@@ -30,8 +30,14 @@ export function* signInStart({ payload: { username, password } }) {
 
 function* updateUserStart({ payload: { userId, token, user } }) {
     try {
-        const _response = yield call(uploadImageToS3, user.image);
-        const _user = { ...user, imageUrl: _response.body.postResponse.location };
+        let _user = null;
+
+        if (user.image.uri) {
+            const _response = yield call(uploadImageToS3, user.image);
+            _user = { ...user, imageUrl: _response.body.postResponse.location };
+        } else {
+            _user = user;
+        }
         const response = yield call(updateUser, userId, token, _user);
 
         yield put(updateUserSuccess(response.data));

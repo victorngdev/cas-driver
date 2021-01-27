@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import getDistance from "geolib/es/getDistance";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import { Rating } from "react-native-ratings";
 
 import RequestInfoItem from "../components/request-info-item.component";
-import Rating from "../components/rating.component";
 
 const HistoryItem = ({ label, content }) => (
     <>
@@ -139,13 +139,19 @@ const HistoryComponent = ({
                     {morbidityNote && <HistoryItem label="Ghi chú" content={morbidityNote} />}
                     {reason && <HistoryItem label="Yêu cầu không hoàn thành do" content={reason} />}
                     {(ratingDriver || feedbackDriver) && (
-                        <>
+                        <View style={{ alignItems: "flex-start" }}>
                             <Text style={styles.infoTitle}>Đánh giá</Text>
-                            <Rating level={ratingDriver} size={8} />
+                            <Rating
+                                ratingCount={5}
+                                imageSize={12}
+                                startingValue={ratingDriver}
+                                readonly
+                                type="heart"
+                            />
                             <RequestInfoItem
                                 content={feedbackDriver || "Không có đánh giá về bạn"}
                             />
-                        </>
+                        </View>
                     )}
                 </>
             )}

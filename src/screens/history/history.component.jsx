@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Text } from "react-native";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 
@@ -12,17 +12,24 @@ import HistoryComponent from "../../components/history-row.component";
 import Spinner from "../../components/spinner.component";
 
 const HistoryScreen = ({ currentUser, token, navigation, viewHistory }) => {
-    const [history, setHistory] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [history, setHistory] = useState({ data: [], totalPage: 0, currentPage: 1 });
+    const [currentHistory, setCurrentHistory] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        fetchHistory(token, currentUser.id).then(response =>
+        fetchHistories(1);
+    }, []);
+
+    const fetchHistories = pageIndex => {
+        setLoading(true);
+        fetchHistory(token, currentUser.id, pageIndex).then(response =>
             setTimeout(() => {
                 setHistory(response.data);
+                setCurrentHistory(currentHistory.concat(response.data.data));
                 setLoading(false);
             }, 500)
         );
-    }, []);
+    };
 
     return (
         <View style={styles.container}>
@@ -33,8 +40,8 @@ const HistoryScreen = ({ currentUser, token, navigation, viewHistory }) => {
                 showsVerticalScrollIndicator={false}
                 directionalLockEnabled={true}
             >
-                {history.length ? (
-                    history.map(({ id, ...otherProps }) => (
+                {currentHistory.length ? (
+                    currentHistory.map(({ id, ...otherProps }) => (
                         <HistoryComponent
                             key={id}
                             {...otherProps}
@@ -46,6 +53,13 @@ const HistoryScreen = ({ currentUser, token, navigation, viewHistory }) => {
                     ))
                 ) : (
                     <Text style={styles.emptyMessage}>Không có yêu cầu nào được thực hiện</Text>
+                )}
+                {history.currentPage < history.totalPage && (
+                    <TouchableOpacity
+                        onPress={() => fetchHistories(Number.parseInt(history.currentPage) + 1)}
+                    >
+                        <Text style={styles.loadMore}>Xem thêm</Text>
+                    </TouchableOpacity>
                 )}
             </ScrollView>
         </View>
@@ -73,5 +87,13 @@ const styles = StyleSheet.create({
         width: "100%",
         marginTop: "50%",
         textAlign: "center"
+    },
+    loadMore: {
+        width: "100%",
+        textAlign: "center",
+        marginVertical: 10,
+        fontFamily: "Texgyreadventor-bold",
+        fontSize: 13,
+        color: "#6c7fa6"
     }
 });
