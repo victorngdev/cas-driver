@@ -8,7 +8,7 @@ import * as Location from "expo-location";
 import { configureTask } from "../../uitls/background-task.services";
 
 import { pickedPatient, finishRequest, cancelRequest } from "../../redux/request/request.actions";
-import { clearStatusCode } from "../../redux/message/message.action";
+import { updateStatusCode } from "../../redux/message/message.action";
 import { selectCurrentRequest } from "../../redux/request/request.selectors";
 import { selectToken, selectCurrentUser } from "../../redux/user/user.selectors";
 import { selectStatusCode } from "../../redux/message/message.selectors";
@@ -34,7 +34,7 @@ const RequestScreen = ({
     pickedPatient,
     cancelRequest,
     finishRequest,
-    clearStatusCode,
+    updateStatusCode,
     navigation
 }) => {
     const [arrived, setArrived] = useState(false);
@@ -80,7 +80,20 @@ const RequestScreen = ({
 
     useEffect(() => {
         if (requestStatus && requestStatus.status === "canceled") {
-            navigation.replace("Home");
+            updateStatusCode(403);
+            setTimeout(() => {
+                navigation.replace("Home");
+            }, 2900);
+        }
+        if (
+            requestStatus &&
+            requestStatus.poolId &&
+            requestStatus.poolId !== currentUser.username
+        ) {
+            updateStatusCode(404);
+            setTimeout(() => {
+                navigation.replace("Home");
+            }, 2900);
         }
     }, [requestStatus]);
 
@@ -176,7 +189,7 @@ const mapDispatchToProps = dispatch => ({
     finishRequest: (token, requestId) => dispatch(finishRequest(token, requestId)),
     cancelRequest: (token, driverId, requestId, reason) =>
         dispatch(cancelRequest(token, driverId, requestId, reason)),
-    clearStatusCode: () => dispatch(clearStatusCode())
+    updateStatusCode: statusCode => dispatch(updateStatusCode(statusCode))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RequestScreen);

@@ -93,7 +93,7 @@ function* rejectRequestStart({ payload: { token, requestIds, username } }) {
     }
 }
 
-function* fetchConfigStart({ payload: token }) {
+function* fetchConfigStart({ payload: { token } }) {
     try {
         const response = yield call(fetchConfig, token);
 

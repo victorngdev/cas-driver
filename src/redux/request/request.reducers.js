@@ -13,8 +13,8 @@ const mapKey = {
     1: "requestTimeout",
     2: "termTimeout",
     3: "radius",
-    4: "maxRadius",
-    5: "extraRadius"
+    4: "extraRadius",
+    5: "maxRadius"
 };
 
 const requestReducer = (state = INITIAL_STATE, action) => {

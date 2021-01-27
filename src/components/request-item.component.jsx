@@ -8,6 +8,7 @@ import { createStructuredSelector } from "reselect";
 import getDistance from "geolib/es/getDistance";
 
 import { selectToken, selectUsername } from "../redux/user/user.selectors";
+import { selectRequestTimeout } from "../redux/request/request.selectors";
 import { rejectRequest } from "../redux/request/request.actions";
 
 import RequestInfoItem from "./request-info-item.component";
@@ -33,7 +34,8 @@ const RequestItem = ({
         distance
     },
     onAccept,
-    rejectRequest
+    rejectRequest,
+    requestTimeout
 }) => {
     const viewStateIcon = {
         false: require("../../assets/icons/details.png"),
@@ -55,7 +57,7 @@ const RequestItem = ({
             ) / 1000;
 
         setRDistance(distance.toFixed(1));
-        setTimer(15 * 60 - Math.round(diff));
+        setTimer(Number.parseInt(requestTimeout) * 60 - Math.round(diff));
     }, []);
 
     const children = remainingTime => {
@@ -97,7 +99,7 @@ const RequestItem = ({
                     {timer > 0 && (
                         <CountdownCircleTimer
                             isPlaying
-                            duration={900}
+                            duration={Number.parseInt(requestTimeout) * 60}
                             initialRemainingTime={timer}
                             strokeWidth={3}
                             size={55}
@@ -218,7 +220,8 @@ const RequestItem = ({
 
 const mapStateToProps = createStructuredSelector({
     token: selectToken,
-    username: selectUsername
+    username: selectUsername,
+    requestTimeout: selectRequestTimeout
 });
 
 const mapDispatchToProps = dispatch => ({

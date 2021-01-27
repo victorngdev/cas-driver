@@ -19,7 +19,7 @@ import Spinner from "../../components/spinner.component";
 import styles from "./login.style";
 
 const LoginScreen = ({ navigation, signIn, statusCode }) => {
-    const [username, setUsername] = useState("0326569665");
+    const [username, setUsername] = useState("0931738872");
     const [password, setPassword] = useState("123456");
     const [loading, setLoading] = useState(false);
 

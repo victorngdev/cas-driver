@@ -12,7 +12,8 @@ import {
     acceptRequest,
     fetchRequests,
     removeRequests,
-    rejectRequest
+    rejectRequest,
+    fetchConfig
 } from "../redux/request/request.actions";
 import { clearStatusCode } from "../redux/message/message.action";
 import { selectCurrentUser, selectToken } from "../redux/user/user.selectors";
@@ -35,6 +36,7 @@ const RequestBottomSheet = ({
     clearStatusCode,
     removeRequests,
     rejectRequest,
+    fetchConfig,
     navigation
 }) => {
     const [sortBy, setSortBy] = useState("createdTime");
@@ -59,7 +61,6 @@ const RequestBottomSheet = ({
     useEffect(() => {
         if (statusCode === 206) {
             clearStatusCode();
-            configureTask({ username: currentUser.username, inRequest: true });
             setLoading(false);
             requestRef.current.snapTo(2);
             navigation.replace("Request");
@@ -67,7 +68,10 @@ const RequestBottomSheet = ({
     }, [statusCode]);
 
     useEffect(() => {
-        fetchRequestsInit();
+        fetchConfig(token);
+        setTimeout(() => {
+            fetchRequestsInit();
+        }, 1000);
     }, [requests]);
 
     const initLocation = () => {
@@ -243,7 +247,8 @@ const mapDispatchToProps = dispatch => ({
     clearStatusCode: () => dispatch(clearStatusCode()),
     removeRequests: requestList => dispatch(removeRequests(requestList)),
     rejectRequest: (token, requestIds, username) =>
-        dispatch(rejectRequest(token, requestIds, username))
+        dispatch(rejectRequest(token, requestIds, username)),
+    fetchConfig: token => dispatch(fetchConfig(token))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RequestBottomSheet);

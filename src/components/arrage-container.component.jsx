@@ -4,7 +4,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/AntDesign";
 
 const mapKey = {
-    createdTime: "Thời gian chờ",
+    createdTime: "Thời gian",
     distance: "Khoảng cách",
     requestType: "Loại yêu cầu",
     asc: "Tăng dần",
