@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const api = axios.create({
-    baseURL: "http://192.168.1.170:3000/api/driver"
+    baseURL: "http://192.168.43.241:3000/api/driver"
     // baseURL: "https://cas-server-nodejs.herokuapp.com/api/driver"
 });
 
@@ -25,10 +25,10 @@ export const acceptRequest = (token, driverId, requestId, username) => {
     );
 };
 
-export const cancelRequest = (token, requestId, note) => {
+export const cancelRequest = (token, driverId, requestId, reason) => {
     return api.put(
-        "/requests/cancel",
-        { requestId, note },
+        `/requests/cancel/${driverId}`,
+        { requestId, reason },
         {
             headers: {
                 Authorization: token

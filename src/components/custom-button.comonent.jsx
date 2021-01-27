@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
 
 const CustomButton = ({ action, label, type, style }) => {

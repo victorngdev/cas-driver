@@ -17,6 +17,7 @@ const HomeDriverInfo = ({
     navigation
 }) => {
     const registered = currentAmbulance && currentAmbulance.ambulance_status === "ACTIVE";
+    const confirming = currentAmbulance && currentAmbulance.ambulance_status === "CONFIRMING";
 
     return (
         <>
@@ -39,7 +40,9 @@ const HomeDriverInfo = ({
                             { marginVertical: 15, width: "100%", textAlign: "center" }
                         ]}
                     >
-                        Bạn cần đăng ký xe để nhận yêu cầu
+                        {confirming
+                            ? "Yêu cầu đăng ký xe đang chờ phê duyệt!"
+                            : "Bạn cần đăng ký xe để nhận yêu cầu"}
                     </Text>
                 )}
             </View>
@@ -60,7 +63,7 @@ const HomeDriverInfo = ({
                         <Text
                             style={[styles.setting, { paddingVertical: 10, paddingHorizontal: 65 }]}
                         >
-                            Đăng ký xe
+                            {confirming ? "Xem thông tin đăng ký" : "Đăng ký xe"}
                         </Text>
                     </TouchableOpacity>
                 )}

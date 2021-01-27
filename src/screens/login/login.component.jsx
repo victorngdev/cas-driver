@@ -30,7 +30,7 @@ const LoginScreen = ({ navigation, signIn, statusCode }) => {
     return (
         <BackgroundLogin>
             {loading && <Spinner />}
-            <Message message={messages[401]} visible={!!statusCode} />
+            {statusCode && <Message message={messages[401]} />}
             <KeyboardAvoiding style={styles.container}>
                 <View style={styles.block_logo_name}>
                     <LogoName />

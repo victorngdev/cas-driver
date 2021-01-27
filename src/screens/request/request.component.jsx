@@ -10,7 +10,7 @@ import { configureTask } from "../../uitls/background-task.services";
 import { pickedPatient, finishRequest, cancelRequest } from "../../redux/request/request.actions";
 import { clearStatusCode } from "../../redux/message/message.action";
 import { selectCurrentRequest } from "../../redux/request/request.selectors";
-import { selectToken, selectUsername } from "../../redux/user/user.selectors";
+import { selectToken, selectCurrentUser } from "../../redux/user/user.selectors";
 import { selectStatusCode } from "../../redux/message/message.selectors";
 import { firestore } from "../../firebase/firebase.utils";
 
@@ -21,12 +21,14 @@ import Place from "../../components/place.component";
 import RejectModal from "../../components/reject-modal.component";
 import Header from "../../components/header.component";
 import Spinner from "../../components/spinner.component";
+import Message from "../../components/message.component";
 
 import styles from "./request.styles";
+import messages from "../../uitls/message.data";
 
 const RequestScreen = ({
     token,
-    username,
+    currentUser,
     currentRequest,
     statusCode,
     pickedPatient,
@@ -55,32 +57,30 @@ const RequestScreen = ({
                 longitude: currentRequest.pickUp.longitude
             });
             Location.startLocationUpdatesAsync("syncLocation", {
-                distanceInterval: 50
+                distanceInterval: 10,
+                deferredUpdatesDistance: 10
             });
-            configureTask({ username, inRequest: true });
+            configureTask({ username: currentUser.username, inRequest: true });
         }
     }, []);
 
     useEffect(() => {
         if (statusCode) {
-            setTimeout(() => {
-                if (statusCode === 200) {
-                    setArrived(true);
-                    setDestination({
-                        latitude: currentRequest.destination.latitude,
-                        longitude: currentRequest.destination.longitude
-                    });
-                }
-                clearStatusCode();
-                setLoading(false);
-                finished && navigation.replace("Home");
-            }, 750);
+            if (statusCode === 200) {
+                setArrived(true);
+                setDestination({
+                    latitude: currentRequest.destination.latitude,
+                    longitude: currentRequest.destination.longitude
+                });
+            }
+            setLoading(false);
+            finished && navigation.replace("Home");
         }
     }, [statusCode]);
 
     useEffect(() => {
         if (requestStatus && requestStatus.status === "canceled") {
-            // Show message
+            navigation.replace("Home");
         }
     }, [requestStatus]);
 
@@ -90,7 +90,10 @@ const RequestScreen = ({
     };
 
     const handleCancelRequest = () => {
-        cancelRequest(token, currentRequest.requestId, cancelOption);
+        setModal(false);
+        setLoading(true);
+        cancelRequest(token, currentUser.id, currentRequest.requestId, cancelOption);
+        navigation.replace("Home");
     };
 
     const handleFinish = () => {
@@ -111,6 +114,7 @@ const RequestScreen = ({
                     isArrived={arrived}
                 />
             )}
+            {statusCode && <Message message={messages[statusCode]} isMessage={statusCode < 400} />}
             <Header title="Đang đón bệnh nhân" />
             <View style={{ marginTop: 5 }}>
                 <Map destination={destination} />
@@ -164,13 +168,14 @@ const mapStateToProps = createStructuredSelector({
     token: selectToken,
     currentRequest: selectCurrentRequest,
     statusCode: selectStatusCode,
-    username: selectUsername
+    currentUser: selectCurrentUser
 });
 
 const mapDispatchToProps = dispatch => ({
     pickedPatient: (token, requestId) => dispatch(pickedPatient(token, requestId)),
     finishRequest: (token, requestId) => dispatch(finishRequest(token, requestId)),
-    cancelRequest: (token, requestId, reason) => dispatch(cancelRequest(token, requestId, reason)),
+    cancelRequest: (token, driverId, requestId, reason) =>
+        dispatch(cancelRequest(token, driverId, requestId, reason)),
     clearStatusCode: () => dispatch(clearStatusCode())
 });
 

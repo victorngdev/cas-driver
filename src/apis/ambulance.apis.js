@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "http://192.168.1.170:3000/api/driver"
+    baseURL: "http://192.168.43.241:3000/api/driver"
     // baseURL: "https://cas-server-nodejs.herokuapp.com/api/driver"
 });
 
@@ -38,9 +38,13 @@ export const getAmbulanceNote = (token, ambulanceId) => {
 };
 
 export const unregisterAmbulance = (token, ambulanceId) => {
-    return api.get(`/ambulances/${ambulanceId}/cancel`, {
-        headers: {
-            Authorization: token
+    return api.put(
+        `/ambulances/${ambulanceId}/cancel`,
+        {},
+        {
+            headers: {
+                Authorization: token
+            }
         }
-    });
+    );
 };

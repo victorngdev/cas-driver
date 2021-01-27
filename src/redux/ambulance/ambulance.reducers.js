@@ -28,6 +28,11 @@ const ambulanceReducer = (state = INITIAL_STATE, action) => {
                 ...state,
                 error: action.payload
             };
+        case AmbulanceActionTypes.UPDATE_AMBULANCE_SUCCESS:
+            return {
+                ...state,
+                currentAmbulance: action.payload
+            };
         case AmbulanceActionTypes.GET_AMBULANCE_NOTE_SUCCESS:
             return {
                 ...state,

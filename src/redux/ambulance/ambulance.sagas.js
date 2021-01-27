@@ -55,8 +55,7 @@ function* updateAmbulanceStart({ payload: { token, userId, ambulance } }) {
     try {
         const response = yield call(updateAmbulance, token, userId, ambulance);
 
-        yield put(updateAmbulanceSuccess(response.data));
-        yield put(handleUpdateAmbulance());
+        yield put(updateAmbulanceSuccess({ ...response.data, ambulance_status: "CONFIRMING" }));
         yield put(updateStatusCode(203));
     } catch (error) {
         yield put(updateAmbulanceFail(error));

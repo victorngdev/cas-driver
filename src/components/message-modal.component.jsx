@@ -1,36 +1,28 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Text, StyleSheet, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { connect } from "react-redux";
-
-import { clearStatusCode } from "../redux/message/message.action";
 
 import CustomModal from "./custom-modal.componet";
 
-const MessageModal = ({ message, clearStatusCode }) => {
-    useEffect(() => {
-        setTimeout(() => {
-            clearStatusCode();
-        }, 2000);
-    }, [message]);
-
+const MessageModal = ({ message, onClose, onSubmit, isConfirm }) => {
     return (
         <CustomModal>
             <Text style={styles.message}>{message}</Text>
             <View style={styles.action}>
-                <TouchableOpacity onPress={clearStatusCode}>
-                    <Text style={styles.button}>Xác nhận</Text>
+                <TouchableOpacity onPress={onClose}>
+                    <Text style={styles.button}>Đóng</Text>
                 </TouchableOpacity>
+                {!isConfirm && (
+                    <TouchableOpacity onPress={onSubmit}>
+                        <Text style={styles.button}>Xác nhận</Text>
+                    </TouchableOpacity>
+                )}
             </View>
         </CustomModal>
     );
 };
 
-const mapDispatchToProps = dispatch => ({
-    clearStatusCode: () => dispatch(clearStatusCode())
-});
-
-export default connect(null, mapDispatchToProps)(MessageModal);
+export default MessageModal;
 
 const styles = StyleSheet.create({
     requestStatus: {

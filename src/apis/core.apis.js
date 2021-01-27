@@ -4,7 +4,7 @@ import { RNS3 } from "react-native-aws3";
 import aws from "../config/awskey";
 
 const api = axios.create({
-    baseURL: "http://192.168.1.170:3000/api"
+    baseURL: "http://192.168.43.241:3000/api"
     // baseURL: "https://cas-server-nodejs.herokuapp.com/api"
 });
 
@@ -48,7 +48,7 @@ export const fetchHistoryDetails = (token, requestId) => {
 };
 
 export const checkExistedPhoneNumber = phone => {
-    return api.get(`/users/exist?username=${phone}`);
+    return api.get(`/users/check_exist?username=${phone}`);
 };
 
 export const checkIsRegister = phone => {

@@ -1,8 +1,9 @@
 import React from "react";
 import { View, Image, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { launchCameraAsync } from "expo-image-picker";
+import Icon from "react-native-vector-icons/FontAwesome5";
 
-const ImageCapture = ({ label, source, action }) => {
+const ImageCapture = ({ label, source, action, isWarning, showWarning }) => {
     const launchCamera = () => {
         launchCameraAsync({ base64: true, allowsEditing: true, aspect: [16, 9] }).then(response =>
             action({ uri: response.uri, base64: response.base64 })
@@ -17,7 +18,19 @@ const ImageCapture = ({ label, source, action }) => {
                     source={{ uri: source || "https://i.ibb.co/ypNxXzD/cap-picture.png" }}
                 />
             </TouchableOpacity>
-            <Text style={styles.imgDescription}>{label}</Text>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Text style={styles.imgDescription}>{label}</Text>
+                {isWarning && (
+                    <TouchableOpacity onPress={showWarning}>
+                        <Icon
+                            style={{ marginTop: 5, marginLeft: 2 }}
+                            size={12}
+                            color="#ff0000"
+                            name="exclamation-triangle"
+                        />
+                    </TouchableOpacity>
+                )}
+            </View>
         </View>
     );
 };

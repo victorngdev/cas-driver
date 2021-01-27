@@ -49,10 +49,11 @@ function* acceptRequestStart({ payload: { token, driverId, requestId, username, 
     }
 }
 
-function* cancelRequestStart({ payload: { token, requestId, reason } }) {
+function* cancelRequestStart({ payload: { token, driverId, requestId, reason } }) {
     try {
-        yield call(cancelRequest, token, requestId, reason);
+        yield call(cancelRequest, token, driverId, requestId, reason);
         yield put(cancelRequestSuccess());
+        yield put(updateStatusCode(207));
     } catch (error) {
         yield put(cancelRequestFail(error));
         yield put(updateStatusCode(error.message.includes("401") ? 700 : 402));
@@ -73,7 +74,7 @@ function* finishRequestStart({ payload: { token, requestId } }) {
     try {
         yield call(finishRequest, token, requestId);
         yield put(finishRequestSuccess());
-        yield put(updateStatusCode(207));
+        yield put(updateStatusCode(209));
     } catch (error) {
         yield put(finishRequestFail(error));
         yield put(updateStatusCode(error.message.includes("401") ? 700 : 402));

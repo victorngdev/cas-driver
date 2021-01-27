@@ -39,9 +39,9 @@ export const acceptRequestFail = error => ({
     payload: error
 });
 
-export const cancelRequest = (token, requestId, reason) => ({
+export const cancelRequest = (token, driverId, requestId, reason) => ({
     type: RequestActionTypes.CANCEL_REQUEST_START,
-    payload: { token, requestId, reason }
+    payload: { token, driverId, requestId, reason }
 });
 
 export const cancelRequestSuccess = () => ({

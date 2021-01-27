@@ -43,7 +43,7 @@ const RequestBottomSheet = ({
     const [opacity, setOpacity] = useState(0);
     const [location, setLocation] = useState(null);
     const [loading, setLoading] = useState(false);
-    const requestDocumentRef = firestore.collection("confirmations").doc(currentUser.username);
+    const requestDocumentRef = firestore.collection("drivers").doc(currentUser.username);
     const [requests] = useDocumentData(requestDocumentRef);
 
     useEffect(() => {

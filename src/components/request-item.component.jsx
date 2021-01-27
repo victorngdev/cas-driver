@@ -5,6 +5,7 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
+import getDistance from "geolib/es/getDistance";
 
 import { selectToken, selectUsername } from "../redux/user/user.selectors";
 import { rejectRequest } from "../redux/request/request.actions";
@@ -41,11 +42,19 @@ const RequestItem = ({
     const [viewState, setViewState] = useState(false);
     const [timer, setTimer] = useState(0);
     const [loading, setLoading] = useState(false);
+    const [rDistance, setRDistance] = useState(0);
 
     useEffect(() => {
         const current = new Date().toISOString();
         const start = `${createdDate}T${createdTime}Z`;
         const diff = 25200 - (new Date(start).getTime() - new Date(current).getTime()) / 1000 - 3;
+        const distance =
+            getDistance(
+                { latitude: destination.latitude, longitude: destination.longitude },
+                { latitude: pickUp.latitude, longitude: pickUp.longitude }
+            ) / 1000;
+
+        setRDistance(distance.toFixed(1));
         setTimer(15 * 60 - Math.round(diff));
     }, []);
 
@@ -67,7 +76,7 @@ const RequestItem = ({
                         <Text style={styles.distanceUnit}>km</Text>
                     </View>
                 </View>
-                <View style={{ flexBasis: "35%" }}>
+                <View>
                     <Text style={styles.title}>Loại yêu cầu:</Text>
                     <Text style={[styles.title, { fontSize: 9 }]}>{`${createdTime} ${new Date(
                         createdDate
@@ -122,11 +131,11 @@ const RequestItem = ({
                 <View style={styles.iconContainer}>
                     <Icon size={18} color="#09acfe" name="chevron-circle-up" />
                     <Icon size={12} color="#555" name="ellipsis-v" />
-                    <Text style={styles.requestDistanceValue}>{distance}km</Text>
+                    <Text style={styles.requestDistanceValue}>{rDistance}km</Text>
                     <Icon size={12} color="#555" name="ellipsis-v" />
                     <Icon size={18} color="#f9650c" name="chevron-circle-down" />
                 </View>
-                <View>
+                <View style={{ width: "90%" }}>
                     <View style={[styles.location, { marginBottom: 10 }]}>
                         <Text style={styles.name}>{pickUp.name}</Text>
                         <Text style={styles.address}>{pickUp.address}</Text>

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 
@@ -11,6 +11,7 @@ import {
     updateAmbulance
 } from "../../redux/ambulance/ambulance.actions";
 import { selectCurrentAmbulance } from "../../redux/ambulance/ambulance.selectors";
+import { selectStatusCode } from "../../redux/message/message.selectors";
 import { checkIsRegisteredAmbulance, uploadImage } from "../../apis/core.apis";
 import messages from "../../uitls/message.data";
 
@@ -22,6 +23,7 @@ import ImageCapture from "../../components/image-capture.component";
 import MessageModal from "../../components/message-modal.component";
 import Spinner from "../../components/spinner.component";
 import Header from "../../components/header.component";
+import Message from "../../components/message.component";
 
 const RegisterAmbulanceScreen = ({
     navigation,
@@ -30,11 +32,13 @@ const RegisterAmbulanceScreen = ({
     token,
     registerAmbulance,
     updateAmbulance,
-    unregisterAmbulance
+    unregisterAmbulance,
+    statusCode
 }) => {
     const [displayName, setDisplayName] = useState(currentUser.displayName || "");
     const [messageModal, setMessageModal] = useState(false);
     const [updateModal, setUpdateModal] = useState(false);
+    const [currentNote, setCurrentNote] = useState(null);
     const [cancel, setCancel] = useState(false);
     const [phone, setPhone] = useState(currentUser.phone || "");
     const [loading, setLoading] = useState(false);
@@ -84,12 +88,12 @@ const RegisterAmbulanceScreen = ({
     };
 
     const handleUpdate = async () => {
+        setLoading(true);
         if (isRegistered) {
             setUpdateModal(false);
             return;
         }
         if (identityCard.base64) {
-            setLoading(true);
             await uploadImage(identityCard.base64).then(response => {
                 const ambulance = {
                     ambulanceId: currentAmbulance.id,
@@ -116,13 +120,14 @@ const RegisterAmbulanceScreen = ({
                 registerLicense: registerLicense.uri,
                 registryCertificate: registryCertificate.uri
             });
+            setLoading(false);
         }
         setUpdateModal(false);
     };
 
     const handleUnregister = () => {
         setIdentityCard({ uri: null });
-        unregisterAmbulance(token, currentAmbulance.ambulanceId);
+        unregisterAmbulance(token, currentAmbulance.id);
         setCancel(false);
     };
 
@@ -139,24 +144,35 @@ const RegisterAmbulanceScreen = ({
                     <MessageModal
                         onClose={() => setMessageModal(false)}
                         content={messages.registered}
-                        action={handleRegister}
+                        onSubmit={handleRegister}
                     />
                 )}
                 {updateModal && (
                     <MessageModal
                         onClose={() => setUpdateModal(false)}
-                        content={messages.update}
-                        action={handleUpdate}
+                        message={messages[100]}
+                        onSubmit={handleUpdate}
                     />
                 )}
                 {cancel && (
                     <MessageModal
-                        content={messages.cancel}
-                        action={handleUnregister}
+                        message={messages[101]}
+                        onSubmit={handleUnregister}
                         onClose={() => setCancel(false)}
                     />
                 )}
                 {loading && <Spinner />}
+                {statusCode && (
+                    <Message message={messages[statusCode]} isMessage={statusCode < 400} />
+                )}
+                {currentNote ? (
+                    <MessageModal
+                        onClose={() => setCurrentNote(null)}
+                        message={currentNote}
+                        isMessage
+                        isConfirm
+                    />
+                ) : null}
                 <Header title="Đăng kí xe" gotoScreen={() => navigation.goBack(null)} />
                 <Text style={styles.header}>
                     Cung cấp thông tin và hình ảnh để xác thực danh tính và phương tiện cứu thương
@@ -193,21 +209,49 @@ const RegisterAmbulanceScreen = ({
                             source={identityCard.uri}
                             label="Chứng minh nhân dân"
                             action={setIdentityCard}
+                            isWarning={
+                                currentAmbulance &&
+                                currentAmbulance.note &&
+                                !!currentAmbulance.note.identityCard
+                            }
+                            showWarning={() => setCurrentNote(currentAmbulance.note.identityCard)}
                         />
                         <ImageCapture
                             source={driverLicense.uri}
                             label="Giấy đăng ký xe"
                             action={setDriverLicense}
+                            isWarning={
+                                currentAmbulance &&
+                                currentAmbulance.note &&
+                                !!currentAmbulance.note.driverLicense
+                            }
+                            showWarning={() => setCurrentNote(currentAmbulance.note.driverLicense)}
                         />
                         <ImageCapture
                             source={registerLicense.uri}
                             label="Giấy phép lái xe"
                             action={setRegisterLicense}
+                            isWarning={
+                                currentAmbulance &&
+                                currentAmbulance.note &&
+                                !!currentAmbulance.note.registerLicense
+                            }
+                            showWarning={() =>
+                                setCurrentNote(currentAmbulance.note.registerLicense)
+                            }
                         />
                         <ImageCapture
                             source={registryCertificate.uri}
                             label="Giấy đăng kiểm"
                             action={setRegistryCertificate}
+                            isWarning={
+                                currentAmbulance &&
+                                currentAmbulance.note &&
+                                !!currentAmbulance.note.registryCertificate
+                            }
+                            showWarning={() =>
+                                setCurrentNote(currentAmbulance.note.registryCertificate)
+                            }
                         />
                     </View>
                 </KeyboardAvoiding>
@@ -216,7 +260,10 @@ const RegisterAmbulanceScreen = ({
                         <ButtonText
                             textContent="Hủy đăng ký"
                             styleText={styles.text}
-                            styleButton={styles.cancel}
+                            styleButton={[
+                                styles.button,
+                                { marginRight: 10, paddingHorizontal: 40 }
+                            ]}
                             gotoScreen={() => setCancel(true)}
                         />
                         <ButtonText
@@ -230,7 +277,7 @@ const RegisterAmbulanceScreen = ({
                     <ButtonText
                         textContent="Đăng ký"
                         styleText={styles.text}
-                        styleButton={styles.button}
+                        styleButton={[styles.button, { paddingHorizontal: 55 }]}
                         gotoScreen={() => setMessageModal(true)}
                     />
                 )}
@@ -242,7 +289,8 @@ const RegisterAmbulanceScreen = ({
 const mapStateToProps = createStructuredSelector({
     currentUser: selectCurrentUser,
     currentAmbulance: selectCurrentAmbulance,
-    token: selectToken
+    token: selectToken,
+    statusCode: selectStatusCode
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -264,7 +312,7 @@ const styles = StyleSheet.create({
         position: "relative"
     },
     container: {
-        width: "90%",
+        width: "95%",
         height: "78%",
         flexDirection: "column"
     },
@@ -307,24 +355,19 @@ const styles = StyleSheet.create({
     },
     button: {
         marginBottom: 10,
-        backgroundColor: "#FFAB2E",
+        backgroundColor: "#f3f3f4",
         borderRadius: 25,
-        paddingVertical: 3
+        paddingVertical: 7,
+        marginBottom: 20,
+        paddingHorizontal: 50
     },
     text: {
         textAlign: "center",
         marginVertical: 3,
-        color: "#FFF",
-        fontSize: 14,
-        fontFamily: "Texgyreadventor-regular",
+        color: "#222",
+        fontSize: 12,
+        fontFamily: "Texgyreadventor-bold",
         justifyContent: "center"
-    },
-    cancel: {
-        marginBottom: 10,
-        marginRight: 10,
-        backgroundColor: "#000",
-        borderRadius: 25,
-        paddingVertical: 3
     },
     groupAction: {
         width: "100%",
@@ -336,5 +379,19 @@ const styles = StyleSheet.create({
         fontFamily: "Texgyreadventor-regular",
         color: "#ff0000",
         fontSize: 12
+    },
+    note: {
+        position: "absolute",
+        bottom: 0,
+        flex: 1,
+        backgroundColor: "rgba(0, 0, 0, 0.75)",
+        justifyContent: "center",
+        alignItems: "center",
+        left: 0
+    },
+    noteContent: {
+        width: "95%",
+        height: 150,
+        backgroundColor: "#fff"
     }
 });

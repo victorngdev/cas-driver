@@ -45,10 +45,18 @@ export const syncLocationToRequest = async (poolId, latitude, longitude) => {
 export const initLocation = async (userId, latitude, longitude) => {
     geocollection.doc(`${userId}`).set(
         {
-            coordinates: new firebase.firestore.GeoPoint(latitude, longitude)
+            coordinates: new firebase.firestore.GeoPoint(latitude, longitude),
+            latitude,
+            longitude
         },
         { merge: true }
     );
+};
+
+export const clearConfirmationStatus = async username => {
+    const driverRef = firestore.collection("drivers").doc(`${username}`);
+
+    driverRef.update({ confirmationStatus: null });
 };
 
 export default firebase;

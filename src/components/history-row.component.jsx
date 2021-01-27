@@ -25,25 +25,28 @@ const HistoryComponent = ({
     morbidity,
     morbidityNote,
     feedbackDriver,
-    ratingDriver
+    ratingDriver,
+    reason
 }) => {
     const viewStateIcon = {
         false: require("../../assets/icons/details.png"),
         true: require("../../assets/icons/less.png")
     };
     const mapStatus = {
-        SUCCESS: "Thành công",
-        FAIL: "Không thành công"
+        SUCCESS: { title: "Thành công", color: "#07a33d" },
+        FAIL: { title: "Không hoàn thành", color: "#ff0000" },
+        CANCELED: { title: "Đã hủy bỏ", color: "#ff0000" },
+        PROCESSING: { title: "Đang xử lí", color: "#6ad4d2" }
     };
     const [viewState, setViewState] = useState(false);
 
     return (
         <View style={styles.container}>
             <View style={styles.overview}>
-                <View style={[styles.overviewItem, { flexBasis: "28%", marginRight: 30 }]}>
+                <View style={[styles.overviewItem, { marginRight: 20 }]}>
                     <Text style={styles.title}>Điểm đón:</Text>
                     <Text style={[styles.title, { fontSize: 9 }]}>
-                        {pickUp.time} {pickUp.date}
+                        {pickUp.date ? `${pickUp.time} ${pickUp.date}` : "......"}
                     </Text>
                     <View style={styles.requestType}>
                         <Icon size={14} color="#333" name="taxi" />
@@ -52,15 +55,20 @@ const HistoryComponent = ({
                         </Text>
                     </View>
                 </View>
-                <View style={[styles.overviewItem, { flexBasis: "35%" }]}>
+                <View style={[styles.overviewItem, { flexBasis: "38%", marginRight: 10 }]}>
                     <Text style={styles.title}>Điểm đến:</Text>
                     <Text style={[styles.title, { fontSize: 9 }]}>
-                        {destination.time} {destination.date}
+                        {destination.date ? `${destination.time} ${destination.date}` : "......"}
                     </Text>
                     <View style={styles.requestType}>
                         <Icon size={14} color="#333" name="street-view" />
-                        <Text style={[styles.requestTypeValue, { backgroundColor: "#118539" }]}>
-                            {mapStatus[request_status]}
+                        <Text
+                            style={[
+                                styles.requestTypeValue,
+                                { backgroundColor: mapStatus[request_status].color }
+                            ]}
+                        >
+                            {mapStatus[request_status].title}
                         </Text>
                     </View>
                 </View>
@@ -129,6 +137,7 @@ const HistoryComponent = ({
                     </View>
                     {morbidity && <HistoryItem label="Tình trạng" content={morbidity} />}
                     {morbidityNote && <HistoryItem label="Ghi chú" content={morbidityNote} />}
+                    {reason && <HistoryItem label="Yêu cầu không hoàn thành do" content={reason} />}
                     {(ratingDriver || feedbackDriver) && (
                         <>
                             <Text style={styles.infoTitle}>Đánh giá</Text>

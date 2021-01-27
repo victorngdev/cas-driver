@@ -1,22 +1,23 @@
 import React, { useState, useEffect, useRef } from "react";
 import { View, PermissionsAndroid } from "react-native";
 import { connect } from "react-redux";
-import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import { createStructuredSelector } from "reselect";
 import * as Location from "expo-location";
 import Geocoder from "react-native-geocoding";
+import { useDocumentData } from "react-firebase-hooks/firestore";
 
-import { clearConfirmationRequest } from "../../firebase/firebase.utils";
+import { clearConfirmationStatus, firestore } from "../../firebase/firebase.utils";
 import { clearRequest } from "../../redux/request/request.actions";
-import { handleApprovedRegisterAmbulance } from "../../redux/user/user.actions";
-import { selectUsername } from "../../redux/user/user.selectors";
+import { updateStatusCode } from "../../redux/message/message.action";
+import { fetchAmbulance } from "../../redux/ambulance/ambulance.actions";
+import { selectToken, selectCurrentUser } from "../../redux/user/user.selectors";
 import { selectCurrentAmbulance } from "../../redux/ambulance/ambulance.selectors";
 import { selectStatusCode } from "../../redux/message/message.selectors";
 import { configureTask } from "../../uitls/background-task.services";
 import messages from "../../uitls/message.data";
 
 import HomeDriverInfo from "../../components/home-driver-info.component";
-import MessageModal from "../../components/message-modal.component";
 import Message from "../../components/message.component";
 import RequestBottomSheet from "../../components/request-bottom-sheet.component";
 import SettingBottomSheet from "../../components/setting-bottom-sheet.componet";
@@ -27,13 +28,16 @@ import styles from "./home.style";
 Geocoder.init("AIzaSyA3wjgHRZGPb4I96XDM-Eev7f1QQM_Mpp8", { language: "vi" });
 
 const HomeScreen = ({
+    token,
     currentAmbulance,
-    username,
-    handleApprovedRegisterAmbulance,
     statusCode,
+    currentUser,
+    updateStatusCode,
+    fetchAmbulance,
     navigation
 }) => {
-    const [confirmationStatus, setConfirmationStatus] = useState(null);
+    const driverRef = firestore.collection("drivers").doc(`${currentUser.username}`);
+    const [driverStatus] = useDocumentData(driverRef);
     const [location, setLocation] = useState(null);
     const settingRef = useRef(null);
     const requestRef = useRef(null);
@@ -42,10 +46,24 @@ const HomeScreen = ({
         initLocation();
         const timer = setInterval(() => {
             initLocation();
-        }, 10000);
+        }, 2000);
 
         return () => clearInterval(timer);
     }, []);
+
+    useEffect(() => {
+        if (driverStatus && driverStatus.confirmationStatus) {
+            if (driverStatus.confirmationStatus === "approved") {
+                fetchAmbulance(token, currentUser.id);
+                clearConfirmationStatus(currentUser.username);
+                updateStatusCode(102);
+            } else {
+                clearConfirmationStatus(currentUser.username);
+                fetchAmbulance(token, currentUser.id);
+                updateStatusCode(403);
+            }
+        }
+    }, [driverStatus]);
 
     useEffect(() => {
         if (currentAmbulance && currentAmbulance.ambulance_status === "ACTIVE") {
@@ -54,10 +72,10 @@ const HomeScreen = ({
     }, [currentAmbulance]);
 
     const initBackgroundTask = async inRequest => {
-        configureTask({ username, inRequest });
+        configureTask({ username: currentUser.username, inRequest });
         await Location.startLocationUpdatesAsync("syncLocation", {
-            deferredUpdatesDistance: 2000,
-            distanceInterval: 2000
+            deferredUpdatesDistance: 1,
+            distanceInterval: 1
         });
     };
 
@@ -78,7 +96,7 @@ const HomeScreen = ({
         <View style={styles.container}>
             <SettingBottomSheet settingRef={settingRef} />
             <RequestBottomSheet navigation={navigation} requestRef={requestRef} />
-            {confirmationStatus && <MessageModal content={messages[confirmationStatus]} />}
+            {statusCode && <Message message={messages[statusCode]} isMessage={statusCode < 400} />}
             <Header title="Chờ yêu cầu" />
             <View style={{ flex: 12, marginTop: 5, borderRadius: 10 }}>
                 <MapView
@@ -86,19 +104,26 @@ const HomeScreen = ({
                     initialRegion={{
                         ...location,
                         latitudeDelta: 0.0043,
-                        longitudeDelta: 0.0024
+                        longitudeDelta: 0.0023
                     }}
-                    showsMyLocationButton={true}
-                    showsUserLocation={true}
+                    showsMyLocationButton
+                    showsUserLocation
                     loadingEnabled
-                    followsUserLocation={true}
+                    followsUserLocation
                     style={{ width: "100%", height: "100%" }}
                     onMapReady={() =>
                         PermissionsAndroid.request(
                             PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
                         )
                     }
-                />
+                >
+                    {location && (
+                        <Marker
+                            coordinate={location}
+                            image={require("../../../assets/icons/location.png")}
+                        />
+                    )}
+                </MapView>
             </View>
             <View style={styles.info}>
                 <HomeDriverInfo
@@ -113,14 +138,17 @@ const HomeScreen = ({
 };
 
 const mapStateToProps = createStructuredSelector({
-    username: selectUsername,
     statusCode: selectStatusCode,
-    currentAmbulance: selectCurrentAmbulance
+    currentAmbulance: selectCurrentAmbulance,
+    currentUser: selectCurrentUser,
+    token: selectToken
 });
 
 const mapDispatchToProps = dispatch => ({
     clearRequest: () => dispatch(clearRequest()),
-    handleApprovedRegisterAmbulance: () => dispatch(handleApprovedRegisterAmbulance())
+    handleApprovedRegisterAmbulance: () => dispatch(handleApprovedRegisterAmbulance()),
+    updateStatusCode: statusCode => dispatch(updateStatusCode(statusCode)),
+    fetchAmbulance: (token, userId) => dispatch(fetchAmbulance(token, userId))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);

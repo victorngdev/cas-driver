@@ -11,9 +11,9 @@ const INITIAL_STATE = {
 
 const mapKey = {
     1: "requestTimeout",
-    2: "confirmationTimeout",
+    2: "termTimeout",
     3: "radius",
-    4: "numOfDrivers",
+    4: "maxRadius",
     5: "extraRadius"
 };
 
