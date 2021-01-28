@@ -59,3 +59,21 @@ export const getAmbulanceNoteFail = error => ({
     type: AmbulanceActionTypes.GET_AMBULANCE_NOTE_FAIL,
     payload: error
 });
+
+export const unregisterAmbulance = (token, ambulanceId) => ({
+    type: AmbulanceActionTypes.UNREGISTER_AMBULANCE_START,
+    payload: { token, ambulanceId }
+});
+
+export const unregisterAmbulanceSuccess = () => ({
+    type: AmbulanceActionTypes.UNREGISTER_AMBULANCE_SUCCESS
+});
+
+export const unregisterAmbulanceFail = error => ({
+    type: AmbulanceActionTypes.UNREGISTER_AMBULANCE_FAIL,
+    payload: error
+});
+
+export const clearAmbulanceNote = () => ({
+    type: AmbulanceActionTypes.CLEAR_AMBULANCE_NOTE
+});

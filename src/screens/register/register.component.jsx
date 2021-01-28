@@ -2,7 +2,11 @@ import React, { useState, useRef } from "react";
 import { View, TextInput, Text, TouchableOpacity } from "react-native";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import * as firebase from "firebase";
+import { connect } from "react-redux";
+import { createStructuredSelector } from "reselect";
 
+import { updateStatusCode } from "../../redux/message/message.action";
+import { selectStatusCode } from "../../redux/message/message.selectors";
 import messages from "../../uitls/message.data";
 import { checkExistedPhoneNumber, registerAccount } from "../../apis/core.apis";
 
@@ -13,6 +17,8 @@ import LogoName from "../../components/logo-name.component";
 import BackgroundLogin from "../../components/background-screen-login.component";
 import KeyboardAvoiding from "../../components/keyboard-avoding.component";
 import Modal from "../../components/modal.component";
+import Spinner from "../../components/spinner.component";
+import Message from "../../components/message.component";
 
 import styles from "./register.styles";
 
@@ -26,7 +32,8 @@ const firebaseConfig = {
     appId: "1:801731513492:web:30978d836981cb9b6d3881"
 };
 
-const RegisterScreen = ({ navigation }) => {
+const RegisterScreen = ({ statusCode, navigation, updateStatusCode }) => {
+    const [loading, setLoading] = useState(false);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -51,7 +58,7 @@ const RegisterScreen = ({ navigation }) => {
             invalidName,
             phoneExisted
         } = validation;
-        if (!(username || password || confirmPassword || name)) {
+        if (!(username && password && confirmPassword && name)) {
             return;
         }
         if (
@@ -71,6 +78,15 @@ const RegisterScreen = ({ navigation }) => {
         } catch (error) {
             console.log(error);
         }
+        // setLoading(true);
+        // registerAccount({ username, password, displayName: name, phone: username }).then(
+        //     response => {
+        //         updateStatusCode(208);
+        //         setTimeout(() => {
+        //             navigation.replace("Login");
+        //         }, 2000);
+        //     }
+        // );
     };
 
     const confirmCode = async () => {
@@ -78,14 +94,15 @@ const RegisterScreen = ({ navigation }) => {
             const credential = firebase.auth.PhoneAuthProvider.credential(verificationId, otp);
             await firebase.auth().signInWithCredential(credential);
             setVerificationId(null);
-            await registerAccount({ username, password, name }).then(response => {
-                setVerificationId(null);
-                setUsername(null);
-                setPassword(null);
-                setConfirmPassword(null);
-                setName(null);
-                navigation.navigate("Login");
-            });
+            setLoading(true);
+            await registerAccount({ username, password, displayName: name, phone: username }).then(
+                response => {
+                    updateStatusCode(208);
+                    setTimeout(() => {
+                        navigation.replace("Login");
+                    }, 2000);
+                }
+            );
         } catch (error) {
             setInvalidOTP("Mã OTP không hợp lệ");
         }
@@ -125,6 +142,8 @@ const RegisterScreen = ({ navigation }) => {
 
     return (
         <BackgroundLogin>
+            {loading && <Spinner />}
+            {statusCode && <Message message={messages[208]} isMessage />}
             <FirebaseRecaptchaVerifierModal
                 ref={recaptchaVerifier}
                 firebaseConfig={firebaseConfig}
@@ -223,4 +242,12 @@ const RegisterScreen = ({ navigation }) => {
     );
 };
 
-export default RegisterScreen;
+const mapStateToProps = createStructuredSelector({
+    statusCode: selectStatusCode
+});
+
+const mapDispatchToProps = dispatch => ({
+    updateStatusCode: statusCode => dispatch(updateStatusCode(statusCode))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterScreen);

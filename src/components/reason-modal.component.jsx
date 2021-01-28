@@ -1,26 +1,41 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { connect } from "react-redux";
+import { clearAmbulanceNote } from "../redux/ambulance/ambulance.actions";
 
 const ReasonModal = ({
-    note: { identityCard, driverLicense, registerLicen, registryCertificate },
-    visible
-}) => (
-    <View style={[styles.modal, visible ? styles.visible : null]}>
-        <View style={styles.modalContent}>
-            {identityCard && <Text style={styles.note}>Chứng minh nhân dân: {identityCard}</Text>}
-            {driverLicense && <Text style={styles.note}>Chứng minh nhân dân: {driverLicense}</Text>}
-            {registerLicen && <Text style={styles.note}>Chứng minh nhân dân: {registerLicen}</Text>}
-            {registryCertificate && (
-                <Text style={styles.note}>Chứng minh nhân dân: {registryCertificate}</Text>
-            )}
-            <TouchableOpacity>
-                <Text style={styles.action}>Xác nhận</Text>
-            </TouchableOpacity>
+    note: { identityCard, driverLicense, registerLicense, registryCertificate },
+    visible,
+    clearAmbulanceNote
+}) => {
+    return (
+        <View style={[styles.modal, visible ? styles.visible : null]}>
+            <View style={styles.modalContent}>
+                {!!identityCard && (
+                    <Text style={styles.note}>Chứng minh nhân dân: {identityCard}</Text>
+                )}
+                {!!driverLicense && (
+                    <Text style={styles.note}>Giấy phép lái xe: {driverLicense}</Text>
+                )}
+                {!!registerLicense && (
+                    <Text style={styles.note}>Giấy đăng kiểm: {registerLicense}</Text>
+                )}
+                {!!registryCertificate && (
+                    <Text style={styles.note}>Cavet xe: {registryCertificate}</Text>
+                )}
+                <TouchableOpacity onPress={clearAmbulanceNote}>
+                    <Text style={styles.action}>Xác nhận</Text>
+                </TouchableOpacity>
+            </View>
         </View>
-    </View>
-);
+    );
+};
 
-export default ReasonModal;
+const mapDispatchToProps = dispatch => ({
+    clearAmbulanceNote: () => dispatch(clearAmbulanceNote())
+});
+
+export default connect(null, mapDispatchToProps)(ReasonModal);
 
 const styles = StyleSheet.create({
     modal: {

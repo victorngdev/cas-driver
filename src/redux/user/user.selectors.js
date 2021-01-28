@@ -13,3 +13,5 @@ export const selectUsername = createSelector(
     [selectCurrentUser],
     currentUser => (currentUser && currentUser.username) || ""
 );
+
+export const selectSetting = createSelector([selectUser], user => user.setting);

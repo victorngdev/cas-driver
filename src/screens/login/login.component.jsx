@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 
-import { selectCurrentUser } from "../../redux/user/user.selectors";
 import { selectStatusCode } from "../../redux/message/message.selectors";
 import { signIn } from "../../redux/user/user.actions";
 import messages from "../../uitls/message.data";
@@ -15,20 +14,23 @@ import ButtonText from "../../components/button-text.component";
 import TextLinking from "../../components/text-linking.component";
 import KeyboardAvoiding from "../../components/keyboard-avoding.component";
 import Message from "../../components/message.component";
+import Spinner from "../../components/spinner.component";
 
 import styles from "./login.style";
 
-const LoginScreen = ({ navigation, signIn, currentUser, statusCode }) => {
-    const [username, setUsername] = useState("0931452369");
-    const [password, setPassword] = useState("123");
+const LoginScreen = ({ navigation, signIn, statusCode }) => {
+    const [username, setUsername] = useState("0931738872");
+    const [password, setPassword] = useState("123456");
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        currentUser && navigation.navigate("Home");
-    }, [currentUser]);
+        statusCode && setLoading(false);
+    }, [statusCode]);
 
     return (
         <BackgroundLogin>
-            <Message message={messages[401]} visible={statusCode} />
+            {loading && <Spinner />}
+            {statusCode && <Message message={messages[401]} />}
             <KeyboardAvoiding style={styles.container}>
                 <View style={styles.block_logo_name}>
                     <LogoName />
@@ -50,7 +52,10 @@ const LoginScreen = ({ navigation, signIn, currentUser, statusCode }) => {
                     />
                     <ButtonText
                         textContent="ĐĂNG NHẬP"
-                        gotoScreen={() => signIn(username, password)}
+                        gotoScreen={() => {
+                            setLoading(true);
+                            signIn(username, password);
+                        }}
                     />
                     <TextLinking
                         contentText="Chưa có tài khoản?"
@@ -68,7 +73,6 @@ const LoginScreen = ({ navigation, signIn, currentUser, statusCode }) => {
 };
 
 const mapStateToProps = createStructuredSelector({
-    currentUser: selectCurrentUser,
     statusCode: selectStatusCode
 });
 

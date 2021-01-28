@@ -1,62 +1,68 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, ScrollView, Dimensions } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
+import { ScrollView, TouchableOpacity } from "react-native-gesture-handler";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 
 import { selectCurrentUser, selectToken } from "../../redux/user/user.selectors";
-import { viewHistory } from "../../redux/request/request.actions";
 import { fetchHistory } from "../../apis/core.apis";
 
 import Header from "../../components/header.component";
-import BackgroundImage from "../../components/background-screen.component";
 import HistoryComponent from "../../components/history-row.component";
-
-const screen = Dimensions.get("screen");
-const widthDevice = screen.width;
-const heightDevice = screen.height;
+import Spinner from "../../components/spinner.component";
 
 const HistoryScreen = ({ currentUser, token, navigation, viewHistory }) => {
-    const [history, setHistory] = useState([]);
+    const [history, setHistory] = useState({ data: [], totalPage: 0, currentPage: 1 });
+    const [currentHistory, setCurrentHistory] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        fetchHistory(token, currentUser.userId).then(response => setHistory(response.data));
-    }, [token]);
+        fetchHistories(1);
+    }, []);
+
+    const fetchHistories = pageIndex => {
+        setLoading(true);
+        fetchHistory(token, currentUser.id, pageIndex).then(response =>
+            setTimeout(() => {
+                setHistory(response.data);
+                setCurrentHistory(currentHistory.concat(response.data.data));
+                setLoading(false);
+            }, 500)
+        );
+    };
 
     return (
-        <BackgroundImage>
-            <View style={styles.container}>
-                <Header title="Lịch sử" gotoScreen={() => navigation.goBack()} />
-                <View
-                    style={{
-                        height: "auto",
-                        flexDirection: "column",
-                        justifyContent: "flex-start"
-                    }}
-                >
-                    <ScrollView
-                        showsVerticalScrollIndicator={false}
-                        directionalLockEnabled={true}
-                        contentContainerStyle={{
-                            flexGrow: 1
-                        }}
+        <View style={styles.container}>
+            {loading && <Spinner />}
+            <Header title="Lịch sử" />
+            <ScrollView
+                style={{ width: "90%" }}
+                showsVerticalScrollIndicator={false}
+                directionalLockEnabled={true}
+            >
+                {currentHistory.length ? (
+                    currentHistory.map(({ id, ...otherProps }) => (
+                        <HistoryComponent
+                            key={id}
+                            {...otherProps}
+                            onPress={() => {
+                                viewHistory(requestId);
+                                navigation.navigate("HistoryDetail");
+                            }}
+                        />
+                    ))
+                ) : (
+                    <Text style={styles.emptyMessage}>Không có yêu cầu nào được thực hiện</Text>
+                )}
+                {history.currentPage < history.totalPage && (
+                    <TouchableOpacity
+                        onPress={() => fetchHistories(Number.parseInt(history.currentPage) + 1)}
                     >
-                        {history.length
-                            ? history.map(({ requestId, ...otherProps }) => (
-                                  <HistoryComponent
-                                      key={requestId}
-                                      requestId={requestId}
-                                      {...otherProps}
-                                      onPress={() => {
-                                          viewHistory(requestId);
-                                          navigation.navigate("HistoryDetail");
-                                      }}
-                                  />
-                              ))
-                            : null}
-                    </ScrollView>
-                </View>
-            </View>
-        </BackgroundImage>
+                        <Text style={styles.loadMore}>Xem thêm</Text>
+                    </TouchableOpacity>
+                )}
+            </ScrollView>
+        </View>
     );
 };
 
@@ -65,77 +71,29 @@ const mapStateToProps = createStructuredSelector({
     token: selectToken
 });
 
-const mapDispatchToProps = dispatch => ({
-    viewHistory: history => dispatch(viewHistory(history))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(HistoryScreen);
+export default connect(mapStateToProps)(HistoryScreen);
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: "column",
-        alignItems: "center"
+        alignItems: "center",
+        backgroundColor: "white"
     },
-    listHistory: {
-        marginTop: 10
+    emptyMessage: {
+        fontFamily: "Texgyreadventor-bold",
+        fontSize: 13,
+        color: "#555",
+        width: "100%",
+        marginTop: "50%",
+        textAlign: "center"
     },
-    history: {
-        flexDirection: "row",
-        height: 70,
-        marginHorizontal: 10,
-        marginVertical: 8,
-        margin: 10
-    },
-    logo: {},
-    statusLogo: {
-        width: 25,
-        height: 25,
-        marginTop: 10,
-        marginLeft: 5
-    },
-    app_logo: {
-        width: 50,
-        height: 50,
-        borderRadius: 18,
+    loadMore: {
+        width: "100%",
+        textAlign: "center",
         marginVertical: 10,
-        marginLeft: 10
-    },
-    textTitle: {
-        width: 150,
-        color: "#000",
-        fontSize: 15,
-        fontFamily: "Texgyreadventor-regular",
-        marginVertical: 2,
-        marginLeft: 15,
-        marginTop: 8
-    },
-    textAdd: {
-        width: 150,
-        color: "#4d4d4d",
-        fontSize: 12,
-        fontFamily: "Texgyreadventor-regular",
-        marginLeft: 15
-    },
-    textDate: {
-        width: 50,
-        color: "#4d4d4d",
-        fontSize: 15,
-        fontFamily: "Texgyreadventor-regular",
-        marginVertical: 8,
-        marginLeft: 30
-    },
-    date: {
-        color: "#5c7682",
-        fontSize: 17,
-        fontFamily: "Texgyreadventor-regular"
-    },
-
-    historyView: {
-        width: widthDevice,
-        height: heightDevice * 0.2,
-        backgroundColor: "red",
-        borderBottomColor: "black",
-        borderBottomWidth: 1
+        fontFamily: "Texgyreadventor-bold",
+        fontSize: 13,
+        color: "#6c7fa6"
     }
 });

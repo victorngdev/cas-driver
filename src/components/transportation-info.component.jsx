@@ -20,7 +20,6 @@ const TransportationInfo = ({
                     title="Điểm đến"
                     place={!isArrived ? request.pickUp : request.destination}
                     icon="https://i.ibb.co/gWdQ69d/radar.png"
-                    isEditable={isArrived}
                 />
                 {!isArrived ? (
                     <View style={styles.groupContact}>

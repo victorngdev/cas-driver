@@ -4,21 +4,23 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 
 import CustomModal from "./custom-modal.componet";
 
-const MessageModal = ({ action, content: { message }, onClose }) => (
-    <CustomModal>
-        <Text style={styles.message}>{message}</Text>
-        <View style={styles.action}>
-            {onClose && (
+const MessageModal = ({ message, onClose, onSubmit, isConfirm }) => {
+    return (
+        <CustomModal>
+            <Text style={styles.message}>{message}</Text>
+            <View style={styles.action}>
                 <TouchableOpacity onPress={onClose}>
                     <Text style={styles.button}>Đóng</Text>
                 </TouchableOpacity>
-            )}
-            <TouchableOpacity onPress={action}>
-                <Text style={styles.button}>Xác nhận</Text>
-            </TouchableOpacity>
-        </View>
-    </CustomModal>
-);
+                {!isConfirm && (
+                    <TouchableOpacity onPress={onSubmit}>
+                        <Text style={styles.button}>Xác nhận</Text>
+                    </TouchableOpacity>
+                )}
+            </View>
+        </CustomModal>
+    );
+};
 
 export default MessageModal;
 

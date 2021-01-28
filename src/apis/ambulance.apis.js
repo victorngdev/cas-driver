@@ -1,8 +1,9 @@
 import axios from "axios";
 
 const api = axios.create({
-    // baseURL: "http://localhost:5000/api/users"
-    baseURL: "http://caselastic-env-1.eba-rh86ed2y.ap-southeast-1.elasticbeanstalk.com/api/driver"
+    baseURL:
+        //     "http://casservernodejsversion01-env.eba-dmxzbmkd.ap-southeast-1.elasticbeanstalk.com/api/driver"
+        "http://192.168.43.241:3000/api/driver"
 });
 
 export const fetchAmbulance = (token, userId) => {
@@ -35,4 +36,16 @@ export const getAmbulanceNote = (token, ambulanceId) => {
             Authorization: token
         }
     });
+};
+
+export const unregisterAmbulance = (token, ambulanceId) => {
+    return api.put(
+        `/ambulances/${ambulanceId}/cancel`,
+        {},
+        {
+            headers: {
+                Authorization: token
+            }
+        }
+    );
 };

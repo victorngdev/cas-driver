@@ -1,11 +1,10 @@
 import React from "react";
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Image, StyleSheet } from "react-native";
 
-const Spinner = () => (
-    <View style={styles.spinner}>
+const Spinner = ({ style }) => (
+    <View style={[styles.spinner, style]}>
         <View style={styles.overplay}>
-            <Image style={styles.image} source={{ uri: "https://i.ibb.co/ZmKX8PR/loading.gif" }} />
-            <Text style={styles.message}>Đang xử lí yêu cầu</Text>
+            <Image style={styles.image} source={require("../../assets/icons/loading.gif")} />
         </View>
     </View>
 );
@@ -19,24 +18,18 @@ const styles = StyleSheet.create({
         height: "100%",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "rgba(0, 0, 0, 0.85)",
+        backgroundColor: "rgba(255, 255, 255, 0.6)",
         zIndex: 10
     },
     overplay: {
         width: "90%",
-        height: "25%",
-        backgroundColor: "#fff",
+        height: "auto",
         alignItems: "center",
         paddingVertical: 10,
         borderRadius: 10
     },
     image: {
-        width: 75,
-        height: 75
-    },
-    message: {
-        fontFamily: "Texgyreadventor-regular",
-        fontSize: 16,
-        marginTop: 30
+        width: 150,
+        height: 150
     }
 });

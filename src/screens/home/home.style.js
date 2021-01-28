@@ -1,15 +1,19 @@
-import { StyleSheet, StatusBar } from "react-native";
+import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: "column",
         backgroundColor: "#fff",
-        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-        position: "relative"
+        backgroundColor: "#fff"
     },
-    map: {
-        flex: 1
+    info: {
+        width: "100%",
+        height: "auto",
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        alignItems: "center"
     }
 });
 
