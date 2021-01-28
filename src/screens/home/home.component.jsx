@@ -66,29 +66,15 @@ const HomeScreen = ({
     }, [driverStatus]);
 
     useEffect(() => {
-<<<<<<< HEAD
         if (currentAmbulance && currentAmbulance.ambulance_status === "ACTIVE") {
             initBackgroundTask();
         }
-=======
-        async () => {
-            if (currentAmbulance && currentAmbulance.ambulance_status === "ACTIVE") {
-                initBackgroundTask();
-            } else {
-                await Location.stopLocationUpdatesAsync("syncLocation");
-            }
-        };
->>>>>>> d239c62e047e47337b5ad8e5fc662deacdd80e91
     }, [currentAmbulance]);
 
     const initBackgroundTask = async () => {
         configureTask({ username: currentUser.username });
         await Location.startLocationUpdatesAsync("syncLocation", {
-<<<<<<< HEAD
             accuracy: Location.Accuracy.Balanced
-=======
-            timeInterval: 500,
->>>>>>> d239c62e047e47337b5ad8e5fc662deacdd80e91
         });
     };
 
