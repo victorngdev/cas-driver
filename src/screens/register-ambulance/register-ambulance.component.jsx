@@ -10,6 +10,7 @@ import {
     unregisterAmbulance,
     updateAmbulance
 } from "../../redux/ambulance/ambulance.actions";
+import { updateStatusCode } from "../../redux/message/message.action";
 import { selectCurrentAmbulance } from "../../redux/ambulance/ambulance.selectors";
 import { selectStatusCode } from "../../redux/message/message.selectors";
 import { checkIsRegisteredAmbulance, uploadImage } from "../../apis/core.apis";
@@ -33,7 +34,8 @@ const RegisterAmbulanceScreen = ({
     registerAmbulance,
     updateAmbulance,
     unregisterAmbulance,
-    statusCode
+    statusCode,
+    updateStatusCode
 }) => {
     const [displayName, setDisplayName] = useState(currentUser.displayName || "");
     const [messageModal, setMessageModal] = useState(false);
@@ -68,8 +70,12 @@ const RegisterAmbulanceScreen = ({
     });
 
     const handleRegister = async () => {
+        setMessageModal(false);
         if (isRegistered) {
-            setMessageModal(false);
+            return;
+        }
+        if (!identityCard.base64) {
+            updateStatusCode(405);
             return;
         }
         setMessageModal(false);
@@ -299,7 +305,8 @@ const mapDispatchToProps = dispatch => ({
     updateAmbulance: (token, userId, ambulance) =>
         dispatch(updateAmbulance(token, userId, ambulance)),
     unregisterAmbulance: (token, ambulanceId) => dispatch(unregisterAmbulance(token, ambulanceId)),
-    clearAmbulanceNote: () => dispatch(clearAmbulanceNote())
+    clearAmbulanceNote: () => dispatch(clearAmbulanceNote()),
+    updateStatusCode: statusCode => dispatch(updateStatusCode(statusCode))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RegisterAmbulanceScreen);

@@ -37,6 +37,7 @@ const messages = {
     402: "Đây có thể là lỗi kỹ thuật mà chúng tôi đang cố gắng khắc phục, hãy thực hiện lại yêu cầu một lần nữa!",
     403: "Yêu cầu đã bị gỡ bỏ bởi người gửi yêu cầu!",
     404: "Đã xảy ra lỗi khi nhận yêu cầu, chúng tôi rất tiếc vì điều này!",
+    405: "Vui lòng cung cấp các thông tin cần thiết để tiến hành đăng ký!",
     700: "Phiên làm việc hết hạn, vui lòng đăng xuất để kiểm tra hoạt động!",
     201: "Đăng ký xe thành công! Vui lòng chờ xác nhận từ quản trị viên để có thể nhận được yêu cầu.",
     202: "Hủy đăng ký xe cứu thương thành công!",
