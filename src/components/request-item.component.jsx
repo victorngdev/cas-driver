@@ -8,7 +8,6 @@ import { createStructuredSelector } from "reselect";
 import getDistance from "geolib/es/getDistance";
 
 import { selectToken, selectUsername } from "../redux/user/user.selectors";
-import { selectRequestTimeout } from "../redux/request/request.selectors";
 import { rejectRequest } from "../redux/request/request.actions";
 
 import RequestInfoItem from "./request-info-item.component";
@@ -31,25 +30,22 @@ const RequestItem = ({
         patientName,
         patientPhone,
         requester,
-        distance
+        distance,
+        remainingTime,
+        timeout
     },
     onAccept,
-    rejectRequest,
-    requestTimeout
+    rejectRequest
 }) => {
     const viewStateIcon = {
         false: require("../../assets/icons/details.png"),
         true: require("../../assets/icons/less.png")
     };
     const [viewState, setViewState] = useState(false);
-    const [timer, setTimer] = useState(0);
     const [loading, setLoading] = useState(false);
     const [rDistance, setRDistance] = useState(0);
 
     useEffect(() => {
-        const current = new Date().toISOString();
-        const start = `${createdDate}T${createdTime}Z`;
-        const diff = 25200 - (new Date(start).getTime() - new Date(current).getTime()) / 1000 - 3;
         const distance =
             getDistance(
                 { latitude: destination.latitude, longitude: destination.longitude },
@@ -57,7 +53,6 @@ const RequestItem = ({
             ) / 1000;
 
         setRDistance(distance.toFixed(1));
-        setTimer(Number.parseInt(requestTimeout) * 60 - Math.round(diff));
     }, []);
 
     const children = remainingTime => {
@@ -96,22 +91,20 @@ const RequestItem = ({
                     </View>
                 </View>
                 <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
-                    {timer > 0 && (
-                        <CountdownCircleTimer
-                            isPlaying
-                            duration={Number.parseInt(requestTimeout) * 60}
-                            initialRemainingTime={timer}
-                            strokeWidth={3}
-                            size={55}
-                            colors="#09acfe"
-                        >
-                            {({ remainingTime }) => (
-                                <Animated.Text style={styles.timeout}>
-                                    {children(remainingTime)}
-                                </Animated.Text>
-                            )}
-                        </CountdownCircleTimer>
-                    )}
+                    <CountdownCircleTimer
+                        isPlaying
+                        duration={timeout}
+                        initialRemainingTime={remainingTime}
+                        strokeWidth={3}
+                        size={55}
+                        colors="#09acfe"
+                    >
+                        {({ remainingTime }) => (
+                            <Animated.Text style={styles.timeout}>
+                                {children(remainingTime)}
+                            </Animated.Text>
+                        )}
+                    </CountdownCircleTimer>
                     <View style={{ flexDirection: "column", marginLeft: 2 }}>
                         <TouchableOpacity onPress={onAccept}>
                             <Text style={styles.action}>Chấp nhận</Text>
@@ -220,8 +213,7 @@ const RequestItem = ({
 
 const mapStateToProps = createStructuredSelector({
     token: selectToken,
-    username: selectUsername,
-    requestTimeout: selectRequestTimeout
+    username: selectUsername
 });
 
 const mapDispatchToProps = dispatch => ({
