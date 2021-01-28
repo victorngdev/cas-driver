@@ -14,7 +14,8 @@ const HomeDriverInfo = ({
     addressValue,
     toggleSettingSheet,
     toggleRequestSheet,
-    navigation
+    navigation,
+    displayName
 }) => {
     const registered = currentAmbulance && currentAmbulance.ambulance_status === "ACTIVE";
     const confirming = currentAmbulance && currentAmbulance.ambulance_status === "CONFIRMING";
@@ -23,7 +24,7 @@ const HomeDriverInfo = ({
         <>
             <View style={styles.container}>
                 <View style={styles.currentLocation}>
-                    <Text style={styles.locationTitle}>Vị trí của bạn</Text>
+                    <Text style={styles.locationTitle}>Xin chào, {displayName}</Text>
                     <Text style={styles.value}>{addressValue}</Text>
                 </View>
                 {registered ? (

@@ -28,18 +28,15 @@ export const saveSetting = async (username, distance, requestType) => {
         );
 };
 
-export const syncLocationToRequest = async (poolId, latitude, longitude) => {
-    if (latitude && longitude) {
-        const driverRef = firestore.collection("drivers").doc(`${poolId}`);
-
-        await driverRef.set(
-            {
-                latitude,
-                longitude
-            },
-            { merge: true }
-        );
-    }
+export const syncLocation = async (username, latitude, longitude) => {
+    geocollection.doc(`${username}`).set(
+        {
+            coordinates: new firebase.firestore.GeoPoint(latitude, longitude),
+            latitude,
+            longitude
+        },
+        { merge: true }
+    );
 };
 
 export const initLocation = async (userId, latitude, longitude) => {

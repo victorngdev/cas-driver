@@ -2,9 +2,11 @@ import React, { useRef, useState, useEffect } from "react";
 import { View, StyleSheet, PermissionsAndroid } from "react-native";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 
+import { syncLocation } from "../firebase/firebase.utils";
+
 import MapDirection from "./map-direction.component";
 
-const Map = ({ destination }) => {
+const Map = ({ destination, username }) => {
     const mapRef = useRef(null);
     const [region, setRegion] = useState(null);
 
@@ -30,12 +32,11 @@ const Map = ({ destination }) => {
                 loadingEnabled
                 followsUserLocation={true}
                 style={styles.map__view}
-                onUserLocationChange={coordinate =>
-                    setLocation({
-                        latitude: coordinate.nativeEvent.coordinate.latitude,
-                        longitude: coordinate.nativeEvent.coordinate.longitude
-                    })
-                }
+                onUserLocationChange={coordinate => {
+                    const { latitude, longitude } = coordinate.nativeEvent.coordinate;
+                    setLocation({ latitude, longitude });
+                    syncLocation(username, latitude, longitude);
+                }}
                 onMapReady={() =>
                     PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
                 }

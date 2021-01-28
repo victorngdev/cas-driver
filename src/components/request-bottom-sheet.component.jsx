@@ -36,7 +36,7 @@ const RequestBottomSheet = ({
     rejectRequest,
     navigation
 }) => {
-    const [sortBy, setSortBy] = useState("createdTime");
+    const [sortBy, setSortBy] = useState("remainingTime");
     const [arrage, setArrage] = useState("desc");
     const [filter, setFilter] = useState(6);
     const [opacity, setOpacity] = useState(0);
@@ -131,7 +131,11 @@ const RequestBottomSheet = ({
                 distance: calculateDistance(r.pickUp.latitude, r.pickUp.longitude),
                 requestType: r.isEmergency ? 2 : 3
             }))
-            .sort((a, b) => a[sortBy].localeCompare(b[sortBy]) * (arrage === "desc" ? -1 : 1))
+            .sort(
+                (a, b) =>
+                    String(a[sortBy]).localeCompare(String(b[sortBy])) *
+                    (arrage === "desc" ? -1 : 1)
+            )
             .filter(r => !(filter % r.requestType));
 
         return (

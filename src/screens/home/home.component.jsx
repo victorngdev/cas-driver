@@ -3,18 +3,16 @@ import { View, PermissionsAndroid } from "react-native";
 import { connect } from "react-redux";
 import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
 import { createStructuredSelector } from "reselect";
-import * as Location from "expo-location";
 import Geocoder from "react-native-geocoding";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 
-import { clearConfirmationStatus, firestore } from "../../firebase/firebase.utils";
+import { clearConfirmationStatus, firestore, syncLocation } from "../../firebase/firebase.utils";
 import { clearRequest } from "../../redux/request/request.actions";
 import { updateStatusCode } from "../../redux/message/message.action";
 import { fetchAmbulance } from "../../redux/ambulance/ambulance.actions";
 import { selectToken, selectCurrentUser } from "../../redux/user/user.selectors";
 import { selectCurrentAmbulance } from "../../redux/ambulance/ambulance.selectors";
 import { selectStatusCode } from "../../redux/message/message.selectors";
-import { configureTask } from "../../uitls/background-task.services";
 import messages from "../../uitls/message.data";
 
 import HomeDriverInfo from "../../components/home-driver-info.component";
@@ -38,18 +36,13 @@ const HomeScreen = ({
 }) => {
     const driverRef = firestore.collection("drivers").doc(`${currentUser.username}`);
     const [driverStatus] = useDocumentData(driverRef);
-    const [location, setLocation] = useState(null);
+    const [location, setLocation] = useState({
+        latitude: 10.86598853,
+        longitude: 106.61454844,
+        address: "Đang cập nhật..."
+    });
     const settingRef = useRef(null);
     const requestRef = useRef(null);
-
-    useEffect(() => {
-        initLocation();
-        const timer = setInterval(() => {
-            initLocation();
-        }, 2000);
-
-        return () => clearInterval(timer);
-    }, []);
 
     useEffect(() => {
         if (driverStatus && driverStatus.confirmationStatus) {
@@ -65,32 +58,6 @@ const HomeScreen = ({
         }
     }, [driverStatus]);
 
-    useEffect(() => {
-        if (currentAmbulance && currentAmbulance.ambulance_status === "ACTIVE") {
-            initBackgroundTask();
-        }
-    }, [currentAmbulance]);
-
-    const initBackgroundTask = async () => {
-        configureTask({ username: currentUser.username });
-        await Location.startLocationUpdatesAsync("syncLocation", {
-            timeInterval: 500
-        });
-    };
-
-    const initLocation = () => {
-        navigator.geolocation.getCurrentPosition(async position => {
-            let { latitude, longitude } = position.coords;
-            Geocoder.from(latitude, longitude).then(json =>
-                setLocation({
-                    address: json.results[0].formatted_address,
-                    latitude,
-                    longitude
-                })
-            );
-        });
-    };
-
     return (
         <View style={styles.container}>
             <SettingBottomSheet settingRef={settingRef} />
@@ -100,8 +67,9 @@ const HomeScreen = ({
             <View style={{ flex: 1, marginTop: 5 }}>
                 <MapView
                     provider={PROVIDER_GOOGLE}
-                    initialRegion={{
-                        ...location,
+                    region={{
+                        latitude: location.latitude,
+                        longitude: location.longitude,
                         latitudeDelta: 0.0043,
                         longitudeDelta: 0.0023
                     }}
@@ -110,6 +78,17 @@ const HomeScreen = ({
                     loadingEnabled
                     followsUserLocation
                     style={{ width: "100%", height: "100%" }}
+                    onUserLocationChange={coordinates => {
+                        const { latitude, longitude } = coordinates.nativeEvent.coordinate;
+                        Geocoder.from(latitude, longitude).then(json =>
+                            setLocation({
+                                address: json.results[0].formatted_address,
+                                latitude,
+                                longitude
+                            })
+                        );
+                        syncLocation(currentUser.username, latitude, longitude);
+                    }}
                     onMapReady={() =>
                         PermissionsAndroid.request(
                             PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
@@ -130,6 +109,7 @@ const HomeScreen = ({
                     toggleSettingSheet={() => settingRef.current.snapTo(0)}
                     addressValue={location ? location.address : "Đang cập nhật..."}
                     navigation={navigation}
+                    displayName={currentUser.displayName}
                 />
             </View>
         </View>

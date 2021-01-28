@@ -3,9 +3,6 @@ import { View } from "react-native";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
 import { useDocumentData } from "react-firebase-hooks/firestore";
-import * as Location from "expo-location";
-
-import { configureTask } from "../../uitls/background-task.services";
 
 import { pickedPatient, finishRequest, cancelRequest } from "../../redux/request/request.actions";
 import { updateStatusCode } from "../../redux/message/message.action";
@@ -56,11 +53,6 @@ const RequestScreen = ({
                 latitude: currentRequest.pickUp.latitude,
                 longitude: currentRequest.pickUp.longitude
             });
-            Location.startLocationUpdatesAsync("syncLocation", {
-                distanceInterval: 10,
-                deferredUpdatesDistance: 10
-            });
-            configureTask({ username: currentUser.username, inRequest: true });
         }
     }, []);
 
@@ -130,7 +122,7 @@ const RequestScreen = ({
             {statusCode && <Message message={messages[statusCode]} isMessage={statusCode < 400} />}
             <Header title="Đang đón bệnh nhân" />
             <View style={{ marginTop: 5 }}>
-                <Map destination={destination} />
+                <Map destination={destination} username={currentUser.username} />
             </View>
             <View style={styles.transportationContainer}>
                 <View style={styles.transportation}>
