@@ -27,7 +27,6 @@ Geocoder.init("AIzaSyA3wjgHRZGPb4I96XDM-Eev7f1QQM_Mpp8", { language: "vi" });
 
 const HomeScreen = ({
     token,
-    currentAmbulance,
     statusCode,
     currentUser,
     updateStatusCode,
