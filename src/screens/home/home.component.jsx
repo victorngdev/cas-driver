@@ -65,18 +65,16 @@ const HomeScreen = ({
         }
     }, [driverStatus]);
 
-    useEffect(async () => {
+    useEffect(() => {
         if (currentAmbulance && currentAmbulance.ambulance_status === "ACTIVE") {
             initBackgroundTask();
-        } else {
-            await Location.stopLocationUpdatesAsync("syncLocation");
         }
     }, [currentAmbulance]);
 
     const initBackgroundTask = async () => {
         configureTask({ username: currentUser.username });
         await Location.startLocationUpdatesAsync("syncLocation", {
-            timeInterval: 500
+            accuracy: Location.Accuracy.Balanced
         });
     };
 
@@ -99,7 +97,7 @@ const HomeScreen = ({
             <RequestBottomSheet navigation={navigation} requestRef={requestRef} />
             {statusCode && <Message message={messages[statusCode]} isMessage={statusCode < 400} />}
             <Header title="Chờ yêu cầu" />
-            <View style={{ flex: 12, marginTop: 5, borderRadius: 10 }}>
+            <View style={{ flex: 1, marginTop: 5 }}>
                 <MapView
                     provider={PROVIDER_GOOGLE}
                     initialRegion={{

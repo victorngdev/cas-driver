@@ -12,15 +12,13 @@ import {
     acceptRequest,
     fetchRequests,
     removeRequests,
-    rejectRequest,
-    fetchConfig
+    rejectRequest
 } from "../redux/request/request.actions";
 import { clearStatusCode } from "../redux/message/message.action";
 import { selectCurrentUser, selectToken } from "../redux/user/user.selectors";
 import { selectRequestList } from "../redux/request/request.selectors";
 import { selectStatusCode } from "../redux/message/message.selectors";
 import { firestore } from "../firebase/firebase.utils";
-import { configureTask } from "../uitls/background-task.services";
 
 import RequestItem from "./request-item.component";
 import ArrageContainer from "./arrage-container.component";
@@ -36,7 +34,6 @@ const RequestBottomSheet = ({
     clearStatusCode,
     removeRequests,
     rejectRequest,
-    fetchConfig,
     navigation
 }) => {
     const [sortBy, setSortBy] = useState("createdTime");
@@ -68,10 +65,7 @@ const RequestBottomSheet = ({
     }, [statusCode]);
 
     useEffect(() => {
-        fetchConfig(token);
-        setTimeout(() => {
-            fetchRequestsInit();
-        }, 1000);
+        fetchRequestsInit();
     }, [requests]);
 
     const initLocation = () => {
@@ -202,7 +196,7 @@ const RequestBottomSheet = ({
                         title="Sắp xếp theo"
                         current={sortBy}
                         onValueChange={setSortBy}
-                        options={["createdTime", "distance"]}
+                        options={["remainingTime", "distance"]}
                     />
                     <ArrageContainer
                         title="Thứ tự"
@@ -247,8 +241,7 @@ const mapDispatchToProps = dispatch => ({
     clearStatusCode: () => dispatch(clearStatusCode()),
     removeRequests: requestList => dispatch(removeRequests(requestList)),
     rejectRequest: (token, requestIds, username) =>
-        dispatch(rejectRequest(token, requestIds, username)),
-    fetchConfig: token => dispatch(fetchConfig(token))
+        dispatch(rejectRequest(token, requestIds, username))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RequestBottomSheet);
