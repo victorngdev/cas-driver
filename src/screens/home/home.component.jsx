@@ -34,7 +34,7 @@ const HomeScreen = ({
     currentUser,
     updateStatusCode,
     fetchAmbulance,
-    navigation
+    navigation,
 }) => {
     const driverRef = firestore.collection("drivers").doc(`${currentUser.username}`);
     const [driverStatus] = useDocumentData(driverRef);
@@ -65,29 +65,31 @@ const HomeScreen = ({
         }
     }, [driverStatus]);
 
-    useEffect(async () => {
-        if (currentAmbulance && currentAmbulance.ambulance_status === "ACTIVE") {
-            initBackgroundTask();
-        } else {
-            await Location.stopLocationUpdatesAsync("syncLocation");
-        }
+    useEffect(() => {
+        async () => {
+            if (currentAmbulance && currentAmbulance.ambulance_status === "ACTIVE") {
+                initBackgroundTask();
+            } else {
+                await Location.stopLocationUpdatesAsync("syncLocation");
+            }
+        };
     }, [currentAmbulance]);
 
     const initBackgroundTask = async () => {
         configureTask({ username: currentUser.username });
         await Location.startLocationUpdatesAsync("syncLocation", {
-            timeInterval: 500
+            timeInterval: 500,
         });
     };
 
     const initLocation = () => {
-        navigator.geolocation.getCurrentPosition(async position => {
+        navigator.geolocation.getCurrentPosition(async (position) => {
             let { latitude, longitude } = position.coords;
-            Geocoder.from(latitude, longitude).then(json =>
+            Geocoder.from(latitude, longitude).then((json) =>
                 setLocation({
                     address: json.results[0].formatted_address,
                     latitude,
-                    longitude
+                    longitude,
                 })
             );
         });
@@ -105,25 +107,16 @@ const HomeScreen = ({
                     initialRegion={{
                         ...location,
                         latitudeDelta: 0.0043,
-                        longitudeDelta: 0.0023
+                        longitudeDelta: 0.0023,
                     }}
                     showsMyLocationButton
                     showsUserLocation
                     loadingEnabled
                     followsUserLocation
                     style={{ width: "100%", height: "100%" }}
-                    onMapReady={() =>
-                        PermissionsAndroid.request(
-                            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
-                        )
-                    }
+                    onMapReady={() => PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)}
                 >
-                    {location && (
-                        <Marker
-                            coordinate={location}
-                            image={require("../../../assets/icons/location.png")}
-                        />
-                    )}
+                    {location && <Marker coordinate={location} image={require("../../../assets/icons/location.png")} />}
                 </MapView>
             </View>
             <View style={styles.info}>
@@ -142,14 +135,14 @@ const mapStateToProps = createStructuredSelector({
     statusCode: selectStatusCode,
     currentAmbulance: selectCurrentAmbulance,
     currentUser: selectCurrentUser,
-    token: selectToken
+    token: selectToken,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
     clearRequest: () => dispatch(clearRequest()),
     handleApprovedRegisterAmbulance: () => dispatch(handleApprovedRegisterAmbulance()),
-    updateStatusCode: statusCode => dispatch(updateStatusCode(statusCode)),
-    fetchAmbulance: (token, userId) => dispatch(fetchAmbulance(token, userId))
+    updateStatusCode: (statusCode) => dispatch(updateStatusCode(statusCode)),
+    fetchAmbulance: (token, userId) => dispatch(fetchAmbulance(token, userId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
