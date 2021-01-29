@@ -16,7 +16,7 @@ import AvatarNameCol from "../../components/avatar-name-column.component";
 import KeyboardAvoiding from "../../components/keyboard-avoding.component";
 import Spinner from "../../components/spinner.component";
 import CustomModal from "../../components/custom-modal.componet";
-import MessageModal from "../../components/message-modal.component";
+import Message from "../../components/message.component";
 
 const firebaseConfig = {
     apiKey: "AIzaSyA1akYjqm5cVgCJvcgAFVguS0sw70hv4ds",
@@ -84,9 +84,7 @@ const AccountScreen = ({ currentUser, token, updateUser, statusCode, logout }) =
     return (
         <BackgroundImage>
             {loading && <Spinner />}
-            {statusCode && (
-                <MessageModal message={messages[statusCode]} isMessage={statusCode < 400} />
-            )}
+            {statusCode && <Message message={messages[statusCode]} isMessage={statusCode < 400} />}
             <FirebaseRecaptchaVerifierModal
                 ref={recaptchaVerifier}
                 firebaseConfig={firebaseConfig}
