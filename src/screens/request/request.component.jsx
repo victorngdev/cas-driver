@@ -125,45 +125,49 @@ const RequestScreen = ({
                 <Map destination={destination} username={currentUser.username} />
             </View>
             <View style={styles.transportationContainer}>
-                <View style={styles.transportation}>
-                    {currentRequest && (
-                        <Place
-                            title="Điểm đến"
-                            place={arrived ? currentRequest.destination : currentRequest.pickUp}
-                            icon="https://i.ibb.co/gWdQ69d/radar.png"
+                {currentRequest && currentRequest.requester && (
+                    <View style={styles.transportation}>
+                        {currentRequest && (
+                            <Place
+                                title="Điểm đến"
+                                place={arrived ? currentRequest.destination : currentRequest.pickUp}
+                                icon="https://i.ibb.co/gWdQ69d/radar.png"
+                            />
+                        )}
+                        {!arrived && (
+                            <View style={styles.groupContact}>
+                                <ContactItem
+                                    icon="https://i.ibb.co/z2krjnj/phone-contact.png"
+                                    label="Người gọi"
+                                    phone={currentRequest.requester.phone}
+                                />
+                                {currentRequest.isOther && currentRequest.patientPhone && (
+                                    <ContactItem
+                                        icon="https://i.ibb.co/fprdRyq/phone-contact-purple.png"
+                                        label="Bệnh nhân"
+                                        phone={currentRequest.patientPhone}
+                                    />
+                                )}
+                            </View>
+                        )}
+                        <GroupButton
+                            items={[
+                                {
+                                    itemId: 1,
+                                    label: !arrived ? "Hủy yêu cầu" : "Báo cáo sự cố",
+                                    type: "reject",
+                                    action: () => setModal(true)
+                                },
+                                {
+                                    itemId: 2,
+                                    label: !arrived ? "Đón bệnh nhân" : "Kết thúc",
+                                    action: !arrived ? handleArrived : handleFinish,
+                                    style: { paddingHorizontal: arrived ? 45 : 30 }
+                                }
+                            ]}
                         />
-                    )}
-                    {!arrived && (
-                        <View style={styles.groupContact}>
-                            <ContactItem
-                                icon="https://i.ibb.co/z2krjnj/phone-contact.png"
-                                label="Người gọi"
-                                phone="0988635032"
-                            />
-                            <ContactItem
-                                icon="https://i.ibb.co/fprdRyq/phone-contact-purple.png"
-                                label="Bệnh nhân"
-                                phone={"0931738872"}
-                            />
-                        </View>
-                    )}
-                    <GroupButton
-                        items={[
-                            {
-                                itemId: 1,
-                                label: !arrived ? "Hủy yêu cầu" : "Báo cáo sự cố",
-                                type: "reject",
-                                action: () => setModal(true)
-                            },
-                            {
-                                itemId: 2,
-                                label: !arrived ? "Đón bệnh nhân" : "Kết thúc",
-                                action: !arrived ? handleArrived : handleFinish,
-                                style: { paddingHorizontal: arrived ? 45 : 30 }
-                            }
-                        ]}
-                    />
-                </View>
+                    </View>
+                )}
             </View>
         </View>
     );

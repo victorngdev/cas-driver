@@ -23,7 +23,7 @@ export const saveSetting = async (username, distance, requestType) => {
         .collection("drivers")
         .doc(username)
         .set(
-            { distance, emergency: !(requestType % 3), home: !(requestType % 2) },
+            { distance, emergency: !(requestType % 2), home: !(requestType % 3) },
             { merge: true }
         );
 };
