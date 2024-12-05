@@ -1,9 +1,9 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-const CustomModal = ({ children, title, type, range, visible, contentSize }) => (
-    <View style={[styles.modal, visible ? { opacity: 0.85, zIndex: 10 } : null]}>
-        <View style={[styles.modalContent, contentSize]}>
+const CustomModal = ({ children, title, type, range }) => (
+    <View style={styles.modal}>
+        <View style={styles.modalContent}>
             {title ? (
                 <View style={styles.groupTitle}>
                     <Text style={styles.modalTitle}>{title}</Text>
@@ -25,18 +25,17 @@ const styles = StyleSheet.create({
         position: "absolute",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#000",
-        opacity: 0,
-        zIndex: -1
+        backgroundColor: "rgba(0, 0, 0, 0.85)",
+        zIndex: 10
     },
     modalContent: {
         width: "90%",
-        height: "90%",
+        height: "auto",
+        maxHeight: "90%",
         backgroundColor: "#fff",
         alignItems: "center",
         borderRadius: 10,
-        paddingVertical: 5,
-        paddingHorizontal: 5
+        paddingVertical: 5
     },
     groupTitle: {
         display: "flex",

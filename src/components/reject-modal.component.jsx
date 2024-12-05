@@ -6,23 +6,34 @@ import CustomModal from "./custom-modal.componet";
 import GroupButton from "./group-button.component";
 import CustomOption from "./option.component";
 
-const options = [
-    { itemId: 1, value: "first", label: "Bấm nhầm chấp nhận yêu cầu" },
-    { itemId: 2, value: "second", label: "Không thể đón bệnh nhân đúng giờ" },
-    { itemId: 3, value: "third", label: "Xe bị hỏng không thể đến nơi" },
-    { itemId: 4, value: "four", label: "Địa chỉ không thể lái xe vào" },
-    { itemId: 5, value: "five", label: "Bệnh nhân liên lạc đề nghị huỷ" }
-];
+const options = {
+    false: [
+        { itemId: 1, value: "Bấm nhầm chấp nhận yêu cầu" },
+        { itemId: 2, value: "Không thể đón bệnh nhân đúng giờ" },
+        { itemId: 3, value: "Xe bị hỏng không thể đến nơi" },
+        { itemId: 4, value: "Địa chỉ không thể lái xe vào" },
+        { itemId: 5, value: "Bệnh nhân liên lạc đề nghị huỷ" }
+    ],
+    true: [
+        { itemId: 1, value: "Phương tiện vận chuyển gặp sự cố" },
+        { itemId: 2, value: "Bệnh nhân không thể cứu chữa" },
+        { itemId: 3, value: "Bệnh nhân yêu cầu xuống xe" }
+    ]
+};
 
-const RejectModal = ({ rejectOption, setRejectOption, isVisible, setIsReject, handleFinish }) => (
-    <CustomModal title="Lí do hủy yêu cầu" visible={isVisible} contentSize={{ height: "60%" }}>
+const RejectModal = ({ option, setOption, isArrived, onClose, onSubmit }) => (
+    <CustomModal title="Lí do hủy yêu cầu">
         <View style={styles.optionContainer}>
-            <RadioButton.Group value={rejectOption} onValueChange={value => setRejectOption(value)}>
-                {options.map(({ itemId, ...otherProps }) => (
-                    <CustomOption key={itemId} {...otherProps} />
+            <RadioButton.Group value={option} onValueChange={value => setOption(value)}>
+                {options[isArrived].map(({ itemId, value }) => (
+                    <CustomOption key={itemId} value={value} label={value} />
                 ))}
             </RadioButton.Group>
-            <TextInput style={styles.optionOther} placeholder="Khác" />
+            <TextInput
+                onChangeText={value => setOption(value)}
+                style={styles.optionOther}
+                placeholder="Khác"
+            />
         </View>
         <GroupButton
             items={[
@@ -30,14 +41,14 @@ const RejectModal = ({ rejectOption, setRejectOption, isVisible, setIsReject, ha
                     itemId: 1,
                     label: "Đóng",
                     type: "reject",
-                    action: () => setIsReject(false),
-                    style: { paddingHorizontal: 30 }
+                    action: () => onClose(false),
+                    style: { paddingHorizontal: 50 }
                 },
                 {
                     itemId: 2,
                     label: "Xác nhận",
-                    action: handleFinish,
-                    style: { paddingHorizontal: 30 }
+                    action: onSubmit,
+                    style: { paddingHorizontal: 40 }
                 }
             ]}
         />
@@ -48,8 +59,8 @@ export default RejectModal;
 
 const styles = StyleSheet.create({
     optionContainer: {
-        flex: 1,
-        paddingVertical: 20
+        width: "90%",
+        paddingVertical: 10
     },
     optionOther: {
         paddingVertical: 7,

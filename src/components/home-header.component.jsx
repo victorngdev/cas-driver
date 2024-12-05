@@ -27,21 +27,18 @@ export default HomeHeader;
 
 const styles = StyleSheet.create({
     header: {
-        flex: 1,
-        // display: "flex",
+        position: "relative",
+        height: "auto",
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#fff",
-        paddingTop: 10
+        backgroundColor: "#fff"
     },
     hamburger: {
         flex: 1,
-        // flexBasis: "25%",
         paddingLeft: 10
     },
     title: {
-        // flexBasis: "50%",
         flex: 2,
         textAlign: "center",
         fontFamily: "Texgyreadventor-bold",
@@ -49,7 +46,6 @@ const styles = StyleSheet.create({
         color: "#444444"
     },
     status: {
-        // flexBasis: "25%",
         flex: 1,
         justifyContent: "center"
     }

@@ -1,114 +1,132 @@
-import React, { useState } from "react";
-import { View } from "react-native";
-import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
+import React, { useState, useEffect, useRef } from "react";
+import { View, PermissionsAndroid } from "react-native";
+import { connect } from "react-redux";
+import MapView, { PROVIDER_GOOGLE, Marker } from "react-native-maps";
+import { createStructuredSelector } from "reselect";
+import Geocoder from "react-native-geocoding";
+import { useDocumentData } from "react-firebase-hooks/firestore";
 
-import BackgroundImage from "../../components/background-screen.component";
-import HomeHeader from "../../components/home-header.component";
+import { clearConfirmationStatus, firestore, syncLocation } from "../../firebase/firebase.utils";
+import { clearRequest } from "../../redux/request/request.actions";
+import { updateStatusCode } from "../../redux/message/message.action";
+import { fetchAmbulance } from "../../redux/ambulance/ambulance.actions";
+import { selectToken, selectCurrentUser } from "../../redux/user/user.selectors";
+import { selectCurrentAmbulance } from "../../redux/ambulance/ambulance.selectors";
+import { selectStatusCode } from "../../redux/message/message.selectors";
+import messages from "../../uitls/message.data";
+
+import HomeDriverInfo from "../../components/home-driver-info.component";
+import Message from "../../components/message.component";
+import RequestBottomSheet from "../../components/request-bottom-sheet.component";
+import SettingBottomSheet from "../../components/setting-bottom-sheet.componet";
+import Header from "../../components/header.component";
 
 import styles from "./home.style";
-import HomeDriverInfo from "../../components/home-driver-info.component";
-import RejectModal from "../../components/reject-modal.component";
-import MessageModal from "../../components/message-modal.component";
-import RequestModal from "../../components/request-modal.component";
-import TransportationInfo from "../../components/transportation-info.component";
 
-const HomeScreen = ({ navigation }) => {
-    const pickUp = {
-        name: "Vị trí người bệnh",
-        address: "632 Tô Ký, Q.12, HCM"
-    };
+Geocoder.init("AIzaSyA3wjgHRZGPb4I96XDM-Eev7f1QQM_Mpp8", { language: "vi" });
 
-    const destination = {
-        name: "Bệnh viện Quân Y",
-        address: "321 Lê Văn Việt, Q.9, HCM"
-    };
+const HomeScreen = ({
+    token,
+    statusCode,
+    currentUser,
+    updateStatusCode,
+    fetchAmbulance,
+    navigation
+}) => {
+    const driverRef = firestore.collection("drivers").doc(`${currentUser.username}`);
+    const [driverStatus] = useDocumentData(driverRef);
+    const [location, setLocation] = useState({
+        latitude: 10.86598853,
+        longitude: 106.61454844,
+        address: "Đang cập nhật..."
+    });
+    const settingRef = useRef(null);
+    const requestRef = useRef(null);
 
-    const m_request = {
-        pickUp: pickUp,
-        destination: destination
-    };
-
-    const [isReady, setIsReady] = useState(false);
-    const [title, setTitle] = useState("Chưa sẵn sàng");
-    const [isToggle, setIsToggle] = useState(false);
-    const [request, setRequest] = useState(null);
-    const [isArrived, setIsArrived] = useState(false);
-    const [isReject, setIsReject] = useState(false);
-    const [isFinish, setIsFinish] = useState(false);
-    const [rejectOption, setRejectOption] = useState("first");
-
-    const toggleAction = () => {
-        setIsReady(!isReady);
-        setTitle(!isReady ? "Đang sẵn sàng" : "Chưa sẵn sàng");
-        if (!isReady) {
-            setTimeout(() => {
-                setIsToggle(true);
-                setRequest(m_request);
-            }, 2000);
+    useEffect(() => {
+        if (driverStatus && driverStatus.confirmationStatus) {
+            if (driverStatus.confirmationStatus === "approved") {
+                fetchAmbulance(token, currentUser.id);
+                clearConfirmationStatus(currentUser.username);
+                updateStatusCode(102);
+            } else {
+                clearConfirmationStatus(currentUser.username);
+                fetchAmbulance(token, currentUser.id);
+                updateStatusCode(403);
+            }
         }
-    };
-
-    const handleFinish = () => {
-        setIsArrived(false);
-        setRequest(null);
-        setIsReject(false);
-        setIsFinish(false);
-    };
+    }, [driverStatus]);
 
     return (
         <View style={styles.container}>
-            <BackgroundImage>
-                <View style={{ flex: 1 }}>
-                    <HomeHeader title={title} isReady={isReady} toggleAction={toggleAction} navigation={navigation} />
-                </View>
-                <RejectModal
-                    rejectOption={rejectOption}
-                    setRejectOption={setRejectOption}
-                    isReject={isReady}
-                    isVisible={isReject}
-                    setIsReject={setIsReject}
-                    handleFinish={handleFinish}
-                />
-                {request ? (
-                    <RequestModal
-                        pickUp={pickUp}
-                        destination={destination}
-                        setIsToggle={setIsToggle}
-                        setRequest={setRequest}
-                        isVisible={isToggle}
-                    />
-                ) : null}
-                <MessageModal action={handleFinish} isVisible={isFinish} />
-                {/* Map screen */}
-                <View style={request ? (isArrived ? { flex: 6 } : { flex: 5 }) : { flex: 7 }}>
-                    <MapView
-                        style={styles.map}
-                        provider={PROVIDER_GOOGLE}
-                        showsUserLocation={true}
-                        showsMyLocationButton={true}
-                        followsUserLocation={true}
-                    />
-                </View>
-                {!request ? (
-                    <View style={{ flex: 2 }}>
-                        <HomeDriverInfo
-                            ratingLevel={5}
-                            addressName="Vị trí hiện tại"
-                            addressValue="1141 Quang Trung, Gò Vấp, HCM"
+            <SettingBottomSheet settingRef={settingRef} />
+            <RequestBottomSheet navigation={navigation} requestRef={requestRef} />
+            {statusCode && <Message message={messages[statusCode]} isMessage={statusCode < 400} />}
+            <Header title="Chờ yêu cầu" />
+            <View style={{ flex: 1, marginTop: 5 }}>
+                <MapView
+                    provider={PROVIDER_GOOGLE}
+                    region={{
+                        latitude: location.latitude,
+                        longitude: location.longitude,
+                        latitudeDelta: 0.0043,
+                        longitudeDelta: 0.0023
+                    }}
+                    showsMyLocationButton
+                    showsUserLocation
+                    loadingEnabled
+                    followsUserLocation
+                    style={{ width: "100%", height: "100%" }}
+                    onUserLocationChange={coordinates => {
+                        const { latitude, longitude } = coordinates.nativeEvent.coordinate;
+                        Geocoder.from(latitude, longitude).then(json =>
+                            setLocation({
+                                address: json.results[0].formatted_address,
+                                latitude,
+                                longitude
+                            })
+                        );
+                        syncLocation(currentUser.username, latitude, longitude);
+                    }}
+                    onMapReady={() =>
+                        PermissionsAndroid.request(
+                            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+                        )
+                    }
+                >
+                    {location && (
+                        <Marker
+                            coordinate={location}
+                            image={require("../../../assets/icons/location.png")}
                         />
-                    </View>
-                ) : (
-                    <TransportationInfo
-                        isArrived={isArrived}
-                        request={request}
-                        setIsArrived={setIsArrived}
-                        setIsFinish={setIsFinish}
-                        setIsReject={setIsReject}
-                    />
-                )}
-            </BackgroundImage>
+                    )}
+                </MapView>
+            </View>
+            <View style={styles.info}>
+                <HomeDriverInfo
+                    toggleRequestSheet={() => requestRef.current.snapTo(0)}
+                    toggleSettingSheet={() => settingRef.current.snapTo(0)}
+                    addressValue={location ? location.address : "Đang cập nhật..."}
+                    navigation={navigation}
+                    displayName={currentUser.displayName}
+                />
+            </View>
         </View>
     );
 };
 
-export default HomeScreen;
+const mapStateToProps = createStructuredSelector({
+    statusCode: selectStatusCode,
+    currentAmbulance: selectCurrentAmbulance,
+    currentUser: selectCurrentUser,
+    token: selectToken
+});
+
+const mapDispatchToProps = dispatch => ({
+    clearRequest: () => dispatch(clearRequest()),
+    handleApprovedRegisterAmbulance: () => dispatch(handleApprovedRegisterAmbulance()),
+    updateStatusCode: statusCode => dispatch(updateStatusCode(statusCode)),
+    fetchAmbulance: (token, userId) => dispatch(fetchAmbulance(token, userId))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);
